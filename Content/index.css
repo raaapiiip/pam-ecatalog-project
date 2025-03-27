@@ -1,0 +1,193 @@
+﻿@charset "UTF-8";
+
+:root,
+[data-bs-theme=light] {
+    --bs-font-sans-serif: "Source Sans 3", sans-serif !important;
+    --bs-body-font-family: var(--bs-font-sans-serif) !important;
+    --bg-ocean-20-rgb: 223, 244, 243;
+    --bg-ocean-40-rgb: 184, 222, 218;
+    --bg-ocean-60-rgb: 108, 180, 173;
+    --bg-ocean-80-rgb: 59, 155, 145;
+    --bg-ocean-100-rgb: 10, 130, 118;
+    --bg-ocean-120-rgb: 8, 102, 92;
+    --bg-ocean-140-rgb: 6, 83, 75;
+    --bg-lawn-rgb: 155, 186, 67;
+    --bg-lawn-light-rgb: 185, 210, 87;
+    --bg-berry-rgb: 156, 33, 110;
+    --bg-berry-light-rgb: 190, 50, 131;
+    --bg-engineering-rgb: 87, 83, 82;
+    --bg-engineering-light-rgb: 141, 135, 134;
+    --bg-sun-rgb: 249, 116, 20;
+    --bg-sun-light-rgb: 255, 151, 55;
+    --bg-sand-rgb: 252, 212, 66;
+    --bg-sand-light-rgb: 251, 226, 115;
+
+    --color-ocean-20: #DFF4F3;
+    --color-ocean-40: #B8DEDA;
+    --color-ocean-60: #6CB4AD;
+    --color-ocean-80: #3B9B91;
+    --color-ocean-100: #0A8276;
+    --color-ocean-120: #08665C;
+    --color-ocean-140: #06534B;
+    --color-lawn: #9BBA43;
+    --color-lawn-light: #B9D257;
+    --color-berry: #9C216E;
+    --color-berry-light: #BE3283;
+    --color-engineering: #575352;
+    --color-engineering-light: #8D8786;
+    --color-sun: #F97414;
+    --color-sun-light: #FF9737;
+    --color-sand: #FCD442;
+    --color-sand-light: #FBE273;
+}
+
+.card .card-body {
+    font-family: "Source Sans 3", sans-serif !important;
+    padding: 1.5rem;
+}
+
+.text-sans-serif {
+    font-family: "Source Sans 3", sans-serif !important;
+}
+
+body {
+    margin: 0;
+    font-family: var(--bs-body-font-family);
+    font-size: var(--bs-body-font-size);
+}
+
+.color-ocean-20 {
+    color: var(--color-ocean-20);
+}
+
+.color-ocean-40 {
+    color: var(--color-ocean-40);
+}
+
+.color-ocean-60 {
+    color: var(--color-ocean-60);
+}
+
+.color-ocean-80 {
+    color: var(--color-ocean-80);
+}
+
+.color-ocean-100 {
+    color: var(--color-ocean-100);
+}
+
+.color-ocean-120 {
+    color: var(--color-ocean-120);
+}
+
+.color-ocean-140 {
+    color: var(--color-ocean-140);
+}
+
+.color-lawn {
+    color: var(--color-lawn);
+}
+
+.color-lawn-light {
+    color: var(--color-lawn-light);
+}
+
+.color-berry {
+    color: var(--color-berry);
+}
+
+.color-berry-light {
+    color: var(--color-berry-light);
+}
+
+.color-engineering {
+    color: var(--color-engineering);
+}
+
+.color-engineering-light {
+    color: var(--color-engineering-light);
+}
+
+.color-sun {
+    color: var(--color-sun);
+}
+
+.color-sun-light {
+    color: var(--color-sun-light);
+}
+
+.color-sand {
+    color: var(--color-sand);
+}
+
+.color-sand-light {
+    color: var(--color-sand-light);
+}
+
+.bg-ocean-20 {
+    background-color: rgba(var(--bg-ocean-20-rgb), var(--bs-bg-opacity)) !important;
+}
+
+.bg-ocean-40 {
+    background-color: rgba(var(--bg-ocean-40-rgb), var(--bs-bg-opacity)) !important;
+}
+
+.bg-ocean-60 {
+    background-color: rgba(var(--bg-ocean-60-rgb), var(--bs-bg-opacity)) !important;
+}
+
+.bg-ocean-80 {
+    background-color: rgba(var(--bg-ocean-80-rgb), var(--bs-bg-opacity)) !important;
+}
+
+.bg-ocean-100 {
+    background-color: rgba(var(--bg-ocean-100-rgb), var(--bs-bg-opacity)) !important;
+}
+
+.bg-ocean-120 {
+    background-color: rgba(var(--bg-ocean-120-rgb), var(--bs-bg-opacity)) !important;
+}
+
+.bg-ocean-140 {
+    background-color: rgba(var(--bg-ocean-140-rgb), var(--bs-bg-opacity)) !important;
+}
+
+.bg-lawn {
+    background-color: rgba(var(--bg-lawn-rgb), var(--bs-bg-opacity)) !important;
+}
+
+.bg-lawn-light {
+    background-color: rgba(var(--bg-lawn-light-rgb), var(--bs-bg-opacity)) !important;
+}
+
+.bg-berry {
+    background-color: rgba(var(--bg-berry-rgb), var(--bs-bg-opacity)) !important;
+}
+
+.bg-berry-light {
+    background-color: rgba(var(--bg-berry-light-rgb), var(--bs-bg-opacity)) !important;
+}
+
+.bg-engineering {
+    background-color: rgba(var(--bg-engineering-rgb), var(--bs-bg-opacity)) !important;
+}
+
+.bg-engineering-light {
+    background-color: rgba(var(--bg-engineering-light-rgb), var(--bs-bg-opacity)) !important;
+}
+
+.bg-sun {
+    background-color: rgba(var(--bg-sun-rgb), var(--bs-bg-opacity)) !important;
+}
+
+.bg-sun-light {
+    background-color: rgba(var(--bg-sun-light-rgb), var(--bs-bg-opacity)) !important;
+}
+
+.bg-sand {
+    background-color: rgba(var(--bg-sand-rgb), var(--bs-bg-opacity)) !important;
+}
+
+.bg-sand-light {
+    background-color: rgba(var(--bg-sand-light-rgb), var(--bs-bg-opacity)) !important;
+}

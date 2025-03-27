@@ -1,0 +1,120 @@
+﻿@model ItemListApp.Models.Products
+
+@{
+    ViewBag.Title = "Product Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<main class="main-content position-relative border-radius-lg max-height-vh-100 h-100">
+    <!-- NAVBAR START -->
+    <nav class="navbar navbar-main navbar-expand-lg px-0 shadow-none border-radius-xl " id="navbarBlur" data-scroll="false">
+        <div class="container-fluid py-1 px-3">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+                    <li class="breadcrumb-item text-sm text-white"><a class="opacity-5 text-white">Pages</a></li>
+                    <li class="breadcrumb-item text-sm text-white"><a class="text-white">Products</a></li>
+                    <li class="breadcrumb-item text-sm text-white"><a class="text-white">View</a></li>
+                    <li class="breadcrumb-item text-sm text-white active" aria-current="page">@Model.Product_accessories_name</li>
+                </ol>
+                <h6 class="font-weight-bolder text-white mb-0">Products</h6>
+            </nav>
+            <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0" id="navbar">
+                <div class="ms-auto d-flex align-items-center">
+                    <span class="d-inline text-white">Hello, @User.Identity.Name</span>
+                </div>
+                <div class="nav-item d-xl-none ps-3 d-flex align-items-center">
+                    <a href="javascript:;" class="nav-link text-white p-0" id="iconNavbarSidenav">
+                        <div class="sidenav-toggler-inner">
+                            <i class="sidenav-toggler-line bg-white"></i>
+                            <i class="sidenav-toggler-line bg-white"></i>
+                            <i class="sidenav-toggler-line bg-white"></i>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!-- NAVBAR END -->
+    <!-- CONTENT START -->
+    <div class="container-fluid py-4">
+        <!-- PRODUCT DETAILS START -->
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <div class="card p-4 mb-4 border-radius-lg">
+                    <div class="card-header p-0 d-flex justify-content-between align-items-start">
+                        <h5 class="justify-content-start">Product Details</h5>
+                        <a href="@Url.Action("Index")" class="btn btn-secondary">Close</a>
+                    </div>
+                    <div class="mb-4">
+                        @if (!string.IsNullOrEmpty(Model.Product_photo_filepath))
+                        {
+                            <img src="@Url.Content(Model.Product_photo_filepath)" alt="Product Photo" class="img-fluid" style="max-width: 350px; height: auto;" />
+                        }
+                        else
+                        {
+                            <div class="bg-secondary text-white p-5 text-center" style="max-width: 350px; height: auto;">Picture</div>
+                        }
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p class="mb-1"><strong>Category:</strong> @Model.Category.Category_name</p>
+                            <p class="mb-1"><strong>Accessories Name:</strong> @Model.Product_accessories_name</p>
+                            <p class="mb-1"><strong>Vendor:</strong> @Model.Product_vendor_name</p>
+                            <p class="mb-1"><strong>ECCN#:</strong> @Model.Product_eccn</p>
+                            <p class="mb-1"><strong>HS Code#:</strong> @Model.Product_hs_code</p>
+                            <p><strong>Qty:</strong> @Model.Product_qty</p>
+                        </div>
+                    </div>
+
+                    <p><strong>Last Update:</strong> @(Model.Product_last_modification?.ToString("dd/MM/yyyy") ?? "")</p>
+
+                    <div class="row text-center mt-4">
+                        <div class="col-md-4">
+                            <p><strong>Quotation</strong></p>
+                            @if (!string.IsNullOrEmpty(Model.Product_quotation_filepath))
+                            {
+                                <a href="@Url.Content(Model.Product_quotation_filepath)" target="_blank">( attachment )</a>
+                            }
+                        </div>
+                        <div class="col-md-4">
+                            <p><strong>Drawing</strong></p>
+                            @if (!string.IsNullOrEmpty(Model.Product_drawing_filepath))
+                            {
+                                <a href="@Url.Content(Model.Product_drawing_filepath)" target="_blank">( attachment )</a>
+                            }
+                        </div>
+                        <div class="col-md-4">
+                            <p><strong>Function/Detail</strong></p>
+                            @if (!string.IsNullOrEmpty(Model.Product_function))
+                            {
+                                <p class="mb-1"> @Model.Product_function</p>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <a href="@Url.Action("Index", "Products")" class="btn btn-lg btn-secondary">Back to List</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- PRODUCT DETAILS END -->
+        <!-- FOOTER START -->
+        <footer class="footer pt-3">
+            <div class="container-fluid">
+                <div class="row align-items-center justify-content-lg-between">
+                    <div class="col-lg-6 mb-lg-0 mb-4">
+                        <div class="copyright text-center text-md text-muted text-lg-start">
+                            ©
+                            <script>document.write(new Date().getFullYear())</script> -
+                            <a class="font-weight-bold">OE Applications</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- FOOTER END -->
+    </div>
+    <!-- CONTENT END -->
+</main>

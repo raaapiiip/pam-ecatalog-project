@@ -1,0 +1,154 @@
+﻿@model IEnumerable<ItemListApp.Models.Products>
+
+@{
+    ViewBag.Title = "Product By Category";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<main class="main-content position-relative border-radius-lg max-height-vh-100 h-100">
+    <!-- NAVBAR START -->
+    <nav class="navbar navbar-main navbar-expand-lg px-0 shadow-none border-radius-xl " id="navbarBlur" data-scroll="false">
+        <div class="container-fluid py-1 px-3">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+                    <li class="breadcrumb-item text-sm"><a class="opacity-5 text-white">Pages</a></li>
+                    <li class="breadcrumb-item text-sm text-white"><a class="text-white">Home</a></li>
+                    <li class="breadcrumb-item text-sm text-white active" aria-current="page">Product By Category - @(Model.FirstOrDefault()?.Category?.Category_name)</li>
+                </ol>
+                <h6 class="font-weight-bolder text-white mb-0">Home</h6>
+            </nav>
+            <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0" id="navbar">
+                <div class="ms-auto d-flex align-items-center">
+                    <span class="d-inline text-white">Hello, @User.Identity.Name</span>
+                </div>
+                <div class="nav-item d-xl-none ps-3 d-flex align-items-center">
+                    <a href="javascript:;" class="nav-link text-white p-0" id="iconNavbarSidenav">
+                        <div class="sidenav-toggler-inner">
+                            <i class="sidenav-toggler-line bg-white"></i>
+                            <i class="sidenav-toggler-line bg-white"></i>
+                            <i class="sidenav-toggler-line bg-white"></i>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!-- NAVBAR END -->
+    <!-- CONTENT START -->
+    <div class="container-fluid py-4">
+        <!-- NAVIGATION START -->
+        <div class="row">
+            <div class="col-lg-12 mb-lg-0 mb-4">
+                <div class="card shadow-lg p-2 border-radius-lg">
+                    <div class="card-body py-2 px-4">
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                                <a href="@Url.Action("Subcategories", "Home", new { categoryId = Model.First().Category.Category_Hierarchy_id })" class="text-primary font-weight-bold text-sm">
+                                    <i class="fa-solid fa-arrow-left fa-sm"></i>
+                                    <span class="nav-link-text text-lg ms-1">Back</span>
+                                </a>
+                            </div>
+                            <div class="col-auto">
+                                <h3 class="mb-0">
+                                    Product Table of @(Model.FirstOrDefault()?.Category?.Category_name)
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- NAVIGATION END -->
+        <!-- TABLE START -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card mb-4 border-radius-lg">
+                    <div class="card-header pb-0">
+                        <h6>Product Table</h6>
+                    </div>
+                    <div class="card-body px-0 pt-0 pb-2">
+                        <table id="myTable" class="table table-bordered display cell-border compact">
+                            <thead>
+                                <tr>
+                                    <th class="text-uppercase text-md">Photo</th>
+                                    <th class="text-uppercase text-md">Category</th>
+                                    <th class="text-uppercase text-md">Code Number</th>
+                                    <th class="text-uppercase text-md">Accessories Name</th>
+                                    <th class="text-uppercase text-md">Quantity</th>
+                                    <th class="text-uppercase text-md">Owner</th>
+                                    <th class="text-uppercase text-md">Department</th>
+                                    <th class="text-uppercase text-md">Drawing</th>
+                                    <th class="text-uppercase text-md">ECCN</th>
+                                    <th class="text-uppercase text-md">HS Code</th>
+                                    <th class="text-uppercase text-md">Vendor Name</th>
+                                    <th class="text-uppercase text-md">Quotation</th>
+                                    <th class="text-uppercase text-md">Last Modification</th>
+                                    <th class="text-uppercase text-md">Function</th>
+                                    <th class="text-uppercase text-md">Remark</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td class="text-sm-center">
+                                            @if (!string.IsNullOrEmpty(item.Product_photo_filepath))
+                                            {
+                                                <img src="@Url.Content(item.Product_photo_filepath)" alt="Product Photo" width="100" height="100" />
+                                            }
+                                        </td>
+                                        <td class="text-sm-center">@Html.DisplayFor(modelItem => item.Category.Category_name)</td>
+                                        <td class="text-sm">@Html.DisplayFor(modelItem => item.Product_code_number)</td>
+                                        <td class="text-sm">
+                                            <a class="btn btn-link p-0" href="@Url.Action("View", "Home", new { id = item.Product_id })">
+                                                @Html.DisplayFor(modelItem => item.Product_accessories_name)
+                                            </a>
+                                        </td>
+                                        <td class="text-sm-center">@Html.DisplayFor(modelItem => item.Product_qty)</td>
+                                        <td class="text-sm">@Html.DisplayFor(modelItem => item.Product_owner)</td>
+                                        <td class="text-sm">@Html.DisplayFor(modelItem => item.Product_dept)</td>
+                                        <td class="text-sm">
+                                            @if (!string.IsNullOrEmpty(item.Product_drawing_filepath))
+                                            {
+                                                <a href="@Url.Content(item.Product_drawing_filepath)" class="text-sm" target="_blank">View Drawing</a>
+                                            }
+                                        </td>
+                                        <td class="text-sm">@Html.DisplayFor(modelItem => item.Product_eccn)</td>
+                                        <td class="text-sm">@Html.DisplayFor(modelItem => item.Product_hs_code)</td>
+                                        <td class="text-sm">@Html.DisplayFor(modelItem => item.Product_vendor_name)</td>
+                                        <td>
+                                            @if (!string.IsNullOrEmpty(item.Product_quotation_filepath))
+                                            {
+                                                <a href="@Url.Content(item.Product_quotation_filepath)" class="text-sm" target="_blank">View Quotation</a>
+                                            }
+                                        </td>
+                                        <td class="text-sm">@Html.DisplayFor(modelItem => item.Product_last_modification)</td>
+                                        <td class="text-sm">@Html.DisplayFor(modelItem => item.Product_function)</td>
+                                        <td class="text-sm">@Html.DisplayFor(modelItem => item.Product_remark)</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- TABLE END -->
+        <!-- FOOTER START -->
+        <footer class="footer pt-3">
+            <div class="container-fluid">
+                <div class="row align-items-center justify-content-lg-between">
+                    <div class="col-lg-6 mb-lg-0 mb-4">
+                        <div class="copyright text-center text-md text-muted text-lg-start">
+                            ©
+                            <script>document.write(new Date().getFullYear())</script> -
+                            <a class="font-weight-bold">OE Applications</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- FOOTER END -->
+    </div>
+    <!-- CONTENT END -->
+</main>

@@ -1,0 +1,189 @@
+﻿@model ItemListApp.Models.CategoryHierarchyViewModel
+
+@{
+    ViewBag.Title = "Subcategories";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<main class="main-content position-relative border-radius-lg max-height-vh-100 h-100">
+    <!-- NAVBAR START -->
+    <nav class="navbar navbar-main navbar-expand-lg px-0 shadow-none" id="navbarBlur" data-scroll="false">
+        <div class="container-fluid py-1 px-3">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+                    <li class="breadcrumb-item text-sm text-white"><a class="opacity-5 text-white">Pages</a></li>
+                    <li class="breadcrumb-item text-sm text-white"><a class="text-white">Home</a></li>
+                    <li class="breadcrumb-item text-sm text-white active" aria-current="page">Subcategories - @(Model?.Name ?? "Subcategories")</li>
+                </ol>
+                <h6 class="font-weight-bolder text-white mb-0">Home</h6>
+            </nav>
+            <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0" id="navbar">
+                <div class="ms-auto d-flex align-items-center">
+                    <span class="d-inline text-white">Hello, @User.Identity.Name</span>
+                </div>
+                <div class="nav-item d-xl-none ps-3 d-flex align-items-center">
+                    <a href="javascript:;" class="nav-link text-white p-0" id="iconNavbarSidenav">
+                        <div class="sidenav-toggler-inner">
+                            <i class="sidenav-toggler-line bg-white"></i>
+                            <i class="sidenav-toggler-line bg-white"></i>
+                            <i class="sidenav-toggler-line bg-white"></i>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!-- NAVBAR END -->
+    <!-- CONTENT START -->
+    <div class="container-fluid py-4">
+        <!-- NAVIGATION START -->
+        <div class="row">
+            <div class="col-lg-12 mb-lg-0 mb-4">
+                <div class="card shadow-lg p-2 border-radius-lg">
+                    <div class="card-body py-2 px-4">
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                                @if (Model.ParentCategory != null)
+                                {
+                                    <a href="@Url.Action("Subcategories", "Home", new { categoryId = Model.ParentCategory.Id })" class="text-primary font-weight-bold text-sm">
+                                        <i class="fa-solid fa-arrow-left fa-sm"></i>
+                                        <span class="nav-link-text text-lg ms-1">Back</span>
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a href="@Url.Action("Index", "Home")" class="text-primary font-weight-bold text-sm">
+                                        <i class="fa-solid fa-arrow-left fa-sm"></i>
+                                        <span class="nav-link-text text-lg ms-1">Back</span>
+                                    </a>
+                                }
+
+                            </div>
+
+                            <div class="col-auto">
+                                <h3 class="mb-0">
+                                    Subcategories of @Model.Name
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- NAVIGATION END -->
+        <!-- SUBCATEGORY LIST START -->
+        <div class="row mt-4">
+            @foreach (var subcategory in Model.Subcategories)
+            {
+                <div class="col-xl-4 col-sm-6 mb-4">
+                    <a href="@Url.Action("Subcategories", "Home", new { categoryId = subcategory.Id })" class="text-decoration-none">
+                        <div class="card border-radius-lg">
+                            <div class="card-body p-3">
+                                <div class="row">
+                                    <div class="col-8">
+                                        <div class="numbers">
+                                            <p class="text-sm mb-0 text-uppercase font-weight-bold">Subcategory</p>
+                                            <h4 class="font-weight-bolder">@subcategory.Name</h4>
+                                            <p class="mb-0">
+                                                <span class="text-primary text-sm font-weight-bolder">
+                                                    Explore More
+                                                </span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-4 text-end">
+                                        <div class="icon icon-shape bg-sun-light bg-opacity-100 shadow-primary text-center rounded-circle">
+                                            <i class="fa-solid fa-layer-group text-lg opacity-10" aria-hidden="true"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            }
+        </div>
+        <!-- SUBCATEGORY LIST END-->
+        <!-- PRODUCT CATEGORY LIST START -->
+        <div class="row">
+            @foreach (var category in Model.Categories)
+            {
+                <div class="col-xl-4 col-sm-6 mb-4">
+                    @if (category.ProductCount > 0)
+                    {
+                        <a href="@Url.Action("ProductByCategory", "Home", new { categoryName = category.Name })" class="text-decoration-none">
+                            <div class="card border-radius-lg">
+                                <div class="card-body p-3">
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <div class="numbers">
+                                                <p class="text-sm mb-0 text-uppercase font-weight-bold">Product</p>
+                                                <h4 class="font-weight-bolder">
+                                                    @category.Name
+                                                </h4>
+                                                <p class="mb-0">
+                                                    <span class="text-success text-sm font-weight-bolder">
+                                                        @category.ProductCount Items
+                                                    </span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="col-4 text-end">
+                                            <div class="icon icon-shape bg-berry-light bg-opacity-100 shadow-primary text-center rounded-circle">
+                                                <i class="fa-solid fa-table-list text-lg opacity-10" aria-hidden="true"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    }
+                    else
+                    {
+                        <div class="card border-radius-lg" style="filter: grayscale(100%); cursor: not-allowed;">
+                            <div class="card-body p-3">
+                                <div class="row">
+                                    <div class="col-8">
+                                        <div class="numbers">
+                                            <p class="text-sm mb-0 text-uppercase font-weight-bold">Product</p>
+                                            <h4 class="font-weight-bolder">
+                                                @category.Name
+                                            </h4>
+                                            <p class="mb-0">
+                                                <span class="text-danger text-sm font-weight-bolder">
+                                                    @category.ProductCount Items
+                                                </span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-4 text-end">
+                                        <div class="icon icon-shape bg-berry-light bg-opacity-100 shadow-primary text-center rounded-circle">
+                                            <i class="fa-solid fa-table-list text-lg opacity-10" aria-hidden="true"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+        <!-- PRODUCT CATEGORY LIST END -->
+        <!-- FOOTER START -->
+        <footer class="footer pt-10">
+            <div class="container-fluid">
+                <div class="row align-items-center justify-content-lg-between">
+                    <div class="col-lg-6 mb-lg-0 mb-4">
+                        <div class="copyright text-center text-md text-muted text-lg-start">
+                            ©
+                            <script>document.write(new Date().getFullYear())</script> -
+                            <a class="font-weight-bold">OE Applications</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- FOOTER END -->
+    </div>
+    <!-- CONTENT END -->
+</main>
