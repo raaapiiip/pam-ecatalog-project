@@ -3,15 +3,24 @@
 
 @RenderPage("_HeadMenu.cshtml")
 
+@{
+    var isAdmin = Session["IsAdmin"] != null && (bool)Session["IsAdmin"];
+    var roleLabel = isAdmin ? "Admin" : "User";
+    var roleClass = isAdmin ? "bg-ocean-80" : "bg-engineering-light";
+}
+
 <body class="g-sidenav-show" style="background-color: #F7F7F7">
-    <div class="position-absolute w-100 min-height-150" style="background-color: #0A8276"></div>
-    <aside class="sidenav bg-white navbar navbar-vertical navbar-expand-xs border-0 border-radius-lg my-3 fixed-start ms-4 " id="sidenav-main">
+    <div class="position-absolute w-100 min-height-100" style="background-color: #0A8276"></div>
+    <aside class="sidenav bg-white navbar navbar-vertical navbar-expand-xs border-0 fixed-start" id="sidenav-main">
         <div class="sidenav-header">
             <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
-            <a class="navbar-brand px-3 m-0 d-flex flex-column gap-2 align-items-center" href="~/Home/Index">
+            <a class="navbar-brand pt-3 pb-0 m-0 d-flex flex-column gap-2 align-items-center" href="~/Home/Index">
                 <img src="~/assets/img/infineon-logo.svg" class="navbar-brand-img" alt="main_logo">
-                <span class="text-lg font-weight-bold">PAM E-Catalog</span>
+                <span class="text-lg font-weight-bold bg-">PAM E-Catalog</span>
             </a>
+        </div>
+        <div class="d-flex flex-column gap-2 align-items-center" href="~/Home/Index">
+            <span class="badge @roleClass bg-opacity-100 my-3">@roleLabel</span>
         </div>
         <hr class="horizontal dark mt-0">
         @RenderPage("_LeftMenu.cshtml")

@@ -191,3 +191,15 @@ body {
 .bg-sand-light {
     background-color: rgba(var(--bg-sand-light-rgb), var(--bs-bg-opacity)) !important;
 }
+
+@media (min-width: 1200px) {
+    .main-navbar {
+        margin-left: 17.125rem;
+    }
+}
+
+@media (max-width: 1199.98px) {
+    .g-sidenav-show .sidenav.fixed-start + .main-navbar {
+        margin-left: 0 !important;
+    }
+}

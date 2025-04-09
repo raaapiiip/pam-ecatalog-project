@@ -18,7 +18,7 @@
                 </ol>
                 <h6 class="font-weight-bolder text-white mb-0">Products</h6>
             </nav>
-            <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0" id="navbar">
+            <div class="collapse navbar-collapse me-md-0" id="navbar">
                 <div class="ms-auto d-flex align-items-center">
                     <span class="d-inline text-white">Hello, @User.Identity.Name</span>
                 </div>
@@ -36,7 +36,7 @@
     </nav>
     <!-- NAVBAR END -->
     <!-- CONTENT START -->
-    <div class="container-fluid py-4">
+    <div class="container-fluid py-5">
         <!-- DELETE FORM START -->
         <div class="row">
             <div class="col-12">
@@ -81,20 +81,13 @@
                             @using (Html.BeginForm("Delete", "Products", new { id = Model.Product_id }, FormMethod.Post))
                             {
                                 @Html.AntiForgeryToken()
-                                <button type="submit" class="btn btn-danger btn-lg">Delete</button>
-                                <a href="@Url.Action("Index")" class="btn btn-secondary btn-lg">Cancel</a>
-                            }
-                        </div>
-
-                        <div class="col justify-content-start mt-3">
-                            @using (Html.BeginForm("Delete", "Products", new { id = Model.Product_id }, FormMethod.Post))
-                            {
-                                @Html.AntiForgeryToken()
-                                <div class="row">
-                                    <input type="submit" value="Delete" class="btn btn-danger btn-lg mt-3" />
-                                </div>
-                                <div class="row">
-                                    <a href="@Url.Action("Index")" class="btn btn-secondary btn-lg mt-3">Cancel</a>
+                                <div class="row justify-content-start">
+                                    <div class="col-auto">
+                                        <input type="submit" value="Delete" class="btn btn-danger btn-lg mt-3" />
+                                    </div>
+                                    <div class="col-auto">
+                                        <a href="@Url.Action("Index")" class="btn btn-secondary btn-lg mt-3">Cancel</a>
+                                    </div>
                                 </div>
                             }
                         </div>

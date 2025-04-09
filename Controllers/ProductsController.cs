@@ -7,19 +7,47 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using ItemListApp.Attributes;
 using ItemListApp.Models;
 
 namespace ItemListApp.Controllers
 {
+    [CustomAdminAuthorize]
     public class ProductsController : Controller
     {
-        private PAMCatalogContext db = new PAMCatalogContext();
+        private readonly PAMCatalogContext _context;
 
+        public ProductsController(PAMCatalogContext context)
+        {
+            _context = context;
+        }
+        
         // GET: Products
         public ActionResult Index()
         {
-            var products = db.Products.Include(p => p.Category);
+            var products = _context.Products.Include(p => p.Category);
             return View(products.ToList());
+        }
+
+        // GET: Products/View/Id
+        public ActionResult View(int? id)
+        {
+            if (!id.HasValue)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            var product = _context.Products
+                            .Include(p => p.Category)
+                            .Include(p => p.Vendor)
+                            .FirstOrDefault(p => p.Product_id == id);
+
+            if (product == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(product);
         }
 
         // GET: Products/Details/Id
@@ -30,7 +58,9 @@ namespace ItemListApp.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            Products product = db.Products.Include(p => p.Category)
+            Products product = _context.Products
+                .Include(p => p.Category)
+                .Include(p => p.Vendor)
                 .FirstOrDefault(p => p.Product_id == id);
 
             if (product == null)
@@ -41,31 +71,12 @@ namespace ItemListApp.Controllers
             return View(product);
         }
 
-        public ActionResult View(int? id)
-        {
-            if (!id.HasValue)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
-            var product = db.Products
-                            .Include(p => p.Category) // Jika ada relasi ke Category
-                            .FirstOrDefault(p => p.Product_id == id);
-
-            if (product == null)
-            {
-                return HttpNotFound(); // Mengembalikan error 404 jika data tidak ditemukan
-            }
-
-            return View(product); // Pastikan ada View.cshtml yang sesuai
-        }
-
-
         // GET: Products/Create
         public ActionResult Create()
         {
             var product = new Products();
             PrepareCategories();
+            PrepareVendors();
             return View(product);
         }
 
@@ -77,13 +88,13 @@ namespace ItemListApp.Controllers
             if (ModelState.IsValid)
             {
                 // Check if the accessory name or product code already exists (must be unique)
-                bool isAccessoriesNameExists = db.Products.Any(p => p.Product_accessories_name == product.Product_accessories_name);
+                bool isAccessoriesNameExists = _context.Products.Any(p => p.Product_accessories_name == product.Product_accessories_name);
                 if (isAccessoriesNameExists)
                 {
                     ModelState.AddModelError("Product_accessories_name", "Accessories name must be unique.");
                 }
 
-                bool isProductCodeExists = db.Products.Any(p => p.Product_code_number == product.Product_code_number);
+                bool isProductCodeExists = _context.Products.Any(p => p.Product_code_number == product.Product_code_number);
                 if (isProductCodeExists)
                 {
                     ModelState.AddModelError("Product_code_number", "Product code number must be unique.");
@@ -92,11 +103,12 @@ namespace ItemListApp.Controllers
                 if (!ModelState.IsValid)
                 {
                     PrepareCategories(product.Product_Category_id);
+                    PrepareVendors(product.Product_Vendor_id);
                     return View(product);
                 }
 
                 // Retrieve Category Name Based on Product_Category_id
-                var category = db.Categories.FirstOrDefault(c => c.Category_id == product.Product_Category_id);
+                var category = _context.Categories.FirstOrDefault(c => c.Category_id == product.Product_Category_id);
                 if (category == null)
                 {
                     ModelState.AddModelError("Product_Category_id", "Invalid category.");
@@ -170,12 +182,13 @@ namespace ItemListApp.Controllers
                 }
 
                 // Save New Product to Database
-                db.Products.Add(product);
-                db.SaveChanges();
+                _context.Products.Add(product);
+                _context.SaveChanges();
                 return RedirectToAction("Index");
             }
 
             PrepareCategories(product.Product_Category_id);
+            PrepareVendors(product.Product_Vendor_id);
             return View(product);
         }
 
@@ -187,13 +200,14 @@ namespace ItemListApp.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            var product = db.Products.Find(id);
+            var product = _context.Products.Find(id);
             if (product == null)
             {
                 return HttpNotFound();
             }
 
             PrepareCategories(product.Product_Category_id);
+            PrepareVendors(product.Product_Vendor_id);
             return View(product);
         }
 
@@ -206,13 +220,13 @@ namespace ItemListApp.Controllers
             if (ModelState.IsValid)
             {
                 // Check if the accessory name or product code already exists (must be unique)
-                bool isAccessoriesNameExists = db.Products.Any(p => p.Product_id != product.Product_id && p.Product_accessories_name == product.Product_accessories_name);
+                bool isAccessoriesNameExists = _context.Products.Any(p => p.Product_id != product.Product_id && p.Product_accessories_name == product.Product_accessories_name);
                 if (isAccessoriesNameExists)
                 {
                     ModelState.AddModelError("Product_accessories_name", "Accessories name must be unique.");
                 }
 
-                bool isProductCodeExists = db.Products.Any(p => p.Product_id != product.Product_id && p.Product_code_number == product.Product_code_number);
+                bool isProductCodeExists = _context.Products.Any(p => p.Product_id != product.Product_id && p.Product_code_number == product.Product_code_number);
                 if (isProductCodeExists)
                 {
                     ModelState.AddModelError("Product_code_number", "Product code number must be unique.");
@@ -221,11 +235,12 @@ namespace ItemListApp.Controllers
                 if (!ModelState.IsValid)
                 {
                     PrepareCategories(product.Product_Category_id);
+                    PrepareVendors(product.Product_Vendor_id);
                     return View(product);
                 }
 
                 // Retrieve Category Name Based on Product_Category_id
-                var category = db.Categories.FirstOrDefault(c => c.Category_id == product.Product_Category_id);
+                var category = _context.Categories.FirstOrDefault(c => c.Category_id == product.Product_Category_id);
                 if (category == null)
                 {
                     ModelState.AddModelError("Product_Category_id", "Invalid category.");
@@ -332,12 +347,13 @@ namespace ItemListApp.Controllers
                 }
 
                 // Save New Product to Database
-                db.Entry(product).State = EntityState.Modified;
-                db.SaveChanges();
+                _context.Entry(product).State = EntityState.Modified;
+                _context.SaveChanges();
                 return RedirectToAction("Index");
             }
 
             PrepareCategories(product.Product_Category_id);
+            PrepareVendors(product.Product_Vendor_id);
             return View(product);
         }
 
@@ -349,7 +365,7 @@ namespace ItemListApp.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            Products product = db.Products.Include(p => p.Category)
+            Products product = _context.Products.Include(p => p.Category)
                                           .FirstOrDefault(p => p.Product_id == id);
 
             if (product == null)
@@ -365,11 +381,11 @@ namespace ItemListApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Products product = db.Products.Find(id);
+            Products product = _context.Products.Find(id);
             if (product != null)
             {
-                db.Products.Remove(product);
-                db.SaveChanges();
+                _context.Products.Remove(product);
+                _context.SaveChanges();
             }
 
             return RedirectToAction("Index");
@@ -382,7 +398,7 @@ namespace ItemListApp.Controllers
 
             if (field == "Product_accessories_name")
             {
-                exists = db.Products.Any(p => p.Product_accessories_name == value && p.Product_id != id);
+                exists = _context.Products.Any(p => p.Product_accessories_name == value && p.Product_id != id);
                 if (exists)
                 {
                     errorMessage = $"'{value}' already exists. Please use a different accessories name.";
@@ -390,7 +406,7 @@ namespace ItemListApp.Controllers
             }
             else if (field == "Product_code_number")
             {
-                exists = db.Products.Any(p => p.Product_code_number == value && p.Product_id != id);
+                exists = _context.Products.Any(p => p.Product_code_number == value && p.Product_id != id);
                 if (exists)
                 {
                     errorMessage = $"'{value}' already exists. Please use a different code number.";
@@ -402,7 +418,7 @@ namespace ItemListApp.Controllers
 
         private void PrepareCategories(int? selectedCategory = null)
         {
-            var categories = db.Categories
+            var categories = _context.Categories
                 .OrderBy(c => c.Category_name)
                 .Select(c => new SelectListItem
                 {
@@ -422,11 +438,33 @@ namespace ItemListApp.Controllers
             ViewData["Product_Category_id"] = categories;
         }
 
+        private void PrepareVendors(int? selectedVendor = null)
+        {
+            var vendors = _context.Vendors
+                .OrderBy(v => v.Vendor_name)
+                .Select(v => new SelectListItem
+                {
+                    Value = v.Vendor_id.ToString(),
+                    Text = v.Vendor_name,
+                    Selected = selectedVendor.HasValue && v.Vendor_id == selectedVendor.Value
+                })
+                .ToList();
+
+            vendors.Insert(0, new SelectListItem
+            {
+                Value = "",
+                Text = "-- Select Vendor --",
+                Selected = !selectedVendor.HasValue
+            });
+
+            ViewData["Product_Vendor_id"] = vendors;
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
-                db.Dispose();
+                _context.Dispose();
             }
             base.Dispose(disposing);
         }

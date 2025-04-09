@@ -17,7 +17,7 @@
                 </ol>
                 <h6 class="font-weight-bolder text-white mb-0">Products</h6>
             </nav>
-            <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0" id="navbar">
+            <div class="collapse navbar-collapse me-md-0" id="navbar">
                 <div class="ms-auto d-flex align-items-center">
                     <span class="d-inline text-white">Hello, @User.Identity.Name</span>
                 </div>
@@ -35,7 +35,7 @@
     </nav>
     <!-- NAVBAR END -->
     <!-- CONTENT START -->
-    <div class="container-fluid py-4">
+    <div class="container-fluid py-5">
         <!-- CREATE FORM START -->
         <div class="row">
             <div class="col-12">
@@ -133,7 +133,12 @@
 
                             <div class="form-group mb-4">
                                 <span class="text-normal"><label>Vendor Name</label></span>
-                                @Html.TextBoxFor(model => model.Product_vendor_name, new { @class = "form-control", style = "width: 70%", placeholder = "Example: PT. Infineon Technologies Batam" })
+                                <select class="form-select" id="categoryDropdown" name="Product_Vendor_id" style="width: 70%" value="@Model.Product_Vendor_id">
+                                    @foreach (var vendor in ViewData["Product_Vendor_id"] as List<SelectListItem>)
+                                    {
+                                        <option value="@vendor.Value" @(vendor.Selected ? "selected" : "")>@vendor.Text</option>
+                                    }
+                                </select>
                             </div>
 
                             <div class="form-group mb-4">

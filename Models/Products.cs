@@ -14,6 +14,7 @@ namespace ItemListApp.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Product_id { get; set; }
         public int? Product_Category_id { get; set; }
+        public int? Product_Vendor_id { get; set; }
         public string Product_code_number { get; set; }
         public string Product_accessories_name { get; set; }
         public int? Product_qty { get; set; }
@@ -31,5 +32,7 @@ namespace ItemListApp.Models
         public string Product_remark { get; set; }
         [ForeignKey("Product_Category_id")]
         public virtual Categories Category { get; set; }
+        [ForeignKey("Product_Vendor_id")]
+        public virtual Vendors Vendor { get; set; }
     }
 }

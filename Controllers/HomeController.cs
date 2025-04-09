@@ -9,12 +9,17 @@ namespace ItemListApp.Controllers
 {
     public class HomeController : Controller
     {
-        private PAMCatalogContext db = new PAMCatalogContext();
+        private readonly PAMCatalogContext _context;
 
-        // GET: Home
+        public HomeController(PAMCatalogContext context)
+        {
+            _context = context;
+        }
+
+        // GET: Home/Index
         public ActionResult Index()
         {
-            var allCategories = db.CategoriesHierarchy
+            var allCategories = _context.CategoriesHierarchy
                 .Include(ch => ch.Categories.Select(c => c.Products))
                 .ToList();
 
@@ -51,6 +56,7 @@ namespace ItemListApp.Controllers
             return View(rootCategories);
         }
 
+        // GET: Home/View/Id
         public ActionResult View(int? id)
         {
             if (!id.HasValue)
@@ -58,8 +64,9 @@ namespace ItemListApp.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            var product = db.Products
+            var product = _context.Products
                             .Include(p => p.Category)
+                            .Include(p => p.Vendor)
                             .FirstOrDefault(p => p.Product_id == id);
 
             if (product == null)
@@ -70,6 +77,7 @@ namespace ItemListApp.Controllers
             return View(product);
         }
 
+        // GET: Home/ProductByCategory
         public ActionResult ProductByCategory(string categoryName)
         {
             if (string.IsNullOrEmpty(categoryName))
@@ -77,7 +85,7 @@ namespace ItemListApp.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            var products = db.Products
+            var products = _context.Products
                 .Where(p => p.Category.Category_name == categoryName)
                 .ToList();
 
@@ -86,6 +94,7 @@ namespace ItemListApp.Controllers
             return View(products);
         }
 
+        // GET: Home/Subcategories
         public ActionResult Subcategories(int? categoryId)
         {
             if (!categoryId.HasValue)
@@ -93,7 +102,7 @@ namespace ItemListApp.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            var selectedCategory = db.CategoriesHierarchy
+            var selectedCategory = _context.CategoriesHierarchy
                 .Where(ch => ch.Category_Hierarchy_id == categoryId)
                 .Select(ch => new CategoryHierarchyViewModel
                 {
@@ -110,7 +119,7 @@ namespace ItemListApp.Controllers
 
             if (selectedCategory.ParentId.HasValue)
             {
-                var parentCategory = db.CategoriesHierarchy
+                var parentCategory = _context.CategoriesHierarchy
                     .Where(ch => ch.Category_Hierarchy_id == selectedCategory.ParentId.Value)
                     .Select(ch => new CategoryHierarchyViewModel
                     {
@@ -122,7 +131,7 @@ namespace ItemListApp.Controllers
                 selectedCategory.ParentCategory = parentCategory;
             }
 
-            selectedCategory.Subcategories = db.CategoriesHierarchy
+            selectedCategory.Subcategories = _context.CategoriesHierarchy
                 .Where(sub => sub.Parent_id == categoryId)
                 .Select(sub => new CategoryHierarchyViewModel
                 {
@@ -132,7 +141,7 @@ namespace ItemListApp.Controllers
                 })
                 .ToList();
 
-            selectedCategory.Categories = db.Categories
+            selectedCategory.Categories = _context.Categories
                 .Where(c => c.Category_Hierarchy_id == categoryId)
                 .Select(c => new CategoryViewModel
                 {
@@ -149,7 +158,7 @@ namespace ItemListApp.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                _context.Dispose();
             }
             base.Dispose(disposing);
         }

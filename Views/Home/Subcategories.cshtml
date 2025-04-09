@@ -17,7 +17,7 @@
                 </ol>
                 <h6 class="font-weight-bolder text-white mb-0">Home</h6>
             </nav>
-            <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0" id="navbar">
+            <div class="collapse navbar-collapse me-md-0" id="navbar">
                 <div class="ms-auto d-flex align-items-center">
                     <span class="d-inline text-white">Hello, @User.Identity.Name</span>
                 </div>
@@ -35,7 +35,7 @@
     </nav>
     <!-- NAVBAR END -->
     <!-- CONTENT START -->
-    <div class="container-fluid py-4">
+    <div class="container-fluid py-5">
         <!-- NAVIGATION START -->
         <div class="row">
             <div class="col-lg-12 mb-lg-0 mb-4">
@@ -57,7 +57,6 @@
                                         <span class="nav-link-text text-lg ms-1">Back</span>
                                     </a>
                                 }
-
                             </div>
 
                             <div class="col-auto">
@@ -104,6 +103,18 @@
             }
         </div>
         <!-- SUBCATEGORY LIST END-->
+
+        @if ((Model.Subcategories == null || !Model.Subcategories.Any()) && (Model.Categories == null || !Model.Categories.Any()))
+        {
+            <div class="row">
+                <div class="col-12 text-center">
+                    <a class="text-2xl border-radius-lg">
+                        <strong>Oops!</strong> No subcategories or product categories available.
+                    </a>
+                </div>
+            </div>
+        }
+
         <!-- PRODUCT CATEGORY LIST START -->
         <div class="row">
             @foreach (var category in Model.Categories)

@@ -17,7 +17,7 @@
                 </ol>
                 <h6 class="font-weight-bolder text-white mb-0">Home</h6>
             </nav>
-            <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0" id="navbar">
+            <div class="collapse navbar-collapse me-md-0" id="navbar">
                 <div class="ms-auto d-flex align-items-center">
                     <span class="d-inline text-white">Hello, @User.Identity.Name</span>
                 </div>
@@ -35,7 +35,7 @@
     </nav>
     <!-- NAVBAR END -->
     <!-- CONTENT START -->
-    <div class="container-fluid py-4">
+    <div class="container-fluid py-5">
         <!-- NAVIGATION START -->
         <div class="row">
             <div class="col-lg-12 mb-lg-0 mb-4">
@@ -110,16 +110,16 @@
                                         <td class="text-sm">
                                             @if (!string.IsNullOrEmpty(item.Product_drawing_filepath))
                                             {
-                                                <a href="@Url.Content(item.Product_drawing_filepath)" class="text-sm" target="_blank">View Drawing</a>
+                                                <a class="btn btn-link mb-2 mx-2 p-0 text-sm" href="@Url.Content(item.Product_drawing_filepath)" class="text-sm" target="_blank">View Drawing</a>
                                             }
                                         </td>
                                         <td class="text-sm">@Html.DisplayFor(modelItem => item.Product_eccn)</td>
                                         <td class="text-sm">@Html.DisplayFor(modelItem => item.Product_hs_code)</td>
-                                        <td class="text-sm">@Html.DisplayFor(modelItem => item.Product_vendor_name)</td>
+                                        <td class="text-sm">@Html.DisplayFor(modelItem => item.Vendor.Vendor_name)</td>
                                         <td>
                                             @if (!string.IsNullOrEmpty(item.Product_quotation_filepath))
                                             {
-                                                <a href="@Url.Content(item.Product_quotation_filepath)" class="text-sm" target="_blank">View Quotation</a>
+                                                <a class="btn btn-link mb-2 mx-2 p-0 text-sm" href="@Url.Content(item.Product_quotation_filepath)" class="text-sm" target="_blank">View Quotation</a>
                                             }
                                         </td>
                                         <td class="text-sm">@Html.DisplayFor(modelItem => item.Product_last_modification)</td>
