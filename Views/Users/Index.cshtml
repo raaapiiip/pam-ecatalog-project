@@ -1,0 +1,133 @@
+﻿@model IEnumerable<ItemListApp.Models.Users>
+
+@{
+    ViewBag.Title = "Users";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<main class="main-content position-relative border-radius-lg max-height-vh-100 h-100">
+    <!-- NAVBAR START -->
+    <nav class="navbar navbar-main navbar-expand-lg px-0 shadow-none border-radius-xl" id="navbarBlur" data-scroll="false">
+        <div class="container-fluid py-1 px-3">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+                    <li class="breadcrumb-item text-sm text-white"><a class="opacity-5 text-white">Pages</a></li>
+                    <li class="breadcrumb-item text-sm text-white"><a class="text-white">Users</a></li>
+                    <li class="breadcrumb-item text-sm text-white active" aria-current="page">Index</li>
+                </ol>
+                <h6 class="font-weight-bolder text-white mb-0">Users</h6>
+            </nav>
+            <div class="collapse navbar-collapse me-md-0" id="navbar">
+                <div class="ms-auto d-flex align-items-center">
+                    <span class="d-inline text-white">Hello, @User.Identity.Name</span>
+                </div>
+                <div class="nav-item d-xl-none ps-3 d-flex align-items-center">
+                    <a href="javascript:;" class="nav-link text-white p-0" id="iconNavbarSidenav">
+                        <div class="sidenav-toggler-inner">
+                            <i class="sidenav-toggler-line bg-white"></i>
+                            <i class="sidenav-toggler-line bg-white"></i>
+                            <i class="sidenav-toggler-line bg-white"></i>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!-- NAVBAR END -->
+    <!-- CONTENT START -->
+    <div class="container-fluid py-5">
+        <!-- TABLE START -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card mb-4 border-radius-lg">
+                    <div class="card-header pb-0 d-flex justify-content-between align-items-start">
+                        <div class="d-flex align-items-center" style="gap: 1rem;">
+                            <h5 class="justify-content-start">User List</h5>
+                            @using (Html.BeginForm("Index", "Users", FormMethod.Get, new { @class = "mb-0" }))
+                            {
+                                <select name="status" onchange="this.form.submit()" class="form-select w-auto">
+                                    <option value="Active" @(ViewBag.CurrentStatus == "Active" ? "selected" : "")>Active</option>
+                                    <option value="Inactive" @(ViewBag.CurrentStatus == "Inactive" ? "selected" : "")>Inactive</option>
+                                    <option value="All" @(ViewBag.CurrentStatus == "All" ? "selected" : "")>All</option>
+                                </select>
+                            }
+                        </div>
+                        <a href="@Url.Action("Create", "Users")" class="btn bg-berry-light bg-opacity-100 text-white">Add New User</a>
+                    </div>
+                    <div class="card-body px-0 pt-0 pb-2">
+                        <table id="myTable" class="table table-bordered display cell-border compact">
+                            <thead>
+                                <tr>
+                                    <th class="text-uppercase text-md-center">Badge ID</th>
+                                    <th class="text-uppercase text-md-center">Windows Account</th>
+                                    <th class="text-uppercase text-md-center">Role</th>
+                                    <th class="text-uppercase text-md-center">Status</th>
+                                    <th class="text-uppercase text-md-center">Edit</th>
+                                    <th class="text-uppercase text-md-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var user in Model)
+                                {
+                                    <tr>
+                                        <td class="text-sm-center">@Html.DisplayFor(modelItem => user.Badge_id)</td>
+                                        <td class="text-sm-center">@Html.DisplayFor(modelItem => user.Windows_account)</td>
+                                        <td class="text-sm-center">
+                                            @if (user.IsAdmin)
+                                            {
+                                                <span class="badge bg-ocean-80 bg-opacity-100">Admin</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-engineering-light bg-opacity-100">User</span>
+                                            }
+                                        </td>
+                                        <td class="text-sm-center">
+                                            @if (user.IsActive)
+                                            {
+                                                <span class="badge bg-success">Active</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-danger">Inactive</span>
+                                            }
+                                        </td>
+                                        <td class="text-sm-center">
+                                            <a href="@Url.Action("Edit", "Users", new { id = user.User_id })" class="btn bg-ocean-80 bg-opacity-100 text-white">Edit</a>
+                                        </td>
+                                        <td class="text-sm-center">
+                                            @using (Html.BeginForm(user.IsActive ? "Deactivate" : "Activate", "Users", new { id = user.User_id }, FormMethod.Post, new { @onsubmit = "return confirm('Are you sure?');" }))
+                                            {
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="btn @(user.IsActive ? "btn-danger" : "btn-success")">
+                                                    @(user.IsActive ? "Deactivate" : "Activate")
+                                                </button>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- TABLE END -->
+        <!-- FOOTER START -->
+        <footer class="footer pt-3">
+            <div class="container-fluid">
+                <div class="row align-items-center justify-content-lg-between">
+                    <div class="col-lg-6 mb-lg-0 mb-4">
+                        <div class="copyright text-center text-md text-muted text-lg-start">
+                            ©
+                            <script>document.write(new Date().getFullYear())</script> -
+                            <a class="font-weight-bold">OE Applications</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- FOOTER END -->
+    </div>
+    <!-- CONTENT END -->
+</main>

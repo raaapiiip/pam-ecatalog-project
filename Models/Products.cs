@@ -13,9 +13,12 @@ namespace ItemListApp.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Product_id { get; set; }
+        [Required(ErrorMessage = "Product Category ID is required.")]
         public int? Product_Category_id { get; set; }
         public int? Product_Vendor_id { get; set; }
+        [Required(ErrorMessage = "Product code number is required.")]
         public string Product_code_number { get; set; }
+        [Required(ErrorMessage = "Product accessories name is required.")]
         public string Product_accessories_name { get; set; }
         public int? Product_qty { get; set; }
         public string Product_owner { get; set; }

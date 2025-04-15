@@ -1,0 +1,81 @@
+﻿@model ItemListApp.Models.Users
+
+@{
+    ViewBag.Title = "Edit User";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<main class="main-content position-relative border-radius-lg max-height-vh-100 h-100">
+    <!-- NAVBAR START -->
+    <nav class="navbar navbar-main navbar-expand-lg px-0 shadow-none border-radius-xl" id="navbarBlur" data-scroll="false">
+        <div class="container-fluid py-1 px-3">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+                    <li class="breadcrumb-item text-sm text-white"><a class="opacity-5 text-white">Pages</a></li>
+                    <li class="breadcrumb-item text-sm text-white"><a class="text-white">Users</a></li>
+                    <li class="breadcrumb-item text-sm text-white active" aria-current="page">Edit</li>
+                </ol>
+                <h6 class="font-weight-bolder text-white mb-0">Users</h6>
+            </nav>
+        </div>
+    </nav>
+    <!-- NAVBAR END -->
+    <!-- CONTENT START -->
+    <div class="container-fluid py-5">
+        <div class="row">
+            <div class="col-md-9 mx-auto">
+                <div class="card mb-4 border-radius-lg">
+                    <div class="card-header pb-0 d-flex justify-content-between align-items-start">
+                        <h5 class="justify-content-start">Edit User</h5>
+                        <a href="@Url.Action("Index")" class="btn btn-secondary">Close</a>
+                    </div>
+                    <div class="card-body px-4 pt-4 pb-4">
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.HiddenFor(model => model.User_id)
+
+                            <div class="form-group mb-4">
+                                <span class="text-normal"><label>Badge ID</label></span>
+                                @Html.TextBoxFor(model => model.Badge_id, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Badge_id, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="form-group mb-4">
+                                <span class="text-normal"><label>Windows Account</label></span>
+                                @Html.TextBoxFor(model => model.Windows_account, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Windows_account, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="row justify-content-start">
+                                <div class="col-auto">
+                                    <input type="submit" value="Save" class="btn btn-success btn-lg mt-3" />
+                                </div>
+                                <div class="col-auto">
+                                    <a href="@Url.Action("Index")" class="btn btn-secondary btn-lg mt-3">Cancel</a>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER START -->
+        <footer class="footer pt-3 mt-5">
+            <div class="container-fluid">
+                <div class="row align-items-center justify-content-lg-between">
+                    <div class="col-lg-6 mb-lg-0 mb-4">
+                        <div class="text-center text-md text-muted text-lg-start">
+                            ©
+                            <script>document.write(new Date().getFullYear())</script> -
+                            <a class="font-weight-bold">OE Applications</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- FOOTER END -->
+    </div>
+    <!-- CONTENT END -->
+</main>

@@ -35,8 +35,8 @@ namespace ItemListApp
                     {
                         using (var db = new PAMCatalogContext())
                         {
-                            var user = db.Users.FirstOrDefault(u => u.Windows_Account == username);
-                            bool isAdmin = user != null && user.Admin;
+                            var user = db.Users.FirstOrDefault(u => u.Windows_account == username);
+                            bool isAdmin = user != null && user.IsAdmin;
                             HttpContext.Current.Session["IsAdmin"] = isAdmin;
                         }
                     }

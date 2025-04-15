@@ -156,7 +156,7 @@
     <Compile Include="Context\PAMCatalogContext.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
-    <Compile Include="Controllers\ProfileController.cs" />
+    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -527,7 +527,7 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Shared\_HeadMenu.cshtml" />
     <Content Include="Views\Shared\_LeftMenu.cshtml" />
-    <Content Include="Views\Profile\Index.cshtml" />
+    <Content Include="Views\Users\Index.cshtml" />
     <Content Include="Views\Products\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -562,6 +562,8 @@
     <Content Include="Views\Products\Delete.cshtml" />
     <Content Include="Views\Products\View.cshtml" />
     <Content Include="Views\Web.config" />
+    <Content Include="Views\Users\Create.cshtml" />
+    <Content Include="Views\Users\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

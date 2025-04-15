@@ -15,8 +15,8 @@ namespace ItemListApp.Attributes
 
             using (var db = new PAMCatalogContext())
             {
-                var user = db.Users.FirstOrDefault(u => u.Windows_Account == username);
-                return user != null && user.Admin;
+                var user = db.Users.FirstOrDefault(u => u.Windows_account == username);
+                return user != null && user.IsAdmin;
             }
         }
 
