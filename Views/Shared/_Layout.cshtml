@@ -45,7 +45,10 @@
     <script src="~/Scripts/index.js"></script>
     <script>
         $(document).ready(function () {
-            $('#myTable').DataTable();
+            $('#myTable').DataTable({
+                lengthMenu: [[5, 10, 20, 40, 80, -1], [5, 10, 20, 40, 80, "All"]],
+                pageLength: 20 // default yang terpilih
+            });
             $('#myTable').wrap('<div class="table-responsive"></div>');
         });
     </script>

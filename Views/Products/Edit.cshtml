@@ -61,7 +61,7 @@
                                         <input type="checkbox" name="RemovePhoto" value="true"> Remove Photo
                                     </div>
                                 }
-                                <input type="file" name="photoFile" id="photoFile" class="form-control" style="width: 70%" accept="image/*" />
+                                <input type="file" name="photoFile" id="photoFile" class="form-control" style="width: 80%" accept="image/*" />
                                 <small class="form-text text-muted">Supported formats: JPG, JPEG, PNG, GIF.</small>
                                 @Html.HiddenFor(model => model.Product_photo_filepath)
                             </div>
@@ -69,7 +69,7 @@
                             <div class="form-group mb-4">
                                 <span class="text-normal"><label>Category</label></span>
                                 <span class="text-danger text-sm">● required</span>
-                                <select class="form-select" id="categoryDropdown" name="Product_Category_id" required="required" style="width: 70%" value="@Model.Product_Category_id">
+                                <select class="form-select" id="categoryDropdown" name="Product_Category_id" required="required" style="width: 80%" value="@Model.Product_Category_id">
                                     @foreach (var category in ViewData["Product_Category_id"] as List<SelectListItem>)
                                     {
                                         <option value="@category.Value" @(category.Selected ? "selected" : "")>@category.Text</option>
@@ -80,20 +80,20 @@
                             <div class="form-group mb-4">
                                 <span class="text-normal"><label>Code Number</label></span>
                                 <span class="text-danger text-sm">● required</span>
-                                @Html.TextBoxFor(model => model.Product_code_number, new { @class = "form-control", required = "required", style = "width: 70%", placeholder = "Example: ID 00123" })
+                                @Html.TextBoxFor(model => model.Product_code_number, new { @class = "form-control", required = "required", style = "width: 80%", placeholder = "Example: ID 00123" })
                                 <span id="code-number-error" class="text-danger"></span>
                             </div>
 
                             <div class="form-group mb-4">
                                 <span class="text-normal"><label>Accessories Name</label></span>
                                 <span class="text-danger text-sm">● required</span>
-                                @Html.TextBoxFor(model => model.Product_accessories_name, new { @class = "form-control", required = "required", style = "width: 70%", placeholder = "Example: Dust Bin" })
+                                @Html.TextBoxFor(model => model.Product_accessories_name, new { @class = "form-control", required = "required", style = "width: 80%", placeholder = "Example: Dust Bin" })
                                 <span id="accessories-name-error" class="text-danger"></span>
                             </div>
 
                             <div class="form-group mb-4">
                                 <span class="text-normal"><label>Quantity</label></span>
-                                @Html.TextBoxFor(model => model.Product_qty, new { @class = "form-control", type = "number", min = "0", style = "width: 70%", placeholder = "Example: 10" })
+                                @Html.TextBoxFor(model => model.Product_qty, new { @class = "form-control", type = "number", min = "0", style = "width: 80%", placeholder = "Example: 10" })
                             </div>
 
                             <div class="form-group mb-4">
@@ -110,7 +110,7 @@
                                         new SelectListItem { Text = "BAT1-BAT3", Value = "BAT1-BAT3" },
                                         new SelectListItem { Text = "BAT2-BAT3", Value = "BAT2-BAT3" },
                                         new SelectListItem { Text = "BAT1-BAT2-BAT3", Value = "BAT1-BAT2-BAT3" }
-                                    }, new { @class = "form-select", required = "required", style = "width: 70%" })
+                                    }, new { @class = "form-select", required = "required", style = "width: 80%" })
                                 </div>
                             </div>
 
@@ -122,7 +122,7 @@
                                     {
                                         new SelectListItem { Text = "-- Select Department --", Value = "", Selected = true },
                                         new SelectListItem { Text = "PAM", Value = "PAM" },
-                                    }, new { @class = "form-select", required = "required", style = "width: 70%" })
+                                    }, new { @class = "form-select", required = "required", style = "width: 80%" })
                                 </div>
                             </div>
 
@@ -135,24 +135,24 @@
                                         <input type="checkbox" name="RemoveDrawing" value="true"> Remove Drawing
                                     </div>
                                 }
-                                <input type="file" name="drawingFile" id="drawingFile" class="form-control" style="width: 70%" accept=".pdf,.doc,.docx,.xls,.xlsx" />
+                                <input type="file" name="drawingFile" id="drawingFile" class="form-control" style="width: 80%" accept=".pdf,.doc,.docx,.xls,.xlsx" />
                                 <small class="form-text text-muted">Supported formats: PDF, DOC, DOCX, XLS, XLSX.</small>
                                 @Html.HiddenFor(model => model.Product_drawing_filepath)
                             </div>
 
                             <div class="form-group mb-4">
                                 <span class="text-normal"><label>ECCN</label></span>
-                                @Html.TextBoxFor(model => model.Product_eccn, new { @class = "form-control", style = "width: 70%", placeholder = "Example: H1234" })
+                                @Html.TextBoxFor(model => model.Product_eccn, new { @class = "form-control", style = "width: 80%", placeholder = "Example: H1234" })
                             </div>
 
                             <div class="form-group mb-4">
                                 <span class="text-normal"><label>HS Code</label></span>
-                                @Html.TextBoxFor(model => model.Product_hs_code, new { @class = "form-control", style = "width: 70%", placeholder = "Example: 39234000" })
+                                @Html.TextBoxFor(model => model.Product_hs_code, new { @class = "form-control", style = "width: 80%", placeholder = "Example: 39234000" })
                             </div>
 
                             <div class="form-group mb-4">
                                 <span class="text-normal"><label>Vendor Name</label></span>
-                                <select class="form-select" id="categoryDropdown" name="Product_Vendor_id" style="width: 70%" value="@Model.Product_Vendor_id">
+                                <select class="form-select" id="categoryDropdown" name="Product_Vendor_id" style="width: 80%" value="@Model.Product_Vendor_id">
                                     @foreach (var vendor in ViewData["Product_Vendor_id"] as List<SelectListItem>)
                                     {
                                         <option value="@vendor.Value" @(vendor.Selected ? "selected" : "")>@vendor.Text</option>
@@ -169,26 +169,26 @@
                                         <input type="checkbox" name="RemoveQuotation" value="true"> Remove Quotation
                                     </div>
                                 }
-                                <input type="file" name="quotationFile" id="quotationFile" class="form-control" style="width: 70%" accept=".pdf,.doc,.docx,.xls,.xlsx" />
+                                <input type="file" name="quotationFile" id="quotationFile" class="form-control" style="width: 80%" accept=".pdf,.doc,.docx,.xls,.xlsx" />
                                 <small class="form-text text-muted">Supported formats: PDF, DOC, DOCX, XLS, XLSX.</small>
                                 @Html.HiddenFor(model => model.Product_quotation_filepath)
                             </div>
 
                             <div class="form-group mb-4">
                                 <span class="text-normal"><label>Last Modification</label></span>
-                                <input type="text" class="form-control" style="width: 70%" value="@DateTime.Now.ToString("dd/MM/yyyy")" readonly />
+                                <input type="text" class="form-control" style="width: 80%" value="@DateTime.Now.ToString("dd/MM/yyyy")" readonly />
                                 <small class="form-text text-muted">Auto-filled with current date.</small>
                                 <input type="hidden" id="Product_last_modification" name="Product_last_modification" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
                             </div>
 
                             <div class="form-group mb-4">
                                 <span class="text-normal"><label>Function</label></span>
-                                @Html.TextAreaFor(model => model.Product_function, new { @class = "form-control", rows = "3", style = "width: 70%", placeholder = "Example: FOL, EOL, TEST-BEX1, MSP-BEX2" })
+                                @Html.TextAreaFor(model => model.Product_function, new { @class = "form-control", rows = "3", style = "width: 80%", placeholder = "Example: FOL, EOL, TEST-BEX1, MSP-BEX2" })
                             </div>
 
                             <div class="form-group mb-4">
                                 <span class="text-normal"><label>Remark</label></span>
-                                @Html.TextAreaFor(model => model.Product_remark, new { @class = "form-control", rows = "3", style = "width: 70%", placeholder = "Example: Small Bin IC reject" })
+                                @Html.TextAreaFor(model => model.Product_remark, new { @class = "form-control", rows = "3", style = "width: 80%", placeholder = "Example: Small Bin IC reject" })
                             </div>
 
                             <div class="row justify-content-start">

@@ -13,15 +13,31 @@
                 <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
                     <li class="breadcrumb-item text-sm text-white"><a class="opacity-5 text-white">Pages</a></li>
                     <li class="breadcrumb-item text-sm text-white"><a class="text-white">Users</a></li>
-                    <li class="breadcrumb-item text-sm text-white active" aria-current="page">Edit</li>
+                    <li class="breadcrumb-item text-sm text-white"><a class="text-white">Edit</a></li>
+                    <li class="breadcrumb-item text-sm text-white active" aria-current="page">@Model.Windows_account</li>
                 </ol>
                 <h6 class="font-weight-bolder text-white mb-0">Users</h6>
             </nav>
+            <div class="collapse navbar-collapse me-md-0" id="navbar">
+                <div class="ms-auto d-flex align-items-center">
+                    <span class="d-inline text-white">Hello, @User.Identity.Name</span>
+                </div>
+                <div class="nav-item d-xl-none ps-3 d-flex align-items-center">
+                    <a href="javascript:;" class="nav-link text-white p-0" id="iconNavbarSidenav">
+                        <div class="sidenav-toggler-inner">
+                            <i class="sidenav-toggler-line bg-white"></i>
+                            <i class="sidenav-toggler-line bg-white"></i>
+                            <i class="sidenav-toggler-line bg-white"></i>
+                        </div>
+                    </a>
+                </div>
+            </div>
         </div>
     </nav>
     <!-- NAVBAR END -->
     <!-- CONTENT START -->
     <div class="container-fluid py-5">
+        <!-- EDIT FORM START -->
         <div class="row">
             <div class="col-md-9 mx-auto">
                 <div class="card mb-4 border-radius-lg">
@@ -30,26 +46,36 @@
                         <a href="@Url.Action("Index")" class="btn btn-secondary">Close</a>
                     </div>
                     <div class="card-body px-4 pt-4 pb-4">
-                        @using (Html.BeginForm())
+                        @using (Html.BeginForm("Edit", "Users", FormMethod.Post, new { enctype = "multipart/form-data", id = "editUserForm" }))
                         {
                             @Html.AntiForgeryToken()
                             @Html.HiddenFor(model => model.User_id)
-
                             <div class="form-group mb-4">
                                 <span class="text-normal"><label>Badge ID</label></span>
-                                @Html.TextBoxFor(model => model.Badge_id, new { @class = "form-control" })
-                                @Html.ValidationMessageFor(model => model.Badge_id, "", new { @class = "text-danger" })
+                                <span class="text-danger text-sm">● required</span>
+                                @Html.TextBoxFor(model => model.Badge_id, new { @class = "form-control px-3", required = "required", style = "width: 80%", type = "number", min = "0", placeholder = "Example: 12345678" })
+                                @Html.ValidationMessageFor(model => model.Badge_id, "", new { @class = "text-danger d-block" })
+                                <span id="badge-id-error" class="text-danger"></span>
                             </div>
 
                             <div class="form-group mb-4">
                                 <span class="text-normal"><label>Windows Account</label></span>
-                                @Html.TextBoxFor(model => model.Windows_account, new { @class = "form-control" })
-                                @Html.ValidationMessageFor(model => model.Windows_account, "", new { @class = "text-danger" })
+                                <span class="text-danger text-sm">● required</span>
+                                <div class="input-group" style="width: 80%">
+                                    <span class="input-group-text bg-gray-300 border-end-0">INFINEON\</span>
+                                    <input type="text" id="windowsAccount" class="form-control border-start-0 px-3" required placeholder="Example: RamadhansyaM" />
+                                </div>
+                                <small class="form-text text-muted ms-1 d-block">
+                                    Note: The domain prefix <strong>INFINEON\</strong> is automatically included.
+                                </small>
+                                <span id="windows-account-error" class="text-danger"></span>
+                                @Html.HiddenFor(model => model.Windows_account)
+                                @Html.ValidationMessageFor(model => model.Windows_account, "", new { @class = "text-danger d-block" })
                             </div>
 
                             <div class="row justify-content-start">
                                 <div class="col-auto">
-                                    <input type="submit" value="Save" class="btn btn-success btn-lg mt-3" />
+                                    <input type="submit" id="submitBtn" value="Save" class="btn btn-success btn-lg mt-3" />
                                 </div>
                                 <div class="col-auto">
                                     <a href="@Url.Action("Index")" class="btn btn-secondary btn-lg mt-3">Cancel</a>
@@ -60,7 +86,7 @@
                 </div>
             </div>
         </div>
-
+        <!-- EDIT FORM END -->
         <!-- FOOTER START -->
         <footer class="footer pt-3 mt-5">
             <div class="container-fluid">
@@ -79,3 +105,100 @@
     </div>
     <!-- CONTENT END -->
 </main>
+
+<script>
+    $(document).ready(function () {
+        let isBadgeIdValid = true;
+        let isWindowsAccountValid = true;
+        let badgeIdTimer = null;
+        let windowsAccountTimer = null;
+        let currentBadgeRequest = null;
+        let currentWindowsRequest = null;
+
+        var fullAccount = $("#Windows_account").val();
+
+        if (fullAccount) {
+            var username = fullAccount.replace("INFINEON\\", "");
+            $("#windowsAccount").val(username);
+        }
+
+        function checkUnique(field, value, errorLabel, flagVar) {
+            if (field === "Badge_id" && currentBadgeRequest) {
+                currentBadgeRequest.abort();
+            } else if (field === "Windows_account" && currentWindowsRequest) {
+                currentWindowsRequest.abort();
+            }
+
+            var userId = @Model.User_id;
+
+            const request = $.ajax({
+                url: '@Url.Action("CheckUnique", "Users")',
+                type: 'GET',
+                data: { field: field, value: value, id: userId },
+                success: function (response) {
+                    if (!response.isValid) {
+                        $(errorLabel).text(response.message);
+                        if (flagVar === "isBadgeIdValid") {
+                            isBadgeIdValid = false;
+                        } else if (flagVar === "isWindowsAccountValid") {
+                            isWindowsAccountValid = false;
+                        }
+                    } else {
+                        $(errorLabel).text("");
+                        if (flagVar === "isBadgeIdValid") {
+                            isBadgeIdValid = true;
+                        } else if (flagVar === "isWindowsAccountValid") {
+                            isWindowsAccountValid = true;
+                        }
+                    }
+                    toggleSubmitButton();
+                }
+            });
+
+            if (field === "Badge_id") {
+                currentBadgeRequest = request;
+            } else if (field === "Windows_account") {
+                currentWindowsRequest = request;
+            }
+        }
+
+        function toggleSubmitButton() {
+            if (isBadgeIdValid && isWindowsAccountValid) {
+                $("#submitBtn").prop("disabled", false);
+            } else {
+                $("#submitBtn").prop("disabled", true);
+            }
+        }
+
+        $("#Badge_id").on("input", function () {
+            clearTimeout(badgeIdTimer);
+            badgeIdTimer = setTimeout(() => {
+                checkUnique("Badge_id", $(this).val(), "#badge-id-error", "isBadgeIdValid");
+            }, 100);
+        });
+
+        $("#windowsAccount").on("input", function () {
+            clearTimeout(windowsAccountTimer);
+            var input = $(this);
+            windowsAccountTimer = setTimeout(() => {
+                var fullAccount = 'INFINEON\\' + input.val().trim();
+                $("#Windows_account").val(fullAccount);
+                checkUnique("Windows_account", fullAccount, "#windows-account-error", "isWindowsAccountValid");
+            }, 100);
+        });
+
+        $("#editUserForm").on("submit", function (e) {
+            if (!isBadgeIdValid || !isWindowsAccountValid) {
+                e.preventDefault();
+            }
+        });
+
+        toggleSubmitButton();
+    });
+
+    document.querySelector('form').addEventListener('submit', function () {
+        var username = document.getElementById('windowsAccount').value.trim();
+        var fullAccount = 'INFINEON\\' + username;
+        document.getElementById('Windows_account').value = fullAccount;
+    });
+</script>

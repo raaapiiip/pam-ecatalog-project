@@ -55,19 +55,32 @@ namespace ItemListApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Badge_id,Windows_account,IsAdmin,IsActive")] Users user)
         {
-            Debug.WriteLine($"Badge_id yang dikirim: {user.Badge_id}");
             if (ModelState.IsValid)
             {
+                // Check if the badge id or windows account already exists (must be unique)
+                bool isBadgeIdExists = _context.Users.Any(u => u.Badge_id == user.Badge_id);
+                if (isBadgeIdExists)
+                {
+                    ModelState.AddModelError("Badge_id", "Badge ID must be unique.");
+                }
+
+                bool isWindowsAccountExists = _context.Users.Any(u => u.Windows_account == user.Windows_account);
+                if (isWindowsAccountExists)
+                {
+                    ModelState.AddModelError("Windows_account", "Windows account must be unique.");
+                }
+
                 user.IsAdmin = true;
                 user.IsActive = true;
                 _context.Users.Add(user);
                 _context.SaveChanges();
                 return RedirectToAction("Index");
             }
+
             return View(user);
         }
 
-        // GET: Users/Edit/5
+        // GET: Users/Edit/Id
         public ActionResult Edit(int? id)
         {
             if (!id.HasValue)
@@ -76,7 +89,6 @@ namespace ItemListApp.Controllers
             }
 
             Users user = _context.Users.Find(id);
-            
             if (user == null)
             {
                 return HttpNotFound();
@@ -85,25 +97,44 @@ namespace ItemListApp.Controllers
             return View(user);
         }
 
-        // POST: Users/Edit/5
+        // POST: Users/Edit/Id
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "User_id,Badge_id,Windows_account")] Users user)
         {
             if (ModelState.IsValid)
             {
+                // Check if the badge id or windows account already exists (must be unique)
+                bool isBadgeIdExists = _context.Users.Any(u => u.Badge_id == user.Badge_id);
+                if (isBadgeIdExists)
+                {
+                    ModelState.AddModelError("Badge_id", "Badge ID must be unique.");
+                }
+
+                bool isWindowsAccountExists = _context.Users.Any(u => u.Windows_account == user.Windows_account);
+                if (isWindowsAccountExists)
+                {
+                    ModelState.AddModelError("Windows_account", "Windows account must be unique.");
+                }
+
                 _context.Entry(user).State = EntityState.Modified;
                 _context.SaveChanges();
                 return RedirectToAction("Index");
             }
+
             return View(user);
         }
 
         // POST: Users/Deactivate/Id
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Deactivate(int id)
+        public ActionResult Deactivate(int? id)
         {
+            if (!id.HasValue)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             Users user = _context.Users.Find(id);
             if (user == null)
             {
@@ -113,14 +144,20 @@ namespace ItemListApp.Controllers
             user.IsAdmin = false;
             user.IsActive = false;
             _context.SaveChanges();
+
             return RedirectToAction("Index");
         }
 
         // POST: Users/Activate/Id
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Activate(int id)
+        public ActionResult Activate(int? id)
         {
+            if (!id.HasValue)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             Users user = _context.Users.Find(id);
             if (user == null)
             {
@@ -130,7 +167,36 @@ namespace ItemListApp.Controllers
             user.IsAdmin = true;
             user.IsActive = true;
             _context.SaveChanges();
+
             return RedirectToAction("Index");
+        }
+
+        public JsonResult CheckUnique(string field, string value, int? id = null)
+        {
+            bool exists = false;
+            string errorMessage = null;
+
+            if (field == "Badge_id")
+            {
+                if (int.TryParse(value, out int badgeIdValue))
+                {
+                    exists = _context.Users.Any(u => u.Badge_id == badgeIdValue && u.User_id != id);
+                    if (exists)
+                    {
+                        errorMessage = $"'{badgeIdValue}' already exists. Please use a different badge ID.";
+                    }
+                }
+            }
+            else if (field == "Windows_account")
+            {
+                exists = _context.Users.Any(u => u.Windows_account == value && u.User_id != id);
+                if (exists)
+                {
+                    errorMessage = $"'{value}' already exists. Please use a different windows account.";
+                }
+            }
+
+            return Json(new { isValid = !exists, message = errorMessage }, JsonRequestBehavior.AllowGet);
         }
 
         protected override void Dispose(bool disposing)

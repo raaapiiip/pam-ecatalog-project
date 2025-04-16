@@ -15,7 +15,7 @@ namespace ItemListApp.Models
         public int User_id { get; set; }
         [Required(ErrorMessage = "Badge ID is required.")]
         [Range(10000000, 99999999, ErrorMessage = "Badge ID must be an 8-digit number.")]
-        public int Badge_id { get; set; }
+        public int? Badge_id { get; set; }
         [Required(ErrorMessage = "Windows account is required.")]
         public string Windows_account { get; set; }
         public bool IsAdmin { get; set; } = true;
