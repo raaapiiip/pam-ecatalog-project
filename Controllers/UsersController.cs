@@ -22,16 +22,16 @@ namespace ItemListApp.Controllers
         }
 
         // GET: Users
-        public ActionResult Index(string status = "Active")
+        public ActionResult Index(string status = "Admin")
         {
             var users = _context.Users.AsQueryable();
 
             switch (status)
             {
-                case "Active":
+                case "Admin":
                     users = users.Where(u => u.IsActive);
                     break;
-                case "Inactive":
+                case "User":
                     users = users.Where(u => !u.IsActive);
                     break;
                 case "All":
@@ -74,9 +74,11 @@ namespace ItemListApp.Controllers
                 user.IsActive = true;
                 _context.Users.Add(user);
                 _context.SaveChanges();
+                TempData["SuccessMessage"] = "New user successfully added.";
                 return RedirectToAction("Index");
             }
 
+            TempData["ErrorMessage"] = "Failed to add new user.";
             return View(user);
         }
 
@@ -119,9 +121,11 @@ namespace ItemListApp.Controllers
 
                 _context.Entry(user).State = EntityState.Modified;
                 _context.SaveChanges();
+                TempData["SuccessMessage"] = "User successfully updated.";
                 return RedirectToAction("Index");
             }
 
+            TempData["ErrorMessage"] = "Failed to update user.";
             return View(user);
         }
 
@@ -144,6 +148,7 @@ namespace ItemListApp.Controllers
             user.IsAdmin = false;
             user.IsActive = false;
             _context.SaveChanges();
+            TempData["SuccessMessage"] = "User successfully deactivated.";
 
             return RedirectToAction("Index");
         }
@@ -167,6 +172,7 @@ namespace ItemListApp.Controllers
             user.IsAdmin = true;
             user.IsActive = true;
             _context.SaveChanges();
+            TempData["SuccessMessage"] = "User successfully activated.";
 
             return RedirectToAction("Index");
         }

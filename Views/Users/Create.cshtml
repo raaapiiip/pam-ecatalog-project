@@ -178,7 +178,25 @@
 
         $("#createUserForm").on("submit", function (e) {
             if (!isBadgeIdValid || !isWindowsAccountValid) {
-                e.preventDefault();
+                event.preventDefault();
+            }
+            else {
+                event.preventDefault();
+
+                Swal.fire({
+                    title: "Add Data?",
+                    text: "Are you sure you want to add this user?",
+                    icon: "question",
+                    showCancelButton: true,
+                    confirmButtonColor: '#2dce89',
+                    cancelButtonColor: '#8392ab',
+                    confirmButtonText: 'Yes, add it!',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        this.submit();
+                    }
+                });
             }
         });
 

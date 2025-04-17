@@ -70,6 +70,7 @@
                         <table id="myTable" class="table table-bordered display cell-border compact">
                             <thead>
                                 <tr>
+                                    <th class="text-uppercase text-md">Details</th>
                                     <th class="text-uppercase text-md">Photo</th>
                                     <th class="text-uppercase text-md">Category</th>
                                     <th class="text-uppercase text-md">Code Number</th>
@@ -91,26 +92,27 @@
                                 @foreach (var item in Model)
                                 {
                                     <tr>
+                                        <td class="text-sm">
+                                            <a href="@Url.Action("View", "Home", new { id = item.Product_id })" class="btn btn-success">Details</a>
+                                        </td>
                                         <td class="text-sm-center">
                                             @if (!string.IsNullOrEmpty(item.Product_photo_filepath))
                                             {
-                                                <img src="@Url.Content(item.Product_photo_filepath)" alt="Product Photo" width="100" height="100" />
+                                                <a href="@Url.Content(item.Product_photo_filepath)" target="_blank">
+                                                    <img src="@Url.Content(item.Product_photo_filepath)" alt="Product Photo" style="width: 100px; height: 100px; cursor: pointer;" />
+                                                </a>
                                             }
                                         </td>
                                         <td class="text-sm-center">@Html.DisplayFor(modelItem => item.Category.Category_name)</td>
                                         <td class="text-sm">@Html.DisplayFor(modelItem => item.Product_code_number)</td>
-                                        <td class="text-sm">
-                                            <a class="btn btn-link p-0" href="@Url.Action("View", "Home", new { id = item.Product_id })">
-                                                @Html.DisplayFor(modelItem => item.Product_accessories_name)
-                                            </a>
-                                        </td>
+                                        <td class="text-sm">@Html.DisplayFor(modelItem => item.Product_accessories_name)</td>
                                         <td class="text-sm-center">@Html.DisplayFor(modelItem => item.Product_qty)</td>
                                         <td class="text-sm">@Html.DisplayFor(modelItem => item.Product_owner)</td>
                                         <td class="text-sm">@Html.DisplayFor(modelItem => item.Product_dept)</td>
                                         <td class="text-sm">
                                             @if (!string.IsNullOrEmpty(item.Product_drawing_filepath))
                                             {
-                                                <a class="btn btn-link mb-2 mx-2 p-0 text-sm" href="@Url.Content(item.Product_drawing_filepath)" class="text-sm" target="_blank">View Drawing</a>
+                                                <a class="btn btn-link mb-2 mx-2 p-0 text-sm" href="@Url.Content(item.Product_drawing_filepath)" target="_blank">View Drawing</a>
                                             }
                                         </td>
                                         <td class="text-sm">@Html.DisplayFor(modelItem => item.Product_eccn)</td>
@@ -119,7 +121,7 @@
                                         <td>
                                             @if (!string.IsNullOrEmpty(item.Product_quotation_filepath))
                                             {
-                                                <a class="btn btn-link mb-2 mx-2 p-0 text-sm" href="@Url.Content(item.Product_quotation_filepath)" class="text-sm" target="_blank">View Quotation</a>
+                                                <a class="btn btn-link mb-2 mx-2 p-0 text-sm" href="@Url.Content(item.Product_quotation_filepath)" target="_blank">View Quotation</a>
                                             }
                                         </td>
                                         <td class="text-sm">@Html.DisplayFor(modelItem => item.Product_last_modification)</td>

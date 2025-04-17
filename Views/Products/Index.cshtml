@@ -50,6 +50,7 @@
                                 <tr>
                                     <th class="text-uppercase text-md">Edit</th>
                                     <th class="text-uppercase text-md">Delete</th>
+                                    <th class="text-uppercase text-md">Details</th>
                                     <th class="text-uppercase text-md">Photo</th>
                                     <th class="text-uppercase text-md">Category</th>
                                     <th class="text-uppercase text-md">Code Number</th>
@@ -77,19 +78,20 @@
                                         <td class="text-sm">
                                             <a href="@Url.Action("Delete", "Products", new { id = item.Product_id })" class="btn bg-ocean-80 bg-opacity-100 text-white">Delete</a>
                                         </td>
+                                        <td class="text-sm">
+                                            <a href="@Url.Action("View", "Products", new { id = item.Product_id })" class="btn btn-success">Details</a>
+                                        </td>
                                         <td class="text-sm-center">
                                             @if (!string.IsNullOrEmpty(item.Product_photo_filepath))
                                             {
-                                                <img src="@Url.Content(item.Product_photo_filepath)" alt="Product Photo" width="100" height="100" />
+                                                <a href="@Url.Content(item.Product_photo_filepath)" target="_blank">
+                                                    <img src="@Url.Content(item.Product_photo_filepath)" alt="Product Photo" style="width: 100px; height: 100px; cursor: pointer;" />
+                                                </a>
                                             }
                                         </td>
                                         <td class="text-sm-center">@Html.DisplayFor(modelItem => item.Category.Category_name)</td>
                                         <td class="text-sm">@Html.DisplayFor(modelItem => item.Product_code_number)</td>
-                                        <td class="text-sm">
-                                            <a class="btn btn-link p-0" href="@Url.Action("View", "Products", new { id = item.Product_id })">
-                                                @Html.DisplayFor(modelItem => item.Product_accessories_name)
-                                            </a>
-                                        </td>
+                                        <td class="text-sm">@Html.DisplayFor(modelItem => item.Product_accessories_name)</td>
                                         <td class="text-sm-center">@Html.DisplayFor(modelItem => item.Product_qty)</td>
                                         <td class="text-sm">@Html.DisplayFor(modelItem => item.Product_owner)</td>
                                         <td class="text-sm">@Html.DisplayFor(modelItem => item.Product_dept)</td>
@@ -138,3 +140,34 @@
     </div>
     <!-- CONTENT END -->
 </main>
+
+<script>
+    $(document).ready(function () {
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <text>
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    confirmButtonColor: '#2dce89',
+                    timer: 5000,
+                    timerProgressBar: true,
+                    text: '@TempData["SuccessMessage"]'
+                });
+            </text>
+        }
+        else if (TempData["ErrorMessage"] != null)
+        {
+            <text>
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops!',
+                    confirmButtonColor: '#2dce89',
+                    timer: 5000,
+                    timerProgressBar: true,
+                    text: '@TempData["ErrorMessage"]'
+                });
+            </text>
+        }
+    });
+</script>

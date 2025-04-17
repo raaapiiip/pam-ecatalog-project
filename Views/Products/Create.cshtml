@@ -52,7 +52,7 @@
                             <div class="form-group mb-4">
                                 <span class="text-normal"><label>Photo</label></span>
                                 <input type="file" name="photoFile" id="photoFile" class="form-control" style="width: 80%" accept="image/*" />
-                                <small class="form-text text-muted">Supported formats: JPG, JPEG, PNG, GIF.</small>
+                                <small class="form-text text-muted ms-1 d-block">Supported formats: JPG, JPEG, PNG, GIF.</small>
                             </div>
 
                             <div class="form-group mb-4">
@@ -118,7 +118,7 @@
                             <div class="form-group mb-4">
                                 <span class="text-normal"><label>Drawing</label></span>
                                 <input type="file" name="drawingFile" id="drawingFile" class="form-control" style="width: 80%" accept=".pdf,.doc,.docx,.xls,.xlsx" />
-                                <small class="form-text text-muted">Supported formats: PDF, DOC, DOCX, XLS, XLSX.</small>
+                                <small class="form-text text-muted ms-1 d-block">Supported formats: PDF, DOC, DOCX, XLS, XLSX.</small>
                             </div>
 
                             <div class="form-group mb-4">
@@ -144,13 +144,13 @@
                             <div class="form-group mb-4">
                                 <span class="text-normal"><label>Quotation</label></span>
                                 <input type="file" name="quotationFile" id="quotationFile" class="form-control" style="width: 80%" accept=".pdf,.doc,.docx,.xls,.xlsx" />
-                                <small class="form-text text-muted">Supported formats: PDF, DOC, DOCX, XLS, XLSX.</small>
+                                <small class="form-text text-muted ms-1 d-block">Supported formats: PDF, DOC, DOCX, XLS, XLSX.</small>
                             </div>
 
                             <div class="form-group mb-4">
                                 <span class="text-normal"><label>Last Modification</label></span>
                                 <input type="text" class="form-control" style="width: 80%" value="@DateTime.Now.ToString("dd/MM/yyyy")" readonly />
-                                <small class="form-text text-muted">Auto-filled with current date.</small>
+                                <small class="form-text text-muted ms-1 d-block">Note: Auto-filled with <strong>current date</strong>.</small>
                                 <input type="hidden" id="Product_last_modification" name="Product_last_modification" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
                             </div>
 
@@ -271,7 +271,25 @@
 
         $("#createProductForm").on("submit", function (e) {
             if (!isAccessoriesNameValid || !isCodeNumberValid) {
-                e.preventDefault();
+                event.preventDefault();
+            }
+            else {
+                event.preventDefault();
+
+                Swal.fire({
+                    title: "Add Data?",
+                    text: "Are you sure you want to add this product?",
+                    icon: "question",
+                    showCancelButton: true,
+                    confirmButtonColor: '#2dce89',
+                    cancelButtonColor: '#8392ab',
+                    confirmButtonText: 'Yes, add it!',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        this.submit();
+                    }
+                });
             }
         });
 

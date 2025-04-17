@@ -49,7 +49,9 @@
                         <div class="mb-4">
                             @if (!string.IsNullOrEmpty(Model.Product_photo_filepath))
                             {
-                                <img src="@Url.Content(Model.Product_photo_filepath)" alt="Product Photo" class="img-fluid" style="max-width: 350px; height: auto;" />
+                                <a href="@Url.Content(Model.Product_photo_filepath)" target="_blank">
+                                    <img src="@Url.Content(Model.Product_photo_filepath)" alt="Product Photo" class="img-fluid" style="max-width: 350px; height: auto; cursor: pointer;" />
+                                </a>
                             }
                             else
                             {
@@ -99,23 +101,24 @@
                         </div>
                     </div>
                 </div>
-        </div>
-        <!-- PRODUCT DETAILS END -->
-        <!-- FOOTER START -->
-        <footer class="footer pt-3">
-            <div class="container-fluid">
-                <div class="row align-items-center justify-content-lg-between">
-                    <div class="col-lg-6 mb-lg-0 mb-4">
-                        <div class="copyright text-center text-md text-muted text-lg-start">
-                            ©
-                            <script>document.write(new Date().getFullYear())</script> -
-                            <a class="font-weight-bold">OE Applications</a>
+            </div>
+            <!-- PRODUCT DETAILS END -->
+            <!-- FOOTER START -->
+            <footer class="footer pt-3">
+                <div class="container-fluid">
+                    <div class="row align-items-center justify-content-lg-between">
+                        <div class="col-lg-6 mb-lg-0 mb-4">
+                            <div class="copyright text-center text-md text-muted text-lg-start">
+                                ©
+                                <script>document.write(new Date().getFullYear())</script> -
+                                <a class="font-weight-bold">OE Applications</a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </footer>
-        <!-- FOOTER END -->
+            </footer>
+            <!-- FOOTER END -->
+        </div>
+        <!-- CONTENT END -->
     </div>
-    <!-- CONTENT END -->
 </main>

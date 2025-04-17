@@ -48,7 +48,9 @@
                     <div class="mb-4">
                         @if (!string.IsNullOrEmpty(Model.Product_photo_filepath))
                         {
-                            <img src="@Url.Content(Model.Product_photo_filepath)" alt="Product Photo" class="img-fluid" style="max-width: 350px; height: auto;" />
+                            <a href="@Url.Content(Model.Product_photo_filepath)" target="_blank">
+                                <img src="@Url.Content(Model.Product_photo_filepath)" alt="Product Photo" class="img-fluid" style="max-width: 350px; height: auto; cursor: pointer;" />
+                            </a>
                         }
                         else
                         {

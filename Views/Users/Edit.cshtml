@@ -189,7 +189,25 @@
 
         $("#editUserForm").on("submit", function (e) {
             if (!isBadgeIdValid || !isWindowsAccountValid) {
-                e.preventDefault();
+                event.preventDefault();
+            }
+            else {
+                event.preventDefault();
+
+                Swal.fire({
+                    title: "Update Data?",
+                    text: "Are you sure you want to update this user?",
+                    icon: "question",
+                    showCancelButton: true,
+                    confirmButtonColor: '#2dce89',
+                    cancelButtonColor: '#8392ab',
+                    confirmButtonText: 'Yes, update it!',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        this.submit();
+                    }
+                });
             }
         });
 

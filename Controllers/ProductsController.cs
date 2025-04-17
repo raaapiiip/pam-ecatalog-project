@@ -184,11 +184,13 @@ namespace ItemListApp.Controllers
                 // Save New Product to Database
                 _context.Products.Add(product);
                 _context.SaveChanges();
+                TempData["SuccessMessage"] = "New product successfully added.";
                 return RedirectToAction("Index");
             }
 
             PrepareCategories(product.Product_Category_id);
             PrepareVendors(product.Product_Vendor_id);
+            TempData["ErrorMessage"] = "Failed to add new product.";
             return View(product);
         }
 
@@ -349,11 +351,13 @@ namespace ItemListApp.Controllers
                 // Save New Product to Database
                 _context.Entry(product).State = EntityState.Modified;
                 _context.SaveChanges();
+                TempData["SuccessMessage"] = "Product successfully updated.";
                 return RedirectToAction("Index");
             }
 
             PrepareCategories(product.Product_Category_id);
             PrepareVendors(product.Product_Vendor_id);
+            TempData["ErrorMessage"] = "Failed to update product.";
             return View(product);
         }
 
@@ -388,6 +392,7 @@ namespace ItemListApp.Controllers
                 _context.SaveChanges();
             }
 
+            TempData["SuccessMessage"] = "Product successfully deleted.";
             return RedirectToAction("Index");
         }
 
