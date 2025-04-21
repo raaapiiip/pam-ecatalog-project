@@ -1,21 +1,22 @@
 ﻿document.addEventListener('DOMContentLoaded', function () {
-    const currentPath = window.location.pathname;
-
-    let activeController = '';
-    const pathParts = currentPath.split('/').filter(part => part.length > 0);
-    if (pathParts.length > 0) {
-        activeController = pathParts[0].toLowerCase();
-    } else {
-        activeController = 'home';
+    function getNormalizedPath(fullPath) {
+        if (fullPath.endsWith('/')) {
+            fullPath = fullPath.slice(0, -1);
+        }
+        fullPath = fullPath.split('?')[0];
+        return fullPath.toLowerCase();
     }
 
-    console.log("Active controller:", activeController);
+    const currentPath = getNormalizedPath(window.location.pathname);
 
     const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
 
     navLinks.forEach(link => {
         link.classList.remove('active');
     });
+
+    let bestMatchLength = -1;
+    let bestMatchLink = null;
 
     navLinks.forEach(link => {
         let href = link.getAttribute('href');
@@ -24,15 +25,23 @@
             href = href.substring(2);
         }
 
-        const hrefParts = href.split('/').filter(part => part.length > 0);
-        let linkController = '';
-        if (hrefParts.length > 0) {
-            linkController = hrefParts[0].toLowerCase();
+        if (!href.startsWith('/')) {
+            href = '/' + href;
         }
 
-        if (linkController === activeController) {
-            link.classList.add('active');
-            console.log("Activated link with controller:", linkController);
+        const normalizedHref = getNormalizedPath(href);
+
+        if (currentPath.includes(normalizedHref) ||
+            (normalizedHref === '/' && (currentPath === '' || currentPath === '/'))) {
+
+            if (normalizedHref.length > bestMatchLength) {
+                bestMatchLength = normalizedHref.length;
+                bestMatchLink = link;
+            }
         }
     });
+
+    if (bestMatchLink) {
+        bestMatchLink.classList.add('active');
+    }
 });

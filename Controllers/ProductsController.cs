@@ -21,7 +21,7 @@ namespace ItemListApp.Controllers
         {
             _context = context;
         }
-        
+
         // GET: Products
         public ActionResult Index()
         {
@@ -433,11 +433,11 @@ namespace ItemListApp.Controllers
                 })
                 .ToList();
 
-            categories.Insert(0, new SelectListItem 
-            { 
-                Value = "", 
-                Text = "-- Select Category --", 
-                Selected = !selectedCategory.HasValue 
+            categories.Insert(0, new SelectListItem
+            {
+                Value = "",
+                Text = "-- Select Category --",
+                Selected = !selectedCategory.HasValue
             });
 
             ViewData["Product_Category_id"] = categories;

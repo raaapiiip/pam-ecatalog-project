@@ -23,10 +23,8 @@ namespace ItemListApp
 
         protected void Application_AcquireRequestState(object sender, EventArgs e)
         {
-            // Pastikan session tersedia
             if (HttpContext.Current != null && HttpContext.Current.Session != null)
             {
-                // Cek apakah session belum diset
                 if (HttpContext.Current.Session["IsAdmin"] == null)
                 {
                     string username = HttpContext.Current.User?.Identity?.Name;

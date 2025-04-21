@@ -7,15 +7,15 @@
 
 <main class="main-content position-relative border-radius-lg max-height-vh-100 h-100">
     <!-- NAVBAR START -->
-    <nav class="navbar navbar-main navbar-expand-lg px-0 shadow-none border-radius-xl" id="navbarBlur" data-scroll="false">
-        <div class="container-fluid py-1 px-3">
+    <nav class="navbar navbar-main navbar-expand-lg px-0 shadow-none" id="navbarBlur" data-scroll="false">
+        <div class="container-fluid py-2 py-sm-1 px-3">
             <nav aria-label="breadcrumb">
-                <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+                <ol class="breadcrumb d-none d-sm-flex bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6">
                     <li class="breadcrumb-item text-sm text-white"><a class="opacity-5 text-white">Pages</a></li>
                     <li class="breadcrumb-item text-sm text-white"><a class="text-white">Users</a></li>
                     <li class="breadcrumb-item text-sm text-white active" aria-current="page">Create</li>
                 </ol>
-                <h6 class="font-weight-bolder text-white mb-0">Users</h6>
+                <h6 class="font-weight-bolder text-white mb-0 pe-3 pe-sm-0">Users</h6>
             </nav>
             <div class="collapse navbar-collapse me-md-0" id="navbar">
                 <div class="ms-auto d-flex align-items-center">
@@ -37,7 +37,7 @@
     <!-- CONTENT START -->
     <div class="container-fluid py-5">
         <!-- CREATE FORM START -->
-        <div class="row">
+        <div class="row pt-4 pt-sm-0">
             <div class="col-md-9 mx-auto">
                 <div class="card mb-4 border-radius-lg">
                     <div class="card-header pb-0 d-flex justify-content-between align-items-start">
@@ -51,7 +51,7 @@
                             <div class="form-group mb-4">
                                 <span class="text-normal"><label>Badge ID</label></span>
                                 <span class="text-danger text-sm">● required</span>
-                                @Html.TextBoxFor(model => model.Badge_id, new { @class = "form-control px-3", required = "required", style = "width: 80%", type = "number", min = "0", placeholder = "Example: 12345678" })
+                                @Html.TextBoxFor(model => model.Badge_id, new { @class = "form-control w-80 px-3", required = "required", type = "number", min = "0", placeholder = "Example: 12345678" })
                                 @Html.ValidationMessageFor(model => model.Badge_id, "", new { @class = "text-danger d-block" })
                                 <span id="badge-id-error" class="text-danger"></span>
                             </div>
@@ -59,7 +59,7 @@
                             <div class="form-group mb-4">
                                 <span class="text-normal"><label>Windows Account</label></span>
                                 <span class="text-danger text-sm">● required</span>
-                                <div class="input-group" style="width: 80%">
+                                <div class="input-group w-80">
                                     <span class="input-group-text bg-gray-300 border-end-0">INFINEON\</span>
                                     <input type="text" id="windowsAccount" class="form-control border-start-0 px-3" required placeholder="Example: RamadhansyaM" />
                                 </div>

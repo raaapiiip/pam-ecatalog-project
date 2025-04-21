@@ -7,16 +7,16 @@
 
 <main class="main-content position-relative border-radius-lg max-height-vh-100 h-100">
     <!-- NAVBAR START -->
-    <nav class="navbar navbar-main navbar-expand-lg px-0 shadow-none border-radius-xl " id="navbarBlur" data-scroll="false">
-        <div class="container-fluid py-1 px-3">
+    <nav class="navbar navbar-main navbar-expand-lg px-0 shadow-none" id="navbarBlur" data-scroll="false">
+        <div class="container-fluid py-2 py-sm-1 px-3">
             <nav aria-label="breadcrumb">
-                <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+                <ol class="breadcrumb d-none d-sm-flex bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6">
                     <li class="breadcrumb-item text-sm text-white"><a class="opacity-5 text-white">Pages</a></li>
                     <li class="breadcrumb-item text-sm text-white"><a class="text-white">Products</a></li>
                     <li class="breadcrumb-item text-sm text-white"><a class="text-white">View</a></li>
                     <li class="breadcrumb-item text-sm text-white active" aria-current="page">@Model.Product_accessories_name</li>
                 </ol>
-                <h6 class="font-weight-bolder text-white mb-0">Products</h6>
+                <h6 class="font-weight-bolder text-white mb-0 pe-3 pe-sm-0">Products</h6>
             </nav>
             <div class="collapse navbar-collapse me-md-0" id="navbar">
                 <div class="ms-auto d-flex align-items-center">
@@ -38,7 +38,7 @@
     <!-- CONTENT START -->
     <div class="container-fluid py-5">
         <!-- PRODUCT DETAILS START -->
-        <div class="row justify-content-center">
+        <div class="row justify-content-center pt-4 pt-sm-0">
             <div class="col-md-9 mx-auto">
                 <div class="card mb-4 border-radius-lg">
                     <div class="card-header pb-0 d-flex justify-content-between align-items-start">
@@ -50,12 +50,12 @@
                             @if (!string.IsNullOrEmpty(Model.Product_photo_filepath))
                             {
                                 <a href="@Url.Content(Model.Product_photo_filepath)" target="_blank">
-                                    <img src="@Url.Content(Model.Product_photo_filepath)" alt="Product Photo" class="img-fluid" style="max-width: 350px; height: auto; cursor: pointer;" />
+                                    <img src="@Url.Content(Model.Product_photo_filepath)" alt="Product Photo" class="img-fluid max-width-400 max-height-400 cursor-pointer" />
                                 </a>
                             }
                             else
                             {
-                                <div class="bg-secondary text-white p-5 text-center" style="max-width: 350px; height: auto;">Picture</div>
+                                <div class="bg-secondary text-white p-5 text-center max-width-400 h-auto">Picture</div>
                             }
                         </div>
 
@@ -70,7 +70,7 @@
                             </div>
                         </div>
 
-                        <p><strong>Last Update:</strong> @(Model.Product_last_modification?.ToString("dd/MM/yyyy") ?? "")</p>
+                        <p><strong>Last Update:</strong> @(Model.Product_last_modification.HasValue ? Model.Product_last_modification.Value.ToString("dd/MM/yyyy") : "")</p>
 
                         <div class="row text-center mt-4">
                             <div class="col-md-4">

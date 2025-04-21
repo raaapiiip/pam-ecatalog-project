@@ -9,7 +9,7 @@ namespace ItemListApp
     /// <summary>
     /// Specifies the Unity configuration for the main container.
     /// </summary>
-    
+
     public static class UnityConfig
     {
         public static void RegisterComponents()
@@ -33,7 +33,7 @@ namespace ItemListApp
         /// <summary>
         /// Configured Unity Container.
         /// </summary>
-        
+
         public static IUnityContainer Container => container.Value;
         #endregion
 
@@ -47,7 +47,7 @@ namespace ItemListApp
         /// allows resolving a concrete type even if it was not previously
         /// registered.
         /// </remarks>
-        
+
         public static void RegisterTypes(IUnityContainer container)
         {
             // NOTE: To load from web.config uncomment the line below.
