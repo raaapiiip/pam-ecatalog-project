@@ -13,9 +13,8 @@ namespace ItemListApp.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int User_id { get; set; }
-        [Required(ErrorMessage = "Badge ID is required.")]
-        [Range(10000000, 99999999, ErrorMessage = "Badge ID must be an 8-digit number.")]
-        public int? Badge_id { get; set; }
+        [Required(ErrorMessage = "Username is required.")]
+        public string User_name { get; set; }
         [Required(ErrorMessage = "Windows account is required.")]
         public string Windows_account { get; set; }
         public bool IsAdmin { get; set; } = true;

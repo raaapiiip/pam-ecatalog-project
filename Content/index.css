@@ -21,7 +21,6 @@
     --bg-sun-light-rgb: 255, 151, 55;
     --bg-sand-rgb: 252, 212, 66;
     --bg-sand-light-rgb: 251, 226, 115;
-
     --color-ocean-20: #DFF4F3;
     --color-ocean-40: #B8DEDA;
     --color-ocean-60: #6CB4AD;
@@ -190,6 +189,30 @@ body {
 
 .bg-sand-light {
     background-color: rgba(var(--bg-sand-light-rgb), var(--bs-bg-opacity)) !important;
+}
+
+.custom-btn-link-berry {
+    color: var(--color-berry-light) !important;
+}
+
+.custom-btn-link-berry:hover {
+    color: var(--color-berry) !important;
+}
+
+.custom-btn-link-berry:active {
+    color: var(--color-berry) !important;
+}
+
+.custom-btn-link-ocean {
+    color: var(--color-ocean-80) !important;
+}
+
+.custom-btn-link-ocean:hover {
+    color: var(--color-ocean-100) !important;
+}
+
+.custom-btn-link-ocean:active {
+    color: var(--color-ocean-100) !important;
 }
 
 @media (min-width: 1200px) {

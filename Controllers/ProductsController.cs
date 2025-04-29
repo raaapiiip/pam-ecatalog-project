@@ -147,11 +147,11 @@ namespace ItemListApp.Controllers
                 if (drawingFile != null && drawingFile.ContentLength > 0)
                 {
                     string drawingExt = Path.GetExtension(drawingFile.FileName).ToLower();
-                    string[] allowedDrawingExt = { ".pdf", ".doc", ".docx", ".xls", ".xlsx" };
+                    string[] allowedDrawingExt = { ".jpg", ".jpeg", ".png", ".pdf", ".doc", ".docx", ".xls", ".xlsx" };
 
                     if (!allowedDrawingExt.Contains(drawingExt))
                     {
-                        ModelState.AddModelError("Product_drawing_filepath", "Drawing format must be PDF, DOC, DOCX, XLS, or XLSX.");
+                        ModelState.AddModelError("Product_drawing_filepath", "Drawing format must be JPG, JPEG, PNG, PDF, DOC, DOCX, XLS, or XLSX.");
                         return View(product);
                     }
 
@@ -166,11 +166,11 @@ namespace ItemListApp.Controllers
                 if (quotationFile != null && quotationFile.ContentLength > 0)
                 {
                     string quotationExt = Path.GetExtension(quotationFile.FileName).ToLower();
-                    string[] allowedQuotationExt = { ".pdf", ".doc", ".docx", ".xls", ".xlsx" };
+                    string[] allowedQuotationExt = { ".jpg", ".jpeg", ".png", ".pdf", ".doc", ".docx", ".xls", ".xlsx" };
 
                     if (!allowedQuotationExt.Contains(quotationExt))
                     {
-                        ModelState.AddModelError("Product_quotation_filepath", "Quotation format must be PDF, DOC, DOCX, XLS, or XLSX.");
+                        ModelState.AddModelError("Product_quotation_filepath", "Quotation format must be JPG, JPEG, PNG, PDF, DOC, DOCX, XLS, or XLSX.");
                         return View(product);
                     }
 
@@ -314,11 +314,11 @@ namespace ItemListApp.Controllers
                 if (drawingFile != null && drawingFile.ContentLength > 0)
                 {
                     string drawingExt = Path.GetExtension(drawingFile.FileName).ToLower();
-                    string[] allowedDrawingExt = { ".pdf", ".doc", ".docx", ".xls", ".xlsx" };
+                    string[] allowedDrawingExt = { ".jpg", ".jpeg", ".png", ".pdf", ".doc", ".docx", ".xls", ".xlsx" };
 
                     if (!allowedDrawingExt.Contains(drawingExt))
                     {
-                        ModelState.AddModelError("Product_drawing_filepath", "Drawing format must be PDF, DOC, DOCX, XLS, or XLSX.");
+                        ModelState.AddModelError("Product_drawing_filepath", "Drawing format must be JPG, JPEG, PNG, PDF, DOC, DOCX, XLS, or XLSX.");
                         return View(product);
                     }
 
@@ -333,11 +333,11 @@ namespace ItemListApp.Controllers
                 if (quotationFile != null && quotationFile.ContentLength > 0)
                 {
                     string quotationExt = Path.GetExtension(quotationFile.FileName).ToLower();
-                    string[] allowedQuotationExt = { ".pdf", ".doc", ".docx", ".xls", ".xlsx" };
+                    string[] allowedQuotationExt = { ".jpg", ".jpeg", ".png", ".pdf", ".doc", ".docx", ".xls", ".xlsx" };
 
                     if (!allowedQuotationExt.Contains(quotationExt))
                     {
-                        ModelState.AddModelError("Product_quotation_filepath", "Quotation format must be PDF, DOC, DOCX, XLS, or XLSX.");
+                        ModelState.AddModelError("Product_quotation_filepath", "Quotation format must be JPG, JPEG, PNG, PDF, DOC, DOCX, XLS, or XLSX.");
                         return View(product);
                     }
 

@@ -50,9 +50,24 @@
                             @Html.AntiForgeryToken()
 
                             <div class="form-group mb-4">
-                                <span class="text-normal"><label>Photo</label></span>
-                                <input type="file" name="photoFile" id="photoFile" class="form-control w-80" accept="image/*" />
-                                <small class="form-text text-muted ms-1 d-block">Supported formats: JPG, JPEG, PNG, GIF.</small>
+                                <span class="text-normal"><label>Code Number</label></span>
+                                <span class="text-danger text-sm">● required</span>
+                                @Html.TextBoxFor(model => model.Product_code_number, new { @class = "form-control w-80", required = "required", placeholder = "Example: ID 00123" })
+                                @Html.ValidationMessageFor(model => model.Product_code_number, "", new { @class = "text-danger d-block" })
+                                <span id="code-number-error" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group mb-4">
+                                <span class="text-normal"><label>Accessories Name</label></span>
+                                <span class="text-danger text-sm">● required</span>
+                                @Html.TextBoxFor(model => model.Product_accessories_name, new { @class = "form-control w-80", required = "required", placeholder = "Example: Dust Bin" })
+                                @Html.ValidationMessageFor(model => model.Product_accessories_name, "", new { @class = "text-danger d-block" })
+                                <span id="accessories-name-error" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group mb-4">
+                                <span class="text-normal"><label>Quantity</label></span>
+                                @Html.TextBoxFor(model => model.Product_qty, new { @class = "form-control w-80", type = "number", min = "0", placeholder = "Example: 10" })
                             </div>
 
                             <div class="form-group mb-4">
@@ -64,25 +79,7 @@
                                         <option value="@category.Value" @(category.Selected ? "selected" : "")>@category.Text</option>
                                     }
                                 </select>
-                            </div>
-
-                            <div class="form-group mb-4">
-                                <span class="text-normal"><label>Code Number</label></span>
-                                <span class="text-danger text-sm">● required</span>
-                                @Html.TextBoxFor(model => model.Product_code_number, new { @class = "form-control w-80", required = "required", placeholder = "Example: ID 00123" })
-                                <span id="code-number-error" class="text-danger"></span>
-                            </div>
-
-                            <div class="form-group mb-4">
-                                <span class="text-normal"><label>Accessories Name</label></span>
-                                <span class="text-danger text-sm">● required</span>
-                                @Html.TextBoxFor(model => model.Product_accessories_name, new { @class = "form-control w-80", required = "required", placeholder = "Example: Dust Bin" })
-                                <span id="accessories-name-error" class="text-danger"></span>
-                            </div>
-
-                            <div class="form-group mb-4">
-                                <span class="text-normal"><label>Quantity</label></span>
-                                @Html.TextBoxFor(model => model.Product_qty, new { @class = "form-control w-80", type = "number", min = "0", placeholder = "Example: 10" })
+                                @Html.ValidationMessageFor(model => model.Product_Category_id, "", new { @class = "text-danger d-block" })
                             </div>
 
                             <div class="form-group mb-4">
@@ -101,6 +98,7 @@
                                         new SelectListItem { Text = "BAT1-BAT2-BAT3", Value = "BAT1-BAT2-BAT3" }
                                     }, new { @class = "form-select w-80", required = "required" })
                                 </div>
+                                @Html.ValidationMessageFor(model => model.Product_owner, "", new { @class = "text-danger d-block" })
                             </div>
 
                             <div class="form-group mb-4">
@@ -113,12 +111,19 @@
                                         new SelectListItem { Text = "PAM", Value = "PAM" },
                                     }, new { @class = "form-select w-80", required = "required" })
                                 </div>
+                                @Html.ValidationMessageFor(model => model.Product_dept, "", new { @class = "text-danger d-block" })
                             </div>
 
                             <div class="form-group mb-4">
                                 <span class="text-normal"><label>Drawing</label></span>
                                 <input type="file" name="drawingFile" id="drawingFile" class="form-control w-80" accept=".pdf,.doc,.docx,.xls,.xlsx" />
-                                <small class="form-text text-muted ms-1 d-block">Supported formats: PDF, DOC, DOCX, XLS, XLSX.</small>
+                                <small class="form-text text-muted ms-1 d-block">Supported formats: JPG, JPEG, PNG, PDF, DOC, DOCX, XLS, XLSX.</small>
+                            </div>
+
+                            <div class="form-group mb-4">
+                                <span class="text-normal"><label>Photo</label></span>
+                                <input type="file" name="photoFile" id="photoFile" class="form-control w-80" accept="image/*" />
+                                <small class="form-text text-muted ms-1 d-block">Supported formats: JPG, JPEG, PNG, GIF.</small>
                             </div>
 
                             <div class="form-group mb-4">
@@ -144,12 +149,12 @@
                             <div class="form-group mb-4">
                                 <span class="text-normal"><label>Quotation</label></span>
                                 <input type="file" name="quotationFile" id="quotationFile" class="form-control w-80" accept=".pdf,.doc,.docx,.xls,.xlsx" />
-                                <small class="form-text text-muted ms-1 d-block">Supported formats: PDF, DOC, DOCX, XLS, XLSX.</small>
+                                <small class="form-text text-muted ms-1 d-block">Supported formats: JPG, JPEG, PNG, PDF, DOC, DOCX, XLS, XLSX.</small>
                             </div>
 
                             <div class="form-group mb-4">
                                 <span class="text-normal"><label>Last Modification</label></span>
-                                <input type="text" class="form-control w-80" value="@DateTime.Now.ToString("dd/MM/yyyy")" readonly />
+                                <input type="text" class="form-control w-80" value="@DateTime.Now.ToString("yyyy/MM/dd")" readonly />
                                 <small class="form-text text-muted ms-1 d-block">Note: Auto-filled with <strong>current date</strong>.</small>
                                 <input type="hidden" id="Product_last_modification" name="Product_last_modification" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
                             </div>
@@ -215,11 +220,11 @@
         });
 
         document.getElementById("drawingFile").addEventListener("change", function () {
-            validateFile(this, [".pdf", ".doc", ".docx", ".xls", ".xlsx"]);
+            validateFile(this, [".jpg", ".jpeg", ".png", ".pdf", ".doc", ".docx", ".xls", ".xlsx"]);
         });
 
         document.getElementById("quotationFile").addEventListener("change", function () {
-            validateFile(this, [".pdf", ".doc", ".docx", ".xls", ".xlsx"]);
+            validateFile(this, [".jpg", ".jpeg", ".png", ".pdf", ".doc", ".docx", ".xls", ".xlsx"]);
         });
     });
 

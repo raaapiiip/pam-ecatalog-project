@@ -53,19 +53,24 @@
                             @Html.HiddenFor(model => model.Product_id)
 
                             <div class="form-group mb-4">
-                                <span class="text-normal"><label>Photo</label></span>
-                                @if (!string.IsNullOrEmpty(Model.Product_photo_filepath))
-                                {
-                                    <div>
-                                        <a href="@Url.Content(Model.Product_photo_filepath)" target="_blank">
-                                            <img src="@Url.Content(Model.Product_photo_filepath)" class="mb-2 mx-2 max-width-200 height-200 cursor-pointer" alt="Product Photo" />
-                                        </a>
-                                        <input type="checkbox" name="RemovePhoto" value="true"> Remove Photo
-                                    </div>
-                                }
-                                <input type="file" name="photoFile" id="photoFile" class="form-control w-80" accept="image/*" />
-                                <small class="form-text text-muted ms-1 d-block">Supported formats: JPG, JPEG, PNG, GIF.</small>
-                                @Html.HiddenFor(model => model.Product_photo_filepath)
+                                <span class="text-normal"><label>Code Number</label></span>
+                                <span class="text-danger text-sm">● required</span>
+                                @Html.TextBoxFor(model => model.Product_code_number, new { @class = "form-control w-80", required = "required", placeholder = "Example: ID 00123" })
+                                @Html.ValidationMessageFor(model => model.Product_code_number, "", new { @class = "text-danger d-block" })
+                                <span id="code-number-error" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group mb-4">
+                                <span class="text-normal"><label>Accessories Name</label></span>
+                                <span class="text-danger text-sm">● required</span>
+                                @Html.TextBoxFor(model => model.Product_accessories_name, new { @class = "form-control w-80", required = "required", placeholder = "Example: Dust Bin" })
+                                @Html.ValidationMessageFor(model => model.Product_accessories_name, "", new { @class = "text-danger d-block" })
+                                <span id="accessories-name-error" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group mb-4">
+                                <span class="text-normal"><label>Quantity</label></span>
+                                @Html.TextBoxFor(model => model.Product_qty, new { @class = "form-control w-80", type = "number", min = "0", placeholder = "Example: 10" })
                             </div>
 
                             <div class="form-group mb-4">
@@ -77,25 +82,7 @@
                                         <option value="@category.Value" @(category.Selected ? "selected" : "")>@category.Text</option>
                                     }
                                 </select>
-                            </div>
-
-                            <div class="form-group mb-4">
-                                <span class="text-normal"><label>Code Number</label></span>
-                                <span class="text-danger text-sm">● required</span>
-                                @Html.TextBoxFor(model => model.Product_code_number, new { @class = "form-control w-80", required = "required", placeholder = "Example: ID 00123" })
-                                <span id="code-number-error" class="text-danger"></span>
-                            </div>
-
-                            <div class="form-group mb-4">
-                                <span class="text-normal"><label>Accessories Name</label></span>
-                                <span class="text-danger text-sm">● required</span>
-                                @Html.TextBoxFor(model => model.Product_accessories_name, new { @class = "form-control w-80", required = "required", placeholder = "Example: Dust Bin" })
-                                <span id="accessories-name-error" class="text-danger"></span>
-                            </div>
-
-                            <div class="form-group mb-4">
-                                <span class="text-normal"><label>Quantity</label></span>
-                                @Html.TextBoxFor(model => model.Product_qty, new { @class = "form-control w-80", type = "number", min = "0", placeholder = "Example: 10" })
+                                @Html.ValidationMessageFor(model => model.Product_Category_id, "", new { @class = "text-danger d-block" })
                             </div>
 
                             <div class="form-group mb-4">
@@ -114,6 +101,7 @@
                                         new SelectListItem { Text = "BAT1-BAT2-BAT3", Value = "BAT1-BAT2-BAT3" }
                                     }, new { @class = "form-select w-80", required = "required" })
                                 </div>
+                                @Html.ValidationMessageFor(model => model.Product_owner, "", new { @class = "text-danger d-block" })
                             </div>
 
                             <div class="form-group mb-4">
@@ -126,6 +114,7 @@
                                         new SelectListItem { Text = "PAM", Value = "PAM" },
                                     }, new { @class = "form-select w-80", required = "required" })
                                 </div>
+                                @Html.ValidationMessageFor(model => model.Product_dept, "", new { @class = "text-danger d-block" })
                             </div>
 
                             <div class="form-group mb-4">
@@ -133,13 +122,35 @@
                                 @if (!string.IsNullOrEmpty(Model.Product_drawing_filepath))
                                 {
                                     <div>
-                                        <a class="btn btn-link mb-2 mx-2 p-0" href="@Url.Content(Model.Product_drawing_filepath)" target="_blank">View Drawing</a>
-                                        <input type="checkbox" name="RemoveDrawing" value="true"> Remove Drawing
+                                        <a class="btn btn-link custom-btn-link-berry shadow-none mx-2 my-0 p-0" href="@Url.Content(Model.Product_drawing_filepath)" target="_blank">@Model.Product_drawing_filepath</a>
+                                        <div class="form-check form-switch mx-2 my-3">
+                                            <input class="form-check-input" type="checkbox" id="RemoveDrawing" name="RemoveDrawing" value="true">
+                                            <label class="form-check-label" for="RemoveDrawing">Remove Drawing</label>
+                                        </div>
                                     </div>
                                 }
                                 <input type="file" name="drawingFile" id="drawingFile" class="form-control w-80" accept=".pdf,.doc,.docx,.xls,.xlsx" />
-                                <small class="form-text text-muted ms-1 d-block">Supported formats: PDF, DOC, DOCX, XLS, XLSX.</small>
+                                <small class="form-text text-muted ms-1 d-block">Supported formats: JPG, JPEG, PNG, PDF, DOC, DOCX, XLS, XLSX.</small>
                                 @Html.HiddenFor(model => model.Product_drawing_filepath)
+                            </div>
+
+                            <div class="form-group mb-4">
+                                <span class="text-normal"><label>Photo</label></span>
+                                @if (!string.IsNullOrEmpty(Model.Product_photo_filepath))
+                                {
+                                    <div>
+                                        <a href="@Url.Content(Model.Product_photo_filepath)" target="_blank">
+                                            <img src="@Url.Content(Model.Product_photo_filepath)" class="mx-2 max-width-200 height-200 cursor-pointer" alt="Product Photo" />
+                                        </a>
+                                        <div class="form-check form-switch mx-2 my-3">
+                                            <input class="form-check-input" type="checkbox" id="RemovePhoto" name="RemovePhoto" value="true">
+                                            <label class="form-check-label" for="RemovePhoto">Remove Photo</label>
+                                        </div>
+                                    </div>
+                                }
+                                <input type="file" name="photoFile" id="photoFile" class="form-control w-80" accept="image/*" />
+                                <small class="form-text text-muted ms-1 d-block">Supported formats: JPG, JPEG, PNG, GIF.</small>
+                                @Html.HiddenFor(model => model.Product_photo_filepath)
                             </div>
 
                             <div class="form-group mb-4">
@@ -167,18 +178,21 @@
                                 @if (!string.IsNullOrEmpty(Model.Product_quotation_filepath))
                                 {
                                     <div>
-                                        <a class="btn btn-link mb-2 mx-2 p-0" href="@Url.Content(Model.Product_quotation_filepath)" target="_blank">View Quotation</a>
-                                        <input type="checkbox" name="RemoveQuotation" value="true"> Remove Quotation
+                                        <a class="btn btn-link custom-btn-link-berry shadow-none mx-2 my-0 p-0" href="@Url.Content(Model.Product_quotation_filepath)" target="_blank">@Model.Product_quotation_filepath</a>
+                                        <div class="form-check form-switch mx-2 my-3">
+                                            <input class="form-check-input" type="checkbox" id="RemoveQuotation" name="RemoveQuotation" value="true">
+                                            <label class="form-check-label" for="RemoveQuotation">Remove Quotation</label>
+                                        </div>
                                     </div>
                                 }
                                 <input type="file" name="quotationFile" id="quotationFile" class="form-control w-80" accept=".pdf,.doc,.docx,.xls,.xlsx" />
-                                <small class="form-text text-muted ms-1 d-block">Supported formats: PDF, DOC, DOCX, XLS, XLSX.</small>
+                                <small class="form-text text-muted ms-1 d-block">Supported formats: JPG, JPEG, PNG, PDF, DOC, DOCX, XLS, XLSX.</small>
                                 @Html.HiddenFor(model => model.Product_quotation_filepath)
                             </div>
 
                             <div class="form-group mb-4">
                                 <span class="text-normal"><label>Last Modification</label></span>
-                                <input type="text" class="form-control w-80" value="@DateTime.Now.ToString("dd/MM/yyyy")" readonly />
+                                <input type="text" class="form-control w-80" value="@DateTime.Now.ToString("yyyy/MM/dd")" readonly />
                                 <small class="form-text text-muted ms-1 d-block">Note: Auto-filled with <strong>current date</strong>.</small>
                                 <input type="hidden" id="Product_last_modification" name="Product_last_modification" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
                             </div>
@@ -244,11 +258,11 @@
         });
 
         document.getElementById("drawingFile").addEventListener("change", function () {
-            validateFile(this, [".pdf", ".doc", ".docx", ".xls", ".xlsx"]);
+            validateFile(this, [".jpg", ".jpeg", ".png", ".pdf", ".doc", ".docx", ".xls", ".xlsx"]);
         });
 
         document.getElementById("quotationFile").addEventListener("change", function () {
-            validateFile(this, [".pdf", ".doc", ".docx", ".xls", ".xlsx"]);
+            validateFile(this, [".jpg", ".jpeg", ".png", ".pdf", ".doc", ".docx", ".xls", ".xlsx"]);
         });
     });
 

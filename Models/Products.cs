@@ -29,7 +29,7 @@ namespace ItemListApp.Models
         public string Product_hs_code { get; set; }
         public string Product_vendor_name { get; set; }
         public string Product_quotation_filepath { get; set; }
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = true)]
         public DateTime? Product_last_modification { get; set; }
         public string Product_function { get; set; }
         public string Product_remark { get; set; }

@@ -45,9 +45,9 @@
                         @using (Html.BeginForm("Index", "Users", FormMethod.Get, new { @class = "mb-0" }))
                         {
                             <select name="status" onchange="this.form.submit()" class="form-select border-radius-sm">
+                                <option value="All" @(ViewBag.CurrentStatus == "All" ? "selected" : "")>All</option>
                                 <option value="Admin" @(ViewBag.CurrentStatus == "Admin" ? "selected" : "")>Admin</option>
                                 <option value="User" @(ViewBag.CurrentStatus == "User" ? "selected" : "")>User</option>
-                                <option value="All" @(ViewBag.CurrentStatus == "All" ? "selected" : "")>All</option>
                             </select>
                         }
                         <a href="@Url.Action("Create", "Users")" class="btn bg-berry-light bg-opacity-100 ms-auto text-white">Add New User</a>
@@ -56,19 +56,31 @@
                         <table id="myTable" class="table table-bordered display cell-border compact">
                             <thead>
                                 <tr>
-                                    <th class="text-uppercase text-md-center">Badge ID</th>
+                                    <th class="text-uppercase text-md-center no-export">Edit</th>
+                                    <th class="text-uppercase text-md-center no-export">Action</th>
+                                    <th class="text-uppercase text-md-center">Username</th>
                                     <th class="text-uppercase text-md-center">Windows Account</th>
                                     <th class="text-uppercase text-md-center">Role</th>
                                     <th class="text-uppercase text-md-center">Status</th>
-                                    <th class="text-uppercase text-md-center">Edit</th>
-                                    <th class="text-uppercase text-md-center">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach (var user in Model)
                                 {
                                     <tr>
-                                        <td class="text-sm-center">@Html.DisplayFor(modelItem => user.Badge_id)</td>
+                                        <td class="text-sm-center">
+                                            <a href="@Url.Action("Edit", "Users", new { id = user.User_id })" class="btn bg-ocean-80 bg-opacity-100 text-white">Edit</a>
+                                        </td>
+                                        <td class="text-sm-center">
+                                            @using (Html.BeginForm(user.IsActive ? "Deactivate" : "Activate", "Users", new { id = user.User_id }, FormMethod.Post, new { @onsubmit = "return showConfirmation(this);" }))
+                                            {
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="btn @(user.IsActive ? "btn-danger" : "btn-success")">
+                                                    @(user.IsActive ? "Deactivate" : "Activate")
+                                                </button>
+                                            }
+                                        </td>
+                                        <td class="text-sm-center">@Html.DisplayFor(modelItem => user.User_name)</td>
                                         <td class="text-sm-center">@Html.DisplayFor(modelItem => user.Windows_account)</td>
                                         <td class="text-sm-center">
                                             @if (user.IsAdmin)
@@ -88,18 +100,6 @@
                                             else
                                             {
                                                 <span class="badge bg-danger">Inactive</span>
-                                            }
-                                        </td>
-                                        <td class="text-sm-center">
-                                            <a href="@Url.Action("Edit", "Users", new { id = user.User_id })" class="btn bg-ocean-80 bg-opacity-100 text-white">Edit</a>
-                                        </td>
-                                        <td class="text-sm-center">
-                                            @using (Html.BeginForm(user.IsActive ? "Deactivate" : "Activate", "Users", new { id = user.User_id }, FormMethod.Post, new { @onsubmit = "return showConfirmation(this);" }))
-                                            {
-                                                @Html.AntiForgeryToken()
-                                                <button type="submit" class="btn @(user.IsActive ? "btn-danger" : "btn-success")">
-                                                    @(user.IsActive ? "Deactivate" : "Activate")
-                                                </button>
                                             }
                                         </td>
                                     </tr>

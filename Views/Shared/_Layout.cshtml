@@ -46,12 +46,46 @@
     <script>
         $(document).ready(function () {
             $('#myTable').DataTable({
+                layout: {
+                    topStart: ['buttons', 'pageLength'],
+                    topEnd: 'search',
+                    bottomStart: 'info',
+                    bottomEnd: 'paging'
+                },
+                buttons: [
+                    {
+                        extend: 'copyHtml5',
+                        text: 'Copy',
+                        exportOptions: {
+                            columns: ':not(.no-export)'
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        text: 'Excel',
+                        exportOptions: {
+                            columns: ':not(.no-export)'
+                        }
+                    },
+                    {
+                        extend: 'csvHtml5',
+                        text: 'CSV',
+                        exportOptions: {
+                            columns: ':not(.no-export)'
+                        }
+                    }
+                ],
                 lengthMenu: [[5, 10, 20, 40, 80, -1], [5, 10, 20, 40, 80, "All"]],
-                pageLength: 20
+                pageLength: 20,
+                language: {
+                    searchPlaceholder: "Search the data here...",
+                }
             });
+
             $('#myTable').wrap('<div class="table-responsive"></div>');
         });
     </script>
+
     @RenderSection("Scripts", required: false)
 </body>
 

@@ -22,20 +22,20 @@ namespace ItemListApp.Controllers
         }
 
         // GET: Users
-        public ActionResult Index(string status = "Admin")
+        public ActionResult Index(string status = "All")
         {
             var users = _context.Users.AsQueryable();
 
             switch (status)
             {
+                case "All":
+                default:
+                    break;
                 case "Admin":
                     users = users.Where(u => u.IsActive);
                     break;
                 case "User":
                     users = users.Where(u => !u.IsActive);
-                    break;
-                case "All":
-                default:
                     break;
             }
 
@@ -53,15 +53,15 @@ namespace ItemListApp.Controllers
         // POST: Users/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Badge_id,Windows_account,IsAdmin,IsActive")] Users user)
+        public ActionResult Create([Bind(Include = "User_name,Windows_account,IsAdmin,IsActive")] Users user)
         {
             if (ModelState.IsValid)
             {
-                // Check if the badge id or windows account already exists (must be unique)
-                bool isBadgeIdExists = _context.Users.Any(u => u.Badge_id == user.Badge_id);
-                if (isBadgeIdExists)
+                // Check if the username or windows account already exists (must be unique)
+                bool isUserNameExists = _context.Users.Any(u => u.User_name == user.User_name);
+                if (isUserNameExists)
                 {
-                    ModelState.AddModelError("Badge_id", "Badge ID must be unique.");
+                    ModelState.AddModelError("User_name", "Username must be unique.");
                 }
 
                 bool isWindowsAccountExists = _context.Users.Any(u => u.Windows_account == user.Windows_account);
@@ -102,15 +102,15 @@ namespace ItemListApp.Controllers
         // POST: Users/Edit/Id
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "User_id,Badge_id,Windows_account")] Users user)
+        public ActionResult Edit([Bind(Include = "User_id,User_name,Windows_account")] Users user)
         {
             if (ModelState.IsValid)
             {
-                // Check if the badge id or windows account already exists (must be unique)
-                bool isBadgeIdExists = _context.Users.Any(u => u.Badge_id == user.Badge_id);
-                if (isBadgeIdExists)
+                // Check if the username or windows account already exists (must be unique)
+                bool isUserNameExists = _context.Users.Any(u => u.User_name == user.User_name);
+                if (isUserNameExists)
                 {
-                    ModelState.AddModelError("Badge_id", "Badge ID must be unique.");
+                    ModelState.AddModelError("User_name", "Username must be unique.");
                 }
 
                 bool isWindowsAccountExists = _context.Users.Any(u => u.Windows_account == user.Windows_account);
@@ -182,15 +182,12 @@ namespace ItemListApp.Controllers
             bool exists = false;
             string errorMessage = null;
 
-            if (field == "Badge_id")
+            if (field == "User_name")
             {
-                if (int.TryParse(value, out int badgeIdValue))
+                exists = _context.Users.Any(u => u.User_name == value && u.User_id != id);
+                if (exists)
                 {
-                    exists = _context.Users.Any(u => u.Badge_id == badgeIdValue && u.User_id != id);
-                    if (exists)
-                    {
-                        errorMessage = $"'{badgeIdValue}' already exists. Please use a different badge ID.";
-                    }
+                    errorMessage = $"'{value}' already exists. Please use a different username.";
                 }
             }
             else if (field == "Windows_account")

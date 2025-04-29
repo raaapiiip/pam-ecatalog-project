@@ -80,9 +80,11 @@
                             <div class="card-body p-0">
                                 <div class="row align-items-center p-3">
                                     <div class="col-9">
-                                        <div class="numbers">
+                                        <div>
                                             <p class="text-sm mb-0 text-uppercase font-weight-bold">Subcategory</p>
-                                            <h4 class="font-weight-bolder">@subcategory.Name</h4>
+                                            <h5 class="font-weight-bolder">
+                                                @subcategory.Name
+                                            </h5>
                                             <p class="mb-0">
                                                 <span class="text-primary text-sm font-weight-bolder">
                                                     Explore More
@@ -127,14 +129,14 @@
                                 <div class="card-body p-0">
                                     <div class="row align-items-center p-3">
                                         <div class="col-9">
-                                            <div class="numbers">
+                                            <div>
                                                 <p class="text-sm mb-0 text-uppercase font-weight-bold">Product</p>
-                                                <h4 class="font-weight-bolder">
+                                                <h5 class="font-weight-bolder">
                                                     @category.Name
-                                                </h4>
+                                                </h5>
                                                 <p class="mb-0">
                                                     <span class="text-success text-sm font-weight-bolder">
-                                                        @category.ProductCount Items
+                                                        @category.ProductCount @(category.ProductCount == 1 ? "Item" : "Items")
                                                     </span>
                                                 </p>
                                             </div>
@@ -155,14 +157,14 @@
                             <div class="card-body p-0">
                                 <div class="row align-items-center p-3">
                                     <div class="col-9">
-                                        <div class="numbers">
+                                        <div>
                                             <p class="text-sm mb-0 text-uppercase font-weight-bold">Product</p>
-                                            <h4 class="font-weight-bolder">
+                                            <h5 class="font-weight-bolder">
                                                 @category.Name
-                                            </h4>
+                                            </h5>
                                             <p class="mb-0">
                                                 <span class="text-danger text-sm font-weight-bolder">
-                                                    @category.ProductCount Items
+                                                    @category.ProductCount Item
                                                 </span>
                                             </p>
                                         </div>

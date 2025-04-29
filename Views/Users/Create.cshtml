@@ -48,12 +48,13 @@
                         @using (Html.BeginForm("Create", "Users", FormMethod.Post, new { enctype = "multipart/form-data", id = "createUserForm" }))
                         {
                             @Html.AntiForgeryToken()
+
                             <div class="form-group mb-4">
-                                <span class="text-normal"><label>Badge ID</label></span>
+                                <span class="text-normal"><label>Username</label></span>
                                 <span class="text-danger text-sm">● required</span>
-                                @Html.TextBoxFor(model => model.Badge_id, new { @class = "form-control w-80 px-3", required = "required", type = "number", min = "0", placeholder = "Example: 12345678" })
-                                @Html.ValidationMessageFor(model => model.Badge_id, "", new { @class = "text-danger d-block" })
-                                <span id="badge-id-error" class="text-danger"></span>
+                                @Html.TextBoxFor(model => model.User_name, new { @class = "form-control w-80 px-3", required = "required", placeholder = "Example: Full Name (Department)" })
+                                @Html.ValidationMessageFor(model => model.User_name, "", new { @class = "text-danger d-block" })
+                                <span id="user-name-error" class="text-danger"></span>
                             </div>
 
                             <div class="form-group mb-4">
@@ -66,9 +67,16 @@
                                 <small class="form-text text-muted ms-1 d-block">
                                     Note: The domain prefix <strong>INFINEON\</strong> is automatically included.
                                 </small>
-                                <span id="windows-account-error" class="text-danger"></span>
+                                <small class="form-text text-muted ms-1 d-block">
+                                    (Click
+                                    <a href="https://idms-web.infineon.com/ADGroupEditor/ADGroups/SearchGroups" class="btn btn-link custom-btn-link-ocean shadow-none p-0 m-0" target="_blank" rel="noopener noreferrer">
+                                        here <i class="fa-solid fa-up-right-from-square"></i>
+                                    </a>
+                                    to find your or other people's Windows Accounts.)
+                                </small>
                                 @Html.HiddenFor(model => model.Windows_account)
                                 @Html.ValidationMessageFor(model => model.Windows_account, "", new { @class = "text-danger d-block" })
+                                <span id="windows-account-error" class="text-danger"></span>
                             </div>
 
                             <div class="row justify-content-start">
@@ -106,18 +114,18 @@
 
 <script>
     $(document).ready(function () {
-        let isBadgeIdValid = true;
+        let isUserNameValid = true;
         let isWindowsAccountValid = true;
-        let badgeIdTimer = null;
+        let userNameTimer = null;
         let windowsAccountTimer = null;
-        let currentBadgeRequest = null;
-        let currentWindowsRequest = null;
+        let currentUserNameRequest = null;
+        let currentWindowsAccountRequest = null;
 
         function checkUnique(field, value, errorLabel, flagVar) {
-            if (field === "Badge_id" && currentBadgeRequest) {
-                currentBadgeRequest.abort();
-            } else if (field === "Windows_account" && currentWindowsRequest) {
-                currentWindowsRequest.abort();
+            if (field === "User_name" && currentUserNameRequest) {
+                currentUserNameRequest.abort();
+            } else if (field === "Windows_account" && currentWindowsAccountRequest) {
+                currentWindowsAccountRequest.abort();
             }
 
             const request = $.ajax({
@@ -127,15 +135,15 @@
                 success: function (response) {
                     if (!response.isValid) {
                         $(errorLabel).text(response.message);
-                        if (flagVar === "isBadgeIdValid") {
-                            isBadgeIdValid = false;
+                        if (flagVar === "isUserNameValid") {
+                            isUserNameValid = false;
                         } else if (flagVar === "isWindowsAccountValid") {
                             isWindowsAccountValid = false;
                         }
                     } else {
                         $(errorLabel).text("");
-                        if (flagVar === "isBadgeIdValid") {
-                            isBadgeIdValid = true;
+                        if (flagVar === "isUserNameValid") {
+                            isUserNameValid = true;
                         } else if (flagVar === "isWindowsAccountValid") {
                             isWindowsAccountValid = true;
                         }
@@ -144,25 +152,25 @@
                 }
             });
 
-            if (field === "Badge_id") {
-                currentBadgeRequest = request;
+            if (field === "User_name") {
+                currentUserNameRequest = request;
             } else if (field === "Windows_account") {
-                currentWindowsRequest = request;
+                currentWindowsAccountRequest = request;
             }
         }
 
         function toggleSubmitButton() {
-            if (isBadgeIdValid && isWindowsAccountValid) {
+            if (isUserNameValid && isWindowsAccountValid) {
                 $("#submitBtn").prop("disabled", false);
             } else {
                 $("#submitBtn").prop("disabled", true);
             }
         }
 
-        $("#Badge_id").on("input", function () {
-            clearTimeout(badgeIdTimer);
-            badgeIdTimer = setTimeout(() => {
-                checkUnique("Badge_id", $(this).val(), "#badge-id-error", "isBadgeIdValid");
+        $("#User_name").on("input", function () {
+            clearTimeout(userNameTimer);
+            userNameTimer = setTimeout(() => {
+                checkUnique("User_name", $(this).val(), "#user-name-error", "isUserNameValid");
             }, 100);
         });
 
@@ -177,7 +185,7 @@
         });
 
         $("#createUserForm").on("submit", function (e) {
-            if (!isBadgeIdValid || !isWindowsAccountValid) {
+            if (!isUserNameValid || !isWindowsAccountValid) {
                 event.preventDefault();
             }
             else {

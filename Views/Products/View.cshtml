@@ -55,7 +55,7 @@
                             }
                             else
                             {
-                                <div class="bg-secondary text-white p-5 text-center max-width-400 h-auto">Picture</div>
+                                <div class="bg-ocean-100 bg-opacity-100 text-white p-5 text-center max-width-400 h-auto">Product Photo</div>
                             }
                         </div>
 
@@ -70,21 +70,21 @@
                             </div>
                         </div>
 
-                        <p><strong>Last Update:</strong> @(Model.Product_last_modification.HasValue ? Model.Product_last_modification.Value.ToString("dd/MM/yyyy") : "")</p>
+                        <p><strong>Last Update:</strong> @(Model.Product_last_modification.HasValue ? Model.Product_last_modification.Value.ToString("yyyy/MM/dd") : "")</p>
 
                         <div class="row text-center mt-4">
                             <div class="col-md-4">
                                 <p><strong>Quotation</strong></p>
                                 @if (!string.IsNullOrEmpty(Model.Product_quotation_filepath))
                                 {
-                                    <a class="btn btn-link p-0" href="@Url.Content(Model.Product_quotation_filepath)" target="_blank">( attachment )</a>
+                                    <a class="btn btn-link custom-btn-link-berry shadow-none p-0" href="@Url.Content(Model.Product_quotation_filepath)" target="_blank">( attachment )</a>
                                 }
                             </div>
                             <div class="col-md-4">
                                 <p><strong>Drawing</strong></p>
                                 @if (!string.IsNullOrEmpty(Model.Product_drawing_filepath))
                                 {
-                                    <a class="btn btn-link p-0" href="@Url.Content(Model.Product_drawing_filepath)" target="_blank">( attachment )</a>
+                                    <a class="btn btn-link custom-btn-link-berry shadow-none p-0" href="@Url.Content(Model.Product_drawing_filepath)" target="_blank">( attachment )</a>
                                 }
                             </div>
                             <div class="col-md-4">
