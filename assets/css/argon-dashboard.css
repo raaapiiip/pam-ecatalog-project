@@ -22964,8 +22964,8 @@ fieldset:disabled .btn {
 }
 
 .form-switch .form-check-input:checked {
-  border-color: rgba(94, 114, 228, 0.95);
-  background-color: rgba(94, 114, 228, 0.95);
+  border-color: rgba(59, 155, 145, 0.95);
+  background-color: rgba(59, 155, 145, 0.95);
 }
 
 .form-switch .form-check-label {
