@@ -26,7 +26,7 @@ namespace ItemListApp.Models
         public string Product_drawing_filepath { get; set; }
         public string Product_photo_filepath { get; set; }
         public string Product_eccn { get; set; }
-        public string Product_hs_code { get; set; }
+        public int? Product_hs_code { get; set; }
         public string Product_vendor_name { get; set; }
         public string Product_quotation_filepath { get; set; }
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = true)]

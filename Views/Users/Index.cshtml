@@ -56,33 +56,33 @@
                         <table id="myTable" class="table table-bordered display cell-border compact">
                             <thead>
                                 <tr>
-                                    <th class="text-uppercase text-md-center no-export">Edit</th>
-                                    <th class="text-uppercase text-md-center no-export">Action</th>
-                                    <th class="text-uppercase text-md-center">Username</th>
-                                    <th class="text-uppercase text-md-center">Windows Account</th>
-                                    <th class="text-uppercase text-md-center">Role</th>
-                                    <th class="text-uppercase text-md-center">Status</th>
+                                    <th class="text-uppercase text-md text-center align-content-center no-export">Edit Data</th>
+                                    <th class="text-uppercase text-md text-center align-content-center no-export">Action</th>
+                                    <th class="text-uppercase text-md text-center align-content-center">Username</th>
+                                    <th class="text-uppercase text-md text-center align-content-center">Windows Account</th>
+                                    <th class="text-uppercase text-md text-center align-content-center">Role</th>
+                                    <th class="text-uppercase text-md text-center align-content-center">Status</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach (var user in Model)
                                 {
                                     <tr>
-                                        <td class="text-sm-center">
-                                            <a href="@Url.Action("Edit", "Users", new { id = user.User_id })" class="btn bg-ocean-80 bg-opacity-100 text-white">Edit</a>
+                                        <td class="text-sm text-center align-content-center">
+                                            <a href="@Url.Action("Edit", "Users", new { id = user.User_id })" class="btn bg-ocean-80 bg-opacity-100 text-white my-2">Edit</a>
                                         </td>
-                                        <td class="text-sm-center">
+                                        <td class="text-sm text-center align-content-center">
                                             @using (Html.BeginForm(user.IsActive ? "Deactivate" : "Activate", "Users", new { id = user.User_id }, FormMethod.Post, new { @onsubmit = "return showConfirmation(this);" }))
                                             {
                                                 @Html.AntiForgeryToken()
-                                                <button type="submit" class="btn @(user.IsActive ? "btn-danger" : "btn-success")">
+                                                <button type="submit" class="btn my-2 @(user.IsActive ? "btn-danger" : "btn-success")">
                                                     @(user.IsActive ? "Deactivate" : "Activate")
                                                 </button>
                                             }
                                         </td>
-                                        <td class="text-sm-center">@Html.DisplayFor(modelItem => user.User_name)</td>
-                                        <td class="text-sm-center">@Html.DisplayFor(modelItem => user.Windows_account)</td>
-                                        <td class="text-sm-center">
+                                        <td class="text-sm text-center align-content-center">@Html.DisplayFor(modelItem => user.User_name)</td>
+                                        <td class="text-sm text-center align-content-center">@Html.DisplayFor(modelItem => user.Windows_account)</td>
+                                        <td class="text-sm text-center align-content-center">
                                             @if (user.IsAdmin)
                                             {
                                                 <span class="badge bg-ocean-80 bg-opacity-100">Admin</span>
@@ -92,7 +92,7 @@
                                                 <span class="badge bg-engineering-light bg-opacity-100">User</span>
                                             }
                                         </td>
-                                        <td class="text-sm-center">
+                                        <td class="text-sm text-center align-content-center">
                                             @if (user.IsActive)
                                             {
                                                 <span class="badge bg-success">Active</span>
@@ -132,7 +132,7 @@
 
 <script>
     function showConfirmation(formElement) {
-        event.preventDefault();
+        e.preventDefault();
 
         const actionUrl = formElement.action.toLowerCase();
 

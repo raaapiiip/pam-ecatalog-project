@@ -226,3 +226,14 @@ body {
         margin-left: 0 !important;
     }
 }
+
+#myTable td {
+    max-width: 200px;
+    white-space: normal;
+    word-break: break-word;
+}
+
+#myTable th {
+    white-space: nowrap;
+    text-align: center;
+}

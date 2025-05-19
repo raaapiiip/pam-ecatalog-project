@@ -54,29 +54,15 @@
                 },
                 buttons: [
                     {
-                        extend: 'copyHtml5',
-                        text: 'Copy',
-                        exportOptions: {
-                            columns: ':not(.no-export)'
-                        }
-                    },
-                    {
                         extend: 'excelHtml5',
-                        text: 'Excel',
-                        exportOptions: {
-                            columns: ':not(.no-export)'
-                        }
-                    },
-                    {
-                        extend: 'csvHtml5',
-                        text: 'CSV',
+                        text: 'Save Table',
                         exportOptions: {
                             columns: ':not(.no-export)'
                         }
                     }
                 ],
                 lengthMenu: [[5, 10, 20, 40, 80, -1], [5, 10, 20, 40, 80, "All"]],
-                pageLength: 20,
+                pageLength: 10,
                 language: {
                     searchPlaceholder: "Search the data here...",
                 }

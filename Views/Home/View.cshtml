@@ -40,63 +40,66 @@
         <!-- PRODUCT DETAILS START -->
         <div class="row justify-content-center pt-4 pt-sm-0">
             <div class="col-md-9 mx-auto">
-                <div class="card p-4 mb-4 border-radius-lg">
-                    <div class="card-header p-0 d-flex justify-content-between align-items-start">
+                <div class="card mb-4 border-radius-lg">
+                    <div class="card-header pb-0 d-flex justify-content-between align-items-start">
                         <h5 class="justify-content-start">Product Details</h5>
                         <a href="@Url.Action("ProductByCategory", "Home", new { categoryName = Model.Category.Category_name })" class="btn btn-secondary">Close</a>
                     </div>
-                    <div class="mb-4">
-                        @if (!string.IsNullOrEmpty(Model.Product_photo_filepath))
-                        {
-                            <a href="@Url.Content(Model.Product_photo_filepath)" target="_blank">
-                                <img src="@Url.Content(Model.Product_photo_filepath)" alt="Product Photo" class="img-fluid max-width-400 max-height-400 cursor-pointer" />
-                            </a>
-                        }
-                        else
-                        {
-                            <div class="bg-ocean-100 bg-opacity-100 text-white p-5 text-center max-width-400 h-auto">Product Photo</div>
-                        }
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-12">
-                            <p class="mb-1"><strong>Category:</strong> @Model.Category.Category_name</p>
-                            <p class="mb-1"><strong>Accessories Name:</strong> @Model.Product_accessories_name</p>
-                            <p class="mb-1"><strong>Vendor:</strong> @(Model.Vendor != null ? Model.Vendor.Vendor_name : "")</p>
-                            <p class="mb-1"><strong>ECCN#:</strong> @Model.Product_eccn</p>
-                            <p class="mb-1"><strong>HS Code#:</strong> @Model.Product_hs_code</p>
-                            <p><strong>Qty:</strong> @Model.Product_qty</p>
-                        </div>
-                    </div>
-
-                    <p><strong>Last Update:</strong> @(Model.Product_last_modification.HasValue ? Model.Product_last_modification.Value.ToString("yyyy/MM/dd") : "")</p>
-
-                    <div class="row text-center mt-4">
-                        <div class="col-md-4">
-                            <p><strong>Quotation</strong></p>
-                            @if (!string.IsNullOrEmpty(Model.Product_quotation_filepath))
+                    <div class="card-body px-4 pt-4 pb-4">
+                        <div class="mb-4">
+                            @if (!string.IsNullOrEmpty(Model.Product_photo_filepath))
                             {
-                                <a class="btn btn-link custom-btn-link-berry shadow-none p-0" href="@Url.Content(Model.Product_quotation_filepath)" target="_blank">( attachment )</a>
+                                <a href="@Url.Content(Model.Product_photo_filepath)" target="_blank">
+                                    <img src="@Url.Content(Model.Product_photo_filepath)" alt="Product Photo" class="img-fluid max-width-400 max-height-400 cursor-pointer" />
+                                </a>
+                            }
+                            else
+                            {
+                                <div class="bg-ocean-100 bg-opacity-100 text-white p-5 text-center max-width-400 h-auto">Product Photo</div>
                             }
                         </div>
-                        <div class="col-md-4">
-                            <p><strong>Drawing</strong></p>
-                            @if (!string.IsNullOrEmpty(Model.Product_drawing_filepath))
-                            {
-                                <a class="btn btn-link custom-btn-link-berry shadow-none p-0" href="@Url.Content(Model.Product_drawing_filepath)" target="_blank">( attachment )</a>
-                            }
-                        </div>
-                        <div class="col-md-4">
-                            <p><strong>Function/Detail</strong></p>
-                            @if (!string.IsNullOrEmpty(Model.Product_function))
-                            {
-                                <p class="mb-1"> @Model.Product_function</p>
-                            }
-                        </div>
-                    </div>
 
-                    <div class="text-center mt-4">
-                        <a href="@Url.Action("ProductByCategory", "Home", new { categoryName = Model.Category.Category_name })" class="btn btn-lg btn-secondary">Back to List</a>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p class="mb-1"><strong>Category:</strong> @Model.Category.Category_name</p>
+                                <p class="mb-1"><strong>Accessory Name:</strong> @Model.Product_accessories_name</p>
+                                <p class="mb-1"><strong>Owner:</strong> @Model.Product_owner</p>
+                                <p class="mb-1"><strong>Vendor:</strong> @(Model.Vendor != null ? Model.Vendor.Vendor_name : "")</p>
+                                <p class="mb-1"><strong>ECCN#:</strong> @Model.Product_eccn</p>
+                                <p class="mb-1"><strong>HS Code#:</strong> @Model.Product_hs_code</p>
+                                <p><strong>Quantity:</strong> @Model.Product_qty</p>
+                            </div>
+                        </div>
+
+                        <p><strong>Last Update:</strong> @(Model.Product_last_modification.HasValue ? Model.Product_last_modification.Value.ToString("yyyy/MM/dd") : "")</p>
+
+                        <div class="row text-center mt-4">
+                            <div class="col-md-4">
+                                <p><strong>Quotation</strong></p>
+                                @if (!string.IsNullOrEmpty(Model.Product_quotation_filepath))
+                                {
+                                    <a class="btn btn-link custom-btn-link-berry shadow-none p-0" href="@Url.Content(Model.Product_quotation_filepath)" target="_blank">( attachment )</a>
+                                }
+                            </div>
+                            <div class="col-md-4">
+                                <p><strong>Drawing</strong></p>
+                                @if (!string.IsNullOrEmpty(Model.Product_drawing_filepath))
+                                {
+                                    <a class="btn btn-link custom-btn-link-berry shadow-none p-0" href="@Url.Content(Model.Product_drawing_filepath)" target="_blank">( attachment )</a>
+                                }
+                            </div>
+                            <div class="col-md-4">
+                                <p><strong>Function/Detail</strong></p>
+                                @if (!string.IsNullOrEmpty(Model.Product_function))
+                                {
+                                    <p class="mb-1"> @Model.Product_function</p>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <a href="@Url.Action("ProductByCategory", "Home", new { categoryName = Model.Category.Category_name })" class="btn btn-lg btn-secondary">Back to List</a>
+                        </div>
                     </div>
                 </div>
             </div>

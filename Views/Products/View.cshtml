@@ -62,11 +62,12 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <p class="mb-1"><strong>Category:</strong> @Model.Category.Category_name</p>
-                                <p class="mb-1"><strong>Accessories Name:</strong> @Model.Product_accessories_name</p>
+                                <p class="mb-1"><strong>Accessory Name:</strong> @Model.Product_accessories_name</p>
+                                <p class="mb-1"><strong>Owner:</strong> @Model.Product_owner</p>
                                 <p class="mb-1"><strong>Vendor:</strong> @(Model.Vendor != null ? Model.Vendor.Vendor_name : "")</p>
                                 <p class="mb-1"><strong>ECCN#:</strong> @Model.Product_eccn</p>
                                 <p class="mb-1"><strong>HS Code#:</strong> @Model.Product_hs_code</p>
-                                <p><strong>Qty:</strong> @Model.Product_qty</p>
+                                <p><strong>Quantity:</strong> @Model.Product_qty</p>
                             </div>
                         </div>
 

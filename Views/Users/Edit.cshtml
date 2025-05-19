@@ -198,10 +198,10 @@
 
         $("#editUserForm").on("submit", function (e) {
             if (!isUserNameValid || !isWindowsAccountValid) {
-                event.preventDefault();
+                e.preventDefault();
             }
             else {
-                event.preventDefault();
+                e.preventDefault();
 
                 Swal.fire({
                     title: "Update Data?",

@@ -130,7 +130,8 @@
                                     </div>
                                 }
                                 <input type="file" name="drawingFile" id="drawingFile" class="form-control w-80" accept=".pdf,.doc,.docx,.xls,.xlsx" />
-                                <small class="form-text text-muted ms-1 d-block">Supported formats: JPG, JPEG, PNG, PDF, DOC, DOCX, XLS, XLSX.</small>
+                                <small class="form-text text-muted ms-1 d-block">Supported Formats: JPG, JPEG, PNG, PDF, DOC, DOCX, XLS, XLSX.</small>
+                                <small class="form-text text-muted ms-1 d-block">Size Limit: 16 MB.</small>
                                 @Html.HiddenFor(model => model.Product_drawing_filepath)
                             </div>
 
@@ -149,7 +150,8 @@
                                     </div>
                                 }
                                 <input type="file" name="photoFile" id="photoFile" class="form-control w-80" accept="image/*" />
-                                <small class="form-text text-muted ms-1 d-block">Supported formats: JPG, JPEG, PNG, GIF.</small>
+                                <small class="form-text text-muted ms-1 d-block">Supported Formats: JPG, JPEG, PNG, GIF.</small>
+                                <small class="form-text text-muted ms-1 d-block">Size Limit: 16 MB.</small>
                                 @Html.HiddenFor(model => model.Product_photo_filepath)
                             </div>
 
@@ -160,7 +162,7 @@
 
                             <div class="form-group mb-4">
                                 <span class="text-normal"><label>HS Code</label></span>
-                                @Html.TextBoxFor(model => model.Product_hs_code, new { @class = "form-control w-80", placeholder = "Example: 39234000" })
+                                @Html.TextBoxFor(model => model.Product_hs_code, new { @class = "form-control w-80", type = "number", min = "0", placeholder = "Example: 39234000" })
                             </div>
 
                             <div class="form-group mb-4">
@@ -186,15 +188,9 @@
                                     </div>
                                 }
                                 <input type="file" name="quotationFile" id="quotationFile" class="form-control w-80" accept=".pdf,.doc,.docx,.xls,.xlsx" />
-                                <small class="form-text text-muted ms-1 d-block">Supported formats: JPG, JPEG, PNG, PDF, DOC, DOCX, XLS, XLSX.</small>
+                                <small class="form-text text-muted ms-1 d-block">Supported Formats: JPG, JPEG, PNG, PDF, DOC, DOCX, XLS, XLSX.</small>
+                                <small class="form-text text-muted ms-1 d-block">Size Limit: 16 MB.</small>
                                 @Html.HiddenFor(model => model.Product_quotation_filepath)
-                            </div>
-
-                            <div class="form-group mb-4">
-                                <span class="text-normal"><label>Last Modification</label></span>
-                                <input type="text" class="form-control w-80" value="@DateTime.Now.ToString("yyyy/MM/dd")" readonly />
-                                <small class="form-text text-muted ms-1 d-block">Note: Auto-filled with <strong>current date</strong> (YYYY/MM/DD).</small>
-                                <input type="hidden" id="Product_last_modification" name="Product_last_modification" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
                             </div>
 
                             <div class="form-group mb-4">
@@ -241,7 +237,8 @@
 </main>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+    $(document).ready(function () {
+        // File Type Validation
         function validateFile(input, allowedExtensions) {
             if (input.files.length > 0) {
                 let fileName = input.files[0].name.toLowerCase();
@@ -253,25 +250,27 @@
             }
         }
 
-        document.getElementById("photoFile").addEventListener("change", function () {
-            validateFile(this, [".jpg", ".jpeg", ".png", ".gif"]);
+        const fileValidationMap = {
+            "#photoFile": [".jpg", ".jpeg", ".png", ".gif"],
+            "#drawingFile": [".jpg", ".jpeg", ".png", ".pdf", ".doc", ".docx", ".xls", ".xlsx"],
+            "#quotationFile": [".jpg", ".jpeg", ".png", ".pdf", ".doc", ".docx", ".xls", ".xlsx"]
+        };
+
+        $.each(fileValidationMap, function (selector, extensions) {
+            const input = $(selector);
+            if (input.length > 0) {
+                input.on("change", function () {
+                    validateFile(this, extensions);
+                });
+            }
         });
 
-        document.getElementById("drawingFile").addEventListener("change", function () {
-            validateFile(this, [".jpg", ".jpeg", ".png", ".pdf", ".doc", ".docx", ".xls", ".xlsx"]);
-        });
-
-        document.getElementById("quotationFile").addEventListener("change", function () {
-            validateFile(this, [".jpg", ".jpeg", ".png", ".pdf", ".doc", ".docx", ".xls", ".xlsx"]);
-        });
-    });
-
-    $(document).ready(function () {
+        // Uniqueness Validation
         let isAccessoriesNameValid = true;
         let isCodeNumberValid = true;
 
         function checkUnique(field, value, errorLabel, flagVar) {
-            var productId = @Model.Product_id;
+            const productId = @Model.Product_id;
 
             $.ajax({
                 url: '@Url.Action("CheckUnique", "Products")',
@@ -299,11 +298,7 @@
         }
 
         function toggleSubmitButton() {
-            if (isAccessoriesNameValid && isCodeNumberValid) {
-                $("#submitBtn").prop("disabled", false);
-            } else {
-                $("#submitBtn").prop("disabled", true);
-            }
+            $("#submitBtn").prop("disabled", !(isAccessoriesNameValid && isCodeNumberValid));
         }
 
         $("#Product_accessories_name").on("input", function () {
@@ -314,30 +309,53 @@
             checkUnique("Product_code_number", $(this).val(), "#code-number-error", "isCodeNumberValid");
         });
 
+        toggleSubmitButton();
+
+        // File Size Validation (Shared Function)
+        function validateFileSize(e, formId) {
+            const maxSize = 16 * 1024 * 1024;
+            const files = [
+                $(`${formId} #photoFile`)[0]?.files[0],
+                $(`${formId} #drawingFile`)[0]?.files[0],
+                $(`${formId} #quotationFile`)[0]?.files[0]
+            ];
+
+            for (const file of files) {
+                if (file && file.size > maxSize) {
+                    alert("Each uploaded file must be less than or equal to 16 MB.");
+                    e.preventDefault();
+                    return false;
+                }
+            }
+            return true;
+        }
+
         $("#editProductForm").on("submit", function (e) {
             if (!isAccessoriesNameValid || !isCodeNumberValid) {
-                event.preventDefault();
+                e.preventDefault();
+                return;
             }
-            else {
-                event.preventDefault();
 
-                Swal.fire({
-                    title: "Update Data?",
-                    text: "Are you sure you want to update this product?",
-                    icon: "question",
-                    showCancelButton: true,
-                    confirmButtonColor: '#2dce89',
-                    cancelButtonColor: '#8392ab',
-                    confirmButtonText: 'Yes, update it!',
-                    cancelButtonText: 'Cancel'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        this.submit();
-                    }
-                });
+            if (!validateFileSize(e, "#editProductForm")) {
+                return;
             }
+
+            e.preventDefault();
+
+            Swal.fire({
+                title: "Update Data?",
+                text: "Are you sure you want to update this product?",
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonColor: '#2dce89',
+                cancelButtonColor: '#8392ab',
+                confirmButtonText: 'Yes, update it!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.submit();
+                }
+            });
         });
-
-        toggleSubmitButton();
     });
 </script>

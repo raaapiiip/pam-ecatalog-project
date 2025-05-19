@@ -48,40 +48,34 @@
                         <table id="myTable" class="table table-bordered display cell-border compact">
                             <thead>
                                 <tr>
-                                    <th class="text-uppercase text-md no-export">Edit</th>
-                                    <th class="text-uppercase text-md no-export">Delete</th>
-                                    <th class="text-uppercase text-md no-export">Details</th>
-                                    <th class="text-uppercase text-md">Photo</th>
-                                    <th class="text-uppercase text-md">Category</th>
-                                    <th class="text-uppercase text-md">Code Number</th>
-                                    <th class="text-uppercase text-md">Accessories Name</th>
-                                    <th class="text-uppercase text-md">Quantity</th>
-                                    <th class="text-uppercase text-md">Owner</th>
-                                    <th class="text-uppercase text-md">Department</th>
-                                    <th class="text-uppercase text-md">Drawing</th>
-                                    <th class="text-uppercase text-md">ECCN</th>
-                                    <th class="text-uppercase text-md">HS Code</th>
-                                    <th class="text-uppercase text-md">Vendor Name</th>
-                                    <th class="text-uppercase text-md">Quotation</th>
-                                    <th class="text-uppercase text-md">Last Modification</th>
-                                    <th class="text-uppercase text-md">Function</th>
-                                    <th class="text-uppercase text-md">Remark</th>
+                                    <th class="text-uppercase text-md text-center align-content-center no-export">Edit Data</th>
+                                    <th class="text-uppercase text-md text-center align-content-center no-export">Delete Data</th>
+                                    <th class="text-uppercase text-md text-center align-content-center no-export">Detail</th>
+                                    <th class="text-uppercase text-md text-center align-content-center">Photo</th>
+                                    <th class="text-uppercase text-md text-center align-content-center">Category</th>
+                                    <th class="text-uppercase text-md text-center align-content-center">Accessory Name</th>
+                                    <th class="text-uppercase text-md text-center align-content-center">Quantity</th>
+                                    <th class="text-uppercase text-md text-center align-content-center">Owner</th>
+                                    <th class="text-uppercase text-md text-center align-content-center">Vendor</th>
+                                    <th class="text-uppercase text-md text-center align-content-center">Last Update</th>
+                                    <th class="text-uppercase text-md text-center align-content-center">Function</th>
+                                    <th class="text-uppercase text-md text-center align-content-center">Remark</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach (var item in Model)
                                 {
                                     <tr>
-                                        <td class="text-sm">
+                                        <td class="text-sm text-center align-content-center">
                                             <a href="@Url.Action("Edit", "Products", new { id = item.Product_id })" class="btn bg-ocean-80 bg-opacity-100 text-white">Edit</a>
                                         </td>
-                                        <td class="text-sm">
+                                        <td class="text-sm text-center align-content-center">
                                             <a href="@Url.Action("Delete", "Products", new { id = item.Product_id })" class="btn bg-ocean-80 bg-opacity-100 text-white">Delete</a>
                                         </td>
-                                        <td class="text-sm">
-                                            <a href="@Url.Action("View", "Products", new { id = item.Product_id })" class="btn btn-success">Details</a>
+                                        <td class="text-sm text-center align-content-center">
+                                            <a href="@Url.Action("View", "Products", new { id = item.Product_id })" class="btn btn-success">Detail</a>
                                         </td>
-                                        <td class="text-sm-center">
+                                        <td class="text-sm text-center align-content-center">
                                             @if (!string.IsNullOrEmpty(item.Product_photo_filepath))
                                             {
                                                 <a href="@Url.Content(item.Product_photo_filepath)" target="_blank">
@@ -90,33 +84,17 @@
                                             }
                                             else
                                             {
-                                                <div class="bg-ocean-100 bg-opacity-100 text-white p-4 text-center max-width-100 height-100">Product<br />Photo</div>
+                                                <div class="bg-ocean-100 bg-opacity-100 text-white p-4 text-center max-width-100 height-100">Product <br />Photo</div>
                                             }
                                         </td>
-                                        <td class="text-sm-center">@Html.DisplayFor(modelItem => item.Category.Category_name)</td>
-                                        <td class="text-sm">@Html.DisplayFor(modelItem => item.Product_code_number)</td>
-                                        <td class="text-sm">@Html.DisplayFor(modelItem => item.Product_accessories_name)</td>
-                                        <td class="text-sm-center">@Html.DisplayFor(modelItem => item.Product_qty)</td>
-                                        <td class="text-sm">@Html.DisplayFor(modelItem => item.Product_owner)</td>
-                                        <td class="text-sm">@Html.DisplayFor(modelItem => item.Product_dept)</td>
-                                        <td class="text-sm">
-                                            @if (!string.IsNullOrEmpty(item.Product_drawing_filepath))
-                                            {
-                                                <a class="btn btn-link custom-btn-link-berry shadow-none mb-2 mx-2 p-0 text-sm" href="@Url.Content(item.Product_drawing_filepath)" target="_blank">View Drawing</a>
-                                            }
-                                        </td>
-                                        <td class="text-sm">@Html.DisplayFor(modelItem => item.Product_eccn)</td>
-                                        <td class="text-sm">@Html.DisplayFor(modelItem => item.Product_hs_code)</td>
-                                        <td class="text-sm">@Html.DisplayFor(modelItem => item.Vendor.Vendor_name)</td>
-                                        <td>
-                                            @if (!string.IsNullOrEmpty(item.Product_quotation_filepath))
-                                            {
-                                                <a class="btn btn-link custom-btn-link-berry shadow-none mb-2 mx-2 p-0 text-sm" href="@Url.Content(item.Product_quotation_filepath)" target="_blank">View Quotation</a>
-                                            }
-                                        </td>
-                                        <td class="text-sm">@Html.DisplayFor(modelItem => item.Product_last_modification)</td>
-                                        <td class="text-sm">@Html.DisplayFor(modelItem => item.Product_function)</td>
-                                        <td class="text-sm">@Html.DisplayFor(modelItem => item.Product_remark)</td>
+                                        <td class="text-sm text-center align-content-center">@Html.DisplayFor(modelItem => item.Category.Category_name)</td>
+                                        <td class="text-sm text-center align-content-center">@Html.DisplayFor(modelItem => item.Product_accessories_name)</td>
+                                        <td class="text-sm text-center align-content-center">@Html.DisplayFor(modelItem => item.Product_qty)</td>
+                                        <td class="text-sm text-center align-content-center">@Html.DisplayFor(modelItem => item.Product_owner)</td>
+                                        <td class="text-sm text-center align-content-center">@Html.DisplayFor(modelItem => item.Vendor.Vendor_name)</td>
+                                        <td class="text-sm text-center align-content-center">@Html.DisplayFor(modelItem => item.Product_last_modification)</td>
+                                        <td class="text-sm text-center align-content-center">@Html.DisplayFor(modelItem => item.Product_function)</td>
+                                        <td class="text-sm text-center align-content-center">@Html.DisplayFor(modelItem => item.Product_remark)</td>
                                     </tr>
                                 }
                             </tbody>

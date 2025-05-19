@@ -107,6 +107,17 @@ namespace ItemListApp.Controllers
                     return View(product);
                 }
 
+                // Maximum limit for each uploaded file = 16 MB
+                int maxFileSize = 16 * 1024 * 1024;
+
+                if ((photoFile != null && photoFile.ContentLength > maxFileSize) ||
+                    (drawingFile != null && drawingFile.ContentLength > maxFileSize) ||
+                    (quotationFile != null && quotationFile.ContentLength > maxFileSize))
+                {
+                    ModelState.AddModelError("", "Each uploaded file must be less than or equal to 16 MB.");
+                    return View(product);
+                }
+
                 // Retrieve Category Name Based on Product_Category_id
                 var category = _context.Categories.FirstOrDefault(c => c.Category_id == product.Product_Category_id);
                 if (category == null)
@@ -238,6 +249,17 @@ namespace ItemListApp.Controllers
                 {
                     PrepareCategories(product.Product_Category_id);
                     PrepareVendors(product.Product_Vendor_id);
+                    return View(product);
+                }
+
+                // Maximum limit for each uploaded file = 16 MB
+                int maxFileSize = 16 * 1024 * 1024;
+
+                if ((photoFile != null && photoFile.ContentLength > maxFileSize) ||
+                    (drawingFile != null && drawingFile.ContentLength > maxFileSize) ||
+                    (quotationFile != null && quotationFile.ContentLength > maxFileSize))
+                {
+                    ModelState.AddModelError("", "Each uploaded file must be less than or equal to 16 MB.");
                     return View(product);
                 }
 
