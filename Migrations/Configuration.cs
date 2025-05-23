@@ -10,7 +10,6 @@
         public Configuration()
         {
             AutomaticMigrationsEnabled = true;
-            ContextKey = "ItemListApp.Models.PAMCatalogContext";
         }
 
         protected override void Seed(ItemListApp.Models.PAMCatalogContext context)

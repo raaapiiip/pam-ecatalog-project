@@ -91,9 +91,10 @@ namespace ItemListApp.Controllers
             }
 
             Users user = _context.Users.Find(id);
+
             if (user == null)
             {
-                return HttpNotFound();
+                return RedirectToAction("Index", "Home");
             }
 
             return View(user);
@@ -140,9 +141,10 @@ namespace ItemListApp.Controllers
             }
 
             Users user = _context.Users.Find(id);
+
             if (user == null)
             {
-                return HttpNotFound();
+                return RedirectToAction("Index", "Home");
             }
 
             user.IsAdmin = false;
@@ -164,9 +166,10 @@ namespace ItemListApp.Controllers
             }
 
             Users user = _context.Users.Find(id);
+
             if (user == null)
             {
-                return HttpNotFound();
+                return RedirectToAction("Index", "Home");
             }
 
             user.IsAdmin = true;

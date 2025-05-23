@@ -1,8 +1,13 @@
 ﻿@model ItemListApp.Models.Products
+@using System.Linq
 
 @{
     ViewBag.Title = "Edit Product";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var ownerSingle = Model.Product_owner ?? "";
+    var ownerArray = ownerSingle.Split('-');
+    var selectedOwners = ownerArray.Select(x => x.Trim()).ToList();
 }
 
 <main class="main-content position-relative border-radius-lg max-height-vh-100 h-100">
@@ -53,14 +58,6 @@
                             @Html.HiddenFor(model => model.Product_id)
 
                             <div class="form-group mb-4">
-                                <span class="text-normal"><label>Code Number</label></span>
-                                <span class="text-danger text-sm">● required</span>
-                                @Html.TextBoxFor(model => model.Product_code_number, new { @class = "form-control w-80", required = "required", placeholder = "Example: ID 00123" })
-                                @Html.ValidationMessageFor(model => model.Product_code_number, "", new { @class = "text-danger d-block" })
-                                <span id="code-number-error" class="text-danger"></span>
-                            </div>
-
-                            <div class="form-group mb-4">
                                 <span class="text-normal"><label>Accessories Name</label></span>
                                 <span class="text-danger text-sm">● required</span>
                                 @Html.TextBoxFor(model => model.Product_accessories_name, new { @class = "form-control w-80", required = "required", placeholder = "Example: Dust Bin" })
@@ -88,20 +85,19 @@
                             <div class="form-group mb-4">
                                 <span class="text-normal"><label>Owner</label></span>
                                 <span class="text-danger text-sm">● required</span>
-                                <div class="dropdown-container">
-                                    @Html.DropDownList("Product_owner", new List<SelectListItem>
+                                <div id="owner-checkboxes" class="d-flex flex-wrap">
+                                    @foreach (var owner in ViewBag.Owners as List<ItemListApp.Models.Owners>)
                                     {
-                                        new SelectListItem { Text = "-- Select Owner --", Value = "", Selected = true },
-                                        new SelectListItem { Text = "BAT1", Value = "BAT1" },
-                                        new SelectListItem { Text = "BAT2", Value = "BAT2" },
-                                        new SelectListItem { Text = "BAT3", Value = "BAT3" },
-                                        new SelectListItem { Text = "BAT1-BAT2", Value = "BAT1-BAT2" },
-                                        new SelectListItem { Text = "BAT1-BAT3", Value = "BAT1-BAT3" },
-                                        new SelectListItem { Text = "BAT2-BAT3", Value = "BAT2-BAT3" },
-                                        new SelectListItem { Text = "BAT1-BAT2-BAT3", Value = "BAT1-BAT2-BAT3" }
-                                    }, new { @class = "form-select w-80", required = "required" })
+                                        bool isChecked = selectedOwners.Contains(owner.Owner_name);
+                                        <div class="form-check me-3 mb-0">
+                                            <input type="checkbox" class="form-check-input owner-checkbox"
+                                                   name="SelectedOwners" value="@owner.Owner_name" id="owner_@owner.Owner_id"
+                                                   @(isChecked ? "checked" : "") />
+                                            <label class="form-check-label mb-0" for="owner_@owner.Owner_id">@owner.Owner_name</label>
+                                        </div>
+                                    }
                                 </div>
-                                @Html.ValidationMessageFor(model => model.Product_owner, "", new { @class = "text-danger d-block" })
+                                <span id="owner-error" class="text-danger" style="display: none;">Please select at least one owner.</span>
                             </div>
 
                             <div class="form-group mb-4">
@@ -193,6 +189,8 @@
                                 @Html.HiddenFor(model => model.Product_quotation_filepath)
                             </div>
 
+                            <input type="hidden" id="Product_last_modification" name="Product_last_modification" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+
                             <div class="form-group mb-4">
                                 <span class="text-normal"><label>Function</label></span>
                                 @Html.TextAreaFor(model => model.Product_function, new { @class = "form-control w-80", rows = "3", placeholder = "Example: FOL, EOL, TEST-BEX1, MSP-BEX2" })
@@ -267,10 +265,10 @@
 
         // Uniqueness Validation
         let isAccessoriesNameValid = true;
-        let isCodeNumberValid = true;
+        let isOwnerValid = true;
 
         function checkUnique(field, value, errorLabel, flagVar) {
-            const productId = @Model.Product_id;
+            const productId = '@Model.Product_id';
 
             $.ajax({
                 url: '@Url.Action("CheckUnique", "Products")',
@@ -281,37 +279,45 @@
                         $(errorLabel).text(response.message);
                         if (flagVar === "isAccessoriesNameValid") {
                             isAccessoriesNameValid = false;
-                        } else if (flagVar === "isCodeNumberValid") {
-                            isCodeNumberValid = false;
                         }
                     } else {
                         $(errorLabel).text("");
                         if (flagVar === "isAccessoriesNameValid") {
                             isAccessoriesNameValid = true;
-                        } else if (flagVar === "isCodeNumberValid") {
-                            isCodeNumberValid = true;
                         }
                     }
-                    toggleSubmitButton();
                 }
             });
         }
 
-        function toggleSubmitButton() {
-            $("#submitBtn").prop("disabled", !(isAccessoriesNameValid && isCodeNumberValid));
-        }
-
+        // Accessories name validation
         $("#Product_accessories_name").on("input", function () {
             checkUnique("Product_accessories_name", $(this).val(), "#accessories-name-error", "isAccessoriesNameValid");
         });
 
-        $("#Product_code_number").on("input", function () {
-            checkUnique("Product_code_number", $(this).val(), "#code-number-error", "isCodeNumberValid");
-        });
+        // Owner validation
+        function validateOwner() {
+            isOwnerValid = $("input[name='SelectedOwners']:checked").length > 0;
+            if (!isOwnerValid) {
+                $("#owner-error").show();
+            } else {
+                $("#owner-error").hide();
+            }
+        }
 
-        toggleSubmitButton();
+        $("input[name='SelectedOwners']").on("change", validateOwner);
 
-        // File Size Validation (Shared Function)
+        function scrollToElement(selector) {
+            const el = $(selector);
+            if (el.length) {
+                $('html, body').animate({
+                    scrollTop: el.offset().top - 100
+                }, 500);
+                el.focus();
+            }
+        }
+
+        // File size validation (Shared Function)
         function validateFileSize(e, formId) {
             const maxSize = 16 * 1024 * 1024;
             const files = [
@@ -331,16 +337,25 @@
         }
 
         $("#editProductForm").on("submit", function (e) {
-            if (!isAccessoriesNameValid || !isCodeNumberValid) {
-                e.preventDefault();
-                return;
-            }
-
-            if (!validateFileSize(e, "#editProductForm")) {
-                return;
-            }
-
             e.preventDefault();
+
+            validateOwner();
+
+            // Scroll and prevent submit if validations fail
+            if (!isAccessoriesNameValid) {
+                scrollToElement("#Product_accessories_name");
+                return;
+            }
+
+            if (!isOwnerValid) {
+                scrollToElement("#owner-checkboxes");
+                return;
+            }
+
+            // File size validation
+            if (!validateFileSize("#createProductForm")) {
+                return;
+            }
 
             Swal.fire({
                 title: "Update Data?",
@@ -353,6 +368,7 @@
                 cancelButtonText: 'Cancel'
             }).then((result) => {
                 if (result.isConfirmed) {
+                    $("button[type=submit]").prop("disabled", true);
                     this.submit();
                 }
             });

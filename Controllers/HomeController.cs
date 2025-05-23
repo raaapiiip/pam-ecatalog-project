@@ -34,7 +34,7 @@ namespace ItemListApp.Controllers
                         {
                             Id = c.Category_id,
                             Name = c.Category_name,
-                            ProductCount = c.Products.Count()
+                            ProductCount = c.Products.Count(p => !p.IsDeleted)
                         }).ToList(),
                     Subcategories = new List<CategoryHierarchyViewModel>()
                 }).ToList();
@@ -67,11 +67,11 @@ namespace ItemListApp.Controllers
             var product = _context.Products
                             .Include(p => p.Category)
                             .Include(p => p.Vendor)
-                            .FirstOrDefault(p => p.Product_id == id);
+                            .FirstOrDefault(p => p.Product_id == id && !p.IsDeleted);
 
             if (product == null)
             {
-                return HttpNotFound();
+                return RedirectToAction("Index", "Home");
             }
 
             return View(product);
@@ -86,7 +86,7 @@ namespace ItemListApp.Controllers
             }
 
             var products = _context.Products
-                .Where(p => p.Category.Category_name == categoryName)
+                .Where(p => p.Category.Category_name == categoryName && !p.IsDeleted)
                 .ToList();
 
             ViewBag.CategoryFilter = categoryName;
@@ -114,7 +114,7 @@ namespace ItemListApp.Controllers
 
             if (selectedCategory == null)
             {
-                return HttpNotFound();
+                return RedirectToAction("Index", "Home");
             }
 
             if (selectedCategory.ParentId.HasValue)
@@ -147,7 +147,7 @@ namespace ItemListApp.Controllers
                 {
                     Id = c.Category_id,
                     Name = c.Category_name,
-                    ProductCount = c.Products.Count()
+                    ProductCount = c.Products.Count(p => !p.IsDeleted)
                 })
                 .ToList();
 

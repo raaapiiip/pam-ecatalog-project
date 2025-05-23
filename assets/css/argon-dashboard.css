@@ -3152,11 +3152,17 @@ textarea.form-control-lg {
 }
 
 .form-check-input:checked[type=checkbox] {
-  --bs-form-check-bg-image: linear-gradient(310deg, #5e72e4 0%, #825ee4 100%);
+  --bs-form-check-bg-image: none;
+  background-color: #3b9b91f2;
+  background-image: none;
+  border-color: #3b9b91f2;
 }
 
 .form-check-input:checked[type=radio] {
-  --bs-form-check-bg-image: linear-gradient(310deg, #5e72e4 0%, #825ee4 100%);
+  --bs-form-check-bg-image: none;
+  background-color: #3b9b91f2;
+  background-image: none;
+  border-color: #3b9b91f2;
 }
 
 .form-check-input[type=checkbox]:indeterminate {
@@ -22964,8 +22970,8 @@ fieldset:disabled .btn {
 }
 
 .form-switch .form-check-input:checked {
-  border-color: rgba(59, 155, 145, 0.95);
-  background-color: rgba(59, 155, 145, 0.95);
+  border-color: #3b9b91f2;
+  background-color: #3b9b91f2;
 }
 
 .form-switch .form-check-label {

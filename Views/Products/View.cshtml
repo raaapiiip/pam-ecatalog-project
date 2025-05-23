@@ -64,10 +64,11 @@
                                 <p class="mb-1"><strong>Category:</strong> @Model.Category.Category_name</p>
                                 <p class="mb-1"><strong>Accessory Name:</strong> @Model.Product_accessories_name</p>
                                 <p class="mb-1"><strong>Owner:</strong> @Model.Product_owner</p>
-                                <p class="mb-1"><strong>Vendor:</strong> @(Model.Vendor != null ? Model.Vendor.Vendor_name : "")</p>
-                                <p class="mb-1"><strong>ECCN#:</strong> @Model.Product_eccn</p>
-                                <p class="mb-1"><strong>HS Code#:</strong> @Model.Product_hs_code</p>
-                                <p><strong>Quantity:</strong> @Model.Product_qty</p>
+                                <p class="mb-1"><strong>Department:</strong> @Model.Product_dept</p>
+                                <p class="mb-1"><strong>Vendor:</strong> @(Model.Vendor != null ? Model.Vendor.Vendor_name : "(N/A)")</p>
+                                <p class="mb-1"><strong>ECCN#:</strong> @(Model.Product_eccn != null ? Model.Product_eccn : "(N/A)")</p>
+                                <p class="mb-1"><strong>HS Code#:</strong> @(Model.Product_hs_code != null ? Model.Product_hs_code.ToString() : "(N/A)")</p>
+                                <p><strong>Quantity:</strong> @(Model.Product_qty != null ? Model.Product_qty.ToString() : "(N/A)")</p>
                             </div>
                         </div>
 
@@ -78,21 +79,33 @@
                                 <p><strong>Quotation</strong></p>
                                 @if (!string.IsNullOrEmpty(Model.Product_quotation_filepath))
                                 {
-                                    <a class="btn btn-link custom-btn-link-berry shadow-none p-0" href="@Url.Content(Model.Product_quotation_filepath)" target="_blank">( attachment )</a>
+                                    <a class="btn btn-link custom-btn-link-berry shadow-none p-0" href="@Url.Content(Model.Product_quotation_filepath)" target="_blank">(attachment)</a>
+                                }
+                                else
+                                {
+                                    <p class="font-weight-bolder text-sm" style="cursor: not-allowed;">(N/A)</p>
                                 }
                             </div>
                             <div class="col-md-4">
                                 <p><strong>Drawing</strong></p>
                                 @if (!string.IsNullOrEmpty(Model.Product_drawing_filepath))
                                 {
-                                    <a class="btn btn-link custom-btn-link-berry shadow-none p-0" href="@Url.Content(Model.Product_drawing_filepath)" target="_blank">( attachment )</a>
+                                    <a class="btn btn-link custom-btn-link-berry shadow-none p-0" href="@Url.Content(Model.Product_drawing_filepath)" target="_blank">(attachment)</a>
+                                }
+                                else
+                                {
+                                    <p class="font-weight-bolder text-sm" style="cursor: not-allowed;">(N/A)</p>
                                 }
                             </div>
                             <div class="col-md-4">
                                 <p><strong>Function/Detail</strong></p>
                                 @if (!string.IsNullOrEmpty(Model.Product_function))
                                 {
-                                    <p class="mb-1"> @Model.Product_function</p>
+                                    <p class="text-sm mb-1"> @Model.Product_function</p>
+                                }
+                                else
+                                {
+                                    <p class="font-weight-bolder text-sm">(N/A)</p>
                                 }
                             </div>
                         </div>

@@ -25,8 +25,11 @@ namespace ItemListApp.Controllers
         // GET: Products
         public ActionResult Index()
         {
-            var products = _context.Products.Include(p => p.Category);
-            return View(products.ToList());
+            var products = _context.Products
+                .Where(p => !p.IsDeleted)
+                .Include(p => p.Category)
+                .ToList();
+            return View(products);
         }
 
         // GET: Products/View/Id
@@ -40,32 +43,11 @@ namespace ItemListApp.Controllers
             var product = _context.Products
                             .Include(p => p.Category)
                             .Include(p => p.Vendor)
-                            .FirstOrDefault(p => p.Product_id == id);
+                            .FirstOrDefault(p => p.Product_id == id && !p.IsDeleted);
 
             if (product == null)
-            {
-                return HttpNotFound();
-            }
-
-            return View(product);
-        }
-
-        // GET: Products/Details/Id
-        public ActionResult Details(int? id)
-        {
-            if (!id.HasValue)
             {
                 return RedirectToAction("Index", "Home");
-            }
-
-            Products product = _context.Products
-                .Include(p => p.Category)
-                .Include(p => p.Vendor)
-                .FirstOrDefault(p => p.Product_id == id);
-
-            if (product == null)
-            {
-                return HttpNotFound();
             }
 
             return View(product);
@@ -77,33 +59,42 @@ namespace ItemListApp.Controllers
             var product = new Products();
             PrepareCategories();
             PrepareVendors();
+            ViewBag.Owners = _context.Owners.ToList();
             return View(product);
         }
 
         // POST: Products/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Products product, HttpPostedFileBase photoFile, HttpPostedFileBase drawingFile, HttpPostedFileBase quotationFile)
+        public ActionResult Create(Products product, HttpPostedFileBase photoFile, HttpPostedFileBase drawingFile, HttpPostedFileBase quotationFile, string[] SelectedOwners)
         {
             if (ModelState.IsValid)
             {
-                // Check if the accessory name or product code already exists (must be unique)
+                // Convert selected owners to comma-separated string
+                if (SelectedOwners != null && SelectedOwners.Length > 0)
+                {
+                    product.Product_owner = string.Join("-", SelectedOwners);
+                }
+                else
+                {
+                    ModelState.AddModelError("Product_owner", "At least one owner must be selected.");
+                    PrepareCategories(product.Product_Category_id);
+                    PrepareVendors(product.Product_Vendor_id);
+                    return View(product);
+                }
+
+                // Check if the accessory name already exists (must be unique)
                 bool isAccessoriesNameExists = _context.Products.Any(p => p.Product_accessories_name == product.Product_accessories_name);
                 if (isAccessoriesNameExists)
                 {
                     ModelState.AddModelError("Product_accessories_name", "Accessories name must be unique.");
                 }
 
-                bool isProductCodeExists = _context.Products.Any(p => p.Product_code_number == product.Product_code_number);
-                if (isProductCodeExists)
-                {
-                    ModelState.AddModelError("Product_code_number", "Product code number must be unique.");
-                }
-
                 if (!ModelState.IsValid)
                 {
                     PrepareCategories(product.Product_Category_id);
                     PrepareVendors(product.Product_Vendor_id);
+                    ViewBag.Owners = _context.Owners.ToList();
                     return View(product);
                 }
 
@@ -192,6 +183,9 @@ namespace ItemListApp.Controllers
                     product.Product_quotation_filepath = quotationPath;
                 }
 
+                // Save create action from user
+                product.CreatedBy = User.Identity.Name;
+
                 // Save New Product to Database
                 _context.Products.Add(product);
                 _context.SaveChanges();
@@ -201,6 +195,7 @@ namespace ItemListApp.Controllers
 
             PrepareCategories(product.Product_Category_id);
             PrepareVendors(product.Product_Vendor_id);
+            ViewBag.Owners = _context.Owners.ToList();
             TempData["ErrorMessage"] = "Failed to add new product.";
             return View(product);
         }
@@ -213,14 +208,16 @@ namespace ItemListApp.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            var product = _context.Products.Find(id);
+            var product = _context.Products.FirstOrDefault(p => p.Product_id == id && !p.IsDeleted);
+
             if (product == null)
             {
-                return HttpNotFound();
+                return RedirectToAction("Index", "Home");
             }
 
             PrepareCategories(product.Product_Category_id);
             PrepareVendors(product.Product_Vendor_id);
+            ViewBag.Owners = _context.Owners.ToList();
             return View(product);
         }
 
@@ -228,27 +225,35 @@ namespace ItemListApp.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(Products product, HttpPostedFileBase photoFile, HttpPostedFileBase drawingFile, HttpPostedFileBase quotationFile,
-                                 bool? removePhoto, bool? removeDrawing, bool? removeQuotation)
+                                 bool? removePhoto, bool? removeDrawing, bool? removeQuotation, string[] SelectedOwners)
         {
             if (ModelState.IsValid)
             {
-                // Check if the accessory name or product code already exists (must be unique)
+                // Convert selected owners to comma-separated string
+                if (SelectedOwners != null && SelectedOwners.Length > 0)
+                {
+                    product.Product_owner = string.Join("-", SelectedOwners);
+                }
+                else
+                {
+                    ModelState.AddModelError("Product_owner", "At least one owner must be selected.");
+                    PrepareCategories(product.Product_Category_id);
+                    PrepareVendors(product.Product_Vendor_id);
+                    return View(product);
+                }
+
+                // Check if the accessory name already exists (must be unique)
                 bool isAccessoriesNameExists = _context.Products.Any(p => p.Product_id != product.Product_id && p.Product_accessories_name == product.Product_accessories_name);
                 if (isAccessoriesNameExists)
                 {
                     ModelState.AddModelError("Product_accessories_name", "Accessories name must be unique.");
                 }
 
-                bool isProductCodeExists = _context.Products.Any(p => p.Product_id != product.Product_id && p.Product_code_number == product.Product_code_number);
-                if (isProductCodeExists)
-                {
-                    ModelState.AddModelError("Product_code_number", "Product code number must be unique.");
-                }
-
                 if (!ModelState.IsValid)
                 {
                     PrepareCategories(product.Product_Category_id);
                     PrepareVendors(product.Product_Vendor_id);
+                    ViewBag.Owners = _context.Owners.ToList();
                     return View(product);
                 }
 
@@ -370,6 +375,9 @@ namespace ItemListApp.Controllers
                     product.Product_quotation_filepath = quotationPath;
                 }
 
+                // Save update action from user
+                product.UpdatedBy = User.Identity.Name;
+
                 // Save New Product to Database
                 _context.Entry(product).State = EntityState.Modified;
                 _context.SaveChanges();
@@ -379,6 +387,7 @@ namespace ItemListApp.Controllers
 
             PrepareCategories(product.Product_Category_id);
             PrepareVendors(product.Product_Vendor_id);
+            ViewBag.Owners = _context.Owners.ToList();
             TempData["ErrorMessage"] = "Failed to update product.";
             return View(product);
         }
@@ -391,12 +400,13 @@ namespace ItemListApp.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            Products product = _context.Products.Include(p => p.Category)
-                                          .FirstOrDefault(p => p.Product_id == id);
+            Products product = _context.Products
+                .Include(p => p.Category)                     
+                .FirstOrDefault(p => p.Product_id == id && !p.IsDeleted);
 
             if (product == null)
             {
-                return HttpNotFound();
+                return RedirectToAction("Index", "Home");
             }
 
             return View(product);
@@ -407,10 +417,14 @@ namespace ItemListApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Products product = _context.Products.Find(id);
+            var product = _context.Products.FirstOrDefault(p => p.Product_id == id && !p.IsDeleted);
+
             if (product != null)
             {
-                _context.Products.Remove(product);
+                // Save delete action from user
+                product.IsDeleted = true;
+                product.DeletedBy = User.Identity.Name;
+
                 _context.SaveChanges();
             }
 
@@ -428,15 +442,7 @@ namespace ItemListApp.Controllers
                 exists = _context.Products.Any(p => p.Product_accessories_name == value && p.Product_id != id);
                 if (exists)
                 {
-                    errorMessage = $"'{value}' already exists. Please use a different accessories name.";
-                }
-            }
-            else if (field == "Product_code_number")
-            {
-                exists = _context.Products.Any(p => p.Product_code_number == value && p.Product_id != id);
-                if (exists)
-                {
-                    errorMessage = $"'{value}' already exists. Please use a different code number.";
+                    errorMessage = $"'{value}' already used. Please use a different accessories name.";
                 }
             }
 

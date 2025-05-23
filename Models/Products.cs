@@ -16,12 +16,12 @@ namespace ItemListApp.Models
         [Required(ErrorMessage = "Product Category ID is required.")]
         public int? Product_Category_id { get; set; }
         public int? Product_Vendor_id { get; set; }
-        [Required(ErrorMessage = "Product code number is required.")]
-        public string Product_code_number { get; set; }
         [Required(ErrorMessage = "Product accessories name is required.")]
         public string Product_accessories_name { get; set; }
         public int? Product_qty { get; set; }
         public string Product_owner { get; set; }
+        [NotMapped]
+        public List<string> SelectedOwners { get; set; }
         public string Product_dept { get; set; }
         public string Product_drawing_filepath { get; set; }
         public string Product_photo_filepath { get; set; }
@@ -33,6 +33,10 @@ namespace ItemListApp.Models
         public DateTime? Product_last_modification { get; set; }
         public string Product_function { get; set; }
         public string Product_remark { get; set; }
+        public string CreatedBy { get; set; }
+        public string UpdatedBy { get; set; }
+        public string DeletedBy { get; set; }
+        public bool IsDeleted { get; set; } = false;
         [ForeignKey("Product_Category_id")]
         public virtual Categories Category { get; set; }
         [ForeignKey("Product_Vendor_id")]

@@ -162,19 +162,16 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202503030718161_InitialCreate.cs" />
-    <Compile Include="Migrations\202503030718161_InitialCreate.Designer.cs">
-      <DependentUpon>202503030718161_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202503030934020_SyncDatabase.cs" />
-    <Compile Include="Migrations\202503030934020_SyncDatabase.Designer.cs">
-      <DependentUpon>202503030934020_SyncDatabase.cs</DependentUpon>
+    <Compile Include="Migrations\202505220243265_InitialSync.cs" />
+    <Compile Include="Migrations\202505220243265_InitialSync.Designer.cs">
+      <DependentUpon>202505220243265_InitialSync.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Categories.cs" />
     <Compile Include="Models\CategoriesHierarchy.cs" />
     <Compile Include="Models\CategoryHierarchyViewModel.cs" />
     <Compile Include="Models\CategoryViewModel.cs" />
+    <Compile Include="Models\Owners.cs" />
     <Compile Include="Models\Products.cs" />
     <Compile Include="Models\Users.cs" />
     <Compile Include="Models\Vendors.cs" />
@@ -1055,11 +1052,8 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202503030718161_InitialCreate.resx">
-      <DependentUpon>202503030718161_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202503030934020_SyncDatabase.resx">
-      <DependentUpon>202503030934020_SyncDatabase.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202505220243265_InitialSync.resx">
+      <DependentUpon>202505220243265_InitialSync.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
