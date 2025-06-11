@@ -16,13 +16,19 @@
                     <li class="breadcrumb-item text-sm text-white"><a class="text-white">View</a></li>
                     <li class="breadcrumb-item text-sm text-white active" aria-current="page">@Model.Product_accessories_name</li>
                 </ol>
-                <h6 class="font-weight-bolder text-white mb-0 pe-3 pe-sm-0">Products</h6>
+                <h6 class="fw-bolder text-white mb-0 pe-3 pe-sm-0">Products</h6>
             </nav>
             <div class="collapse navbar-collapse me-md-0" id="navbar">
-                <div class="ms-auto d-flex align-items-center">
+                <div class="ms-auto d-flex flex-column align-items-end">
                     <span class="d-inline text-white">Hello, @User.Identity.Name</span>
+                    <a class="d-flex align-items-center justify-content-center gap-2 m-0 letter-normal fw-normal fs-6 text-white btn btn-link btn-outline-secondary shadow-none p-0" href="https://confluencewikiprod.intra.infineon.com/display/5SInternalAudit/E-Catalog+PAM" target="_blank">
+                        <div class="icon d-flex align-items-center justify-content-center">
+                            <i class="fa-solid fa-globe"></i>
+                        </div>
+                        <span class="d-inline">E-Catalog Accessories Tutorial</span>
+                    </a>
                 </div>
-                <div class="nav-item d-xl-none ps-3 d-flex align-items-center">
+                <div class="nav-item d-xl-none ps-3 d-flex align-items-end">
                     <a href="javascript:;" class="nav-link text-white p-0" id="iconNavbarSidenav">
                         <div class="sidenav-toggler-inner">
                             <i class="sidenav-toggler-line bg-white"></i>
@@ -65,10 +71,10 @@
                                 <p class="mb-1"><strong>Accessory Name:</strong> @Model.Product_accessories_name</p>
                                 <p class="mb-1"><strong>Owner:</strong> @Model.Product_owner</p>
                                 <p class="mb-1"><strong>Department:</strong> @Model.Product_dept</p>
-                                <p class="mb-1"><strong>Vendor:</strong> @(Model.Vendor != null ? Model.Vendor.Vendor_name : "(N/A)")</p>
-                                <p class="mb-1"><strong>ECCN#:</strong> @(Model.Product_eccn != null ? Model.Product_eccn : "(N/A)")</p>
-                                <p class="mb-1"><strong>HS Code#:</strong> @(Model.Product_hs_code != null ? Model.Product_hs_code.ToString() : "(N/A)")</p>
-                                <p><strong>Quantity:</strong> @(Model.Product_qty != null ? Model.Product_qty.ToString() : "(N/A)")</p>
+                                <p class="mb-1"><strong>Vendor:</strong> @(Model.Product_vendor_name != null ? Model.Product_vendor_name : "(Will be updated)")</p>
+                                <p class="mb-1"><strong>ECCN#:</strong> @(Model.Product_eccn != null ? Model.Product_eccn : "(Will be updated)")</p>
+                                <p class="mb-1"><strong>HS Code#:</strong> @(Model.Product_hs_code != null ? Model.Product_hs_code.ToString() : "(Will be updated)")</p>
+                                <p><strong>Quantity:</strong> @(Model.Product_qty != null ? Model.Product_qty.ToString() : "(Will be updated)")</p>
                             </div>
                         </div>
 
@@ -83,7 +89,7 @@
                                 }
                                 else
                                 {
-                                    <p class="font-weight-bolder text-sm" style="cursor: not-allowed;">(N/A)</p>
+                                    <p class="fw-bolder text-sm" style="cursor: not-allowed;">(Will be updated)</p>
                                 }
                             </div>
                             <div class="col-md-4">
@@ -94,7 +100,7 @@
                                 }
                                 else
                                 {
-                                    <p class="font-weight-bolder text-sm" style="cursor: not-allowed;">(N/A)</p>
+                                    <p class="fw-bolder text-sm" style="cursor: not-allowed;">(Will be updated)</p>
                                 }
                             </div>
                             <div class="col-md-4">
@@ -105,7 +111,7 @@
                                 }
                                 else
                                 {
-                                    <p class="font-weight-bolder text-sm">(N/A)</p>
+                                    <p class="fw-bolder text-sm">(Will be updated)</p>
                                 }
                             </div>
                         </div>
@@ -125,7 +131,7 @@
                             <div class="copyright text-center text-md text-muted text-lg-start">
                                 ©
                                 <script>document.write(new Date().getFullYear())</script> -
-                                <a class="font-weight-bold">OE Applications</a>
+                                <a class="fw-bold">OE Applications</a>
                             </div>
                         </div>
                     </div>

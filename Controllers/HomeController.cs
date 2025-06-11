@@ -66,7 +66,6 @@ namespace ItemListApp.Controllers
 
             var product = _context.Products
                             .Include(p => p.Category)
-                            .Include(p => p.Vendor)
                             .FirstOrDefault(p => p.Product_id == id && !p.IsDeleted);
 
             if (product == null)

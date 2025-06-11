@@ -7,13 +7,13 @@ namespace ItemListApp.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.5.1")]
-    public sealed partial class InitialSync : IMigrationMetadata
+    public sealed partial class SyncDatabase : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(InitialSync));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(SyncDatabase));
         
         string IMigrationMetadata.Id
         {
-            get { return "202505220243265_InitialSync"; }
+            get { return "202506100334446_SyncDatabase"; }
         }
         
         string IMigrationMetadata.Source

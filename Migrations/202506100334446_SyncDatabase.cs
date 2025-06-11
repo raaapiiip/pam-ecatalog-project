@@ -3,7 +3,7 @@
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class InitialSync : DbMigration
+    public partial class SyncDatabase : DbMigration
     {
         public override void Up()
         {

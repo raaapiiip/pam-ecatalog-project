@@ -15,13 +15,19 @@
                     <li class="breadcrumb-item text-sm text-white"><a class="text-white">Home</a></li>
                     <li class="breadcrumb-item text-sm text-white active" aria-current="page">Subcategories - @(Model != null && Model.Name != null ? Model.Name : "Subcategories")</li>
                 </ol>
-                <h6 class="font-weight-bolder text-white mb-0 pe-3 pe-sm-0">Home</h6>
+                <h6 class="fw-bolder text-white mb-0 pe-3 pe-sm-0">Home</h6>
             </nav>
             <div class="collapse navbar-collapse me-md-0" id="navbar">
-                <div class="ms-auto d-flex align-items-center">
+                <div class="ms-auto d-flex flex-column align-items-end">
                     <span class="d-inline text-white">Hello, @User.Identity.Name</span>
+                    <a class="d-flex align-items-center justify-content-center gap-2 m-0 letter-normal fw-normal fs-6 text-white btn btn-link btn-outline-secondary shadow-none p-0" href="https://confluencewikiprod.intra.infineon.com/display/5SInternalAudit/E-Catalog+PAM" target="_blank">
+                        <div class="icon d-flex align-items-center justify-content-center">
+                            <i class="fa-solid fa-globe"></i>
+                        </div>
+                        <span class="d-inline">E-Catalog Accessories Tutorial</span>
+                    </a>
                 </div>
-                <div class="nav-item d-xl-none ps-3 d-flex align-items-center">
+                <div class="nav-item d-xl-none ps-3 d-flex align-items-end">
                     <a href="javascript:;" class="nav-link text-white p-0" id="iconNavbarSidenav">
                         <div class="sidenav-toggler-inner">
                             <i class="sidenav-toggler-line bg-white"></i>
@@ -45,14 +51,14 @@
                             <div class="col-auto">
                                 @if (Model.ParentCategory != null)
                                 {
-                                    <a href="@Url.Action("Subcategories", "Home", new { categoryId = Model.ParentCategory.Id })" class="text-primary font-weight-bold text-sm">
+                                    <a href="@Url.Action("Subcategories", "Home", new { categoryId = Model.ParentCategory.Id })" class="text-primary fw-bold text-sm">
                                         <i class="fa-solid fa-arrow-left fa-sm"></i>
                                         <span class="nav-link-text text-lg ms-1">Back</span>
                                     </a>
                                 }
                                 else
                                 {
-                                    <a href="@Url.Action("Index", "Home")" class="text-primary font-weight-bold text-sm">
+                                    <a href="@Url.Action("Index", "Home")" class="text-primary fw-bold text-sm">
                                         <i class="fa-solid fa-arrow-left fa-sm"></i>
                                         <span class="nav-link-text text-lg ms-1">Back</span>
                                     </a>
@@ -60,7 +66,7 @@
                             </div>
 
                             <div class="col-auto">
-                                <h4 class="mb-0 font-weight-bolder">
+                                <h4 class="mb-0 fw-bolder">
                                     Subcategories of @Model.Name
                                 </h4>
                             </div>
@@ -81,12 +87,12 @@
                                 <div class="row align-items-center p-3">
                                     <div class="col-9">
                                         <div>
-                                            <p class="text-sm mb-0 text-uppercase font-weight-bold">Subcategory</p>
-                                            <h5 class="font-weight-bolder">
+                                            <p class="text-sm mb-0 text-uppercase fw-bold">Subcategory</p>
+                                            <h5 class="fw-bolder">
                                                 @subcategory.Name
                                             </h5>
                                             <p class="mb-0">
-                                                <span class="text-primary text-sm font-weight-bolder">
+                                                <span class="text-primary text-sm fw-bolder">
                                                     Explore More
                                                 </span>
                                             </p>
@@ -130,12 +136,12 @@
                                     <div class="row align-items-center p-3">
                                         <div class="col-9">
                                             <div>
-                                                <p class="text-sm mb-0 text-uppercase font-weight-bold">Product</p>
-                                                <h5 class="font-weight-bolder">
+                                                <p class="text-sm mb-0 text-uppercase fw-bold">Product</p>
+                                                <h5 class="fw-bolder">
                                                     @category.Name
                                                 </h5>
                                                 <p class="mb-0">
-                                                    <span class="text-success text-sm font-weight-bolder">
+                                                    <span class="text-success text-sm fw-bolder">
                                                         @category.ProductCount @(category.ProductCount == 1 ? "Item" : "Items")
                                                     </span>
                                                 </p>
@@ -158,12 +164,12 @@
                                 <div class="row align-items-center p-3">
                                     <div class="col-9">
                                         <div>
-                                            <p class="text-sm mb-0 text-uppercase font-weight-bold">Product</p>
-                                            <h5 class="font-weight-bolder">
+                                            <p class="text-sm mb-0 text-uppercase fw-bold">Product</p>
+                                            <h5 class="fw-bolder">
                                                 @category.Name
                                             </h5>
                                             <p class="mb-0">
-                                                <span class="text-danger text-sm font-weight-bolder">
+                                                <span class="text-danger text-sm fw-bolder">
                                                     @category.ProductCount Item
                                                 </span>
                                             </p>
@@ -190,7 +196,7 @@
                         <div class="copyright text-center text-md text-muted text-lg-start">
                             ©
                             <script>document.write(new Date().getFullYear())</script> -
-                            <a class="font-weight-bold">OE Applications</a>
+                            <a class="fw-bold">OE Applications</a>
                         </div>
                     </div>
                 </div>

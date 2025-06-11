@@ -11,18 +11,24 @@
         <div class="container-fluid py-2 py-sm-1 px-3">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb d-none d-sm-flex bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6">
-                    <li class="breadcrumb-item text-sm text-white"><a class="opacity-5 texcalt-white">Pages</a></li>
+                    <li class="breadcrumb-item text-sm text-white"><a class="opacity-5 text-white">Pages</a></li>
                     <li class="breadcrumb-item text-sm text-white"><a class="text-white">Products</a></li>
                     <li class="breadcrumb-item text-sm text-white"><a class="text-white">Delete</a></li>
                     <li class="breadcrumb-item text-sm text-white active" aria-current="page">@Model.Product_accessories_name</li>
                 </ol>
-                <h6 class="font-weight-bolder text-white mb-0 pe-3 pe-sm-0">Products</h6>
+                <h6 class="fw-bolder text-white mb-0 pe-3 pe-sm-0">Products</h6>
             </nav>
             <div class="collapse navbar-collapse me-md-0" id="navbar">
-                <div class="ms-auto d-flex align-items-center">
+                <div class="ms-auto d-flex flex-column align-items-end">
                     <span class="d-inline text-white">Hello, @User.Identity.Name</span>
+                    <a class="d-flex align-items-center justify-content-center gap-2 m-0 letter-normal fw-normal fs-6 text-white btn btn-link btn-outline-secondary shadow-none p-0" href="https://confluencewikiprod.intra.infineon.com/display/5SInternalAudit/E-Catalog+PAM" target="_blank">
+                        <div class="icon d-flex align-items-center justify-content-center">
+                            <i class="fa-solid fa-globe"></i>
+                        </div>
+                        <span class="d-inline">E-Catalog Accessories Tutorial</span>
+                    </a>
                 </div>
-                <div class="nav-item d-xl-none ps-3 d-flex align-items-center">
+                <div class="nav-item d-xl-none ps-3 d-flex align-items-end">
                     <a href="javascript:;" class="nav-link text-white p-0" id="iconNavbarSidenav">
                         <div class="sidenav-toggler-inner">
                             <i class="sidenav-toggler-line bg-white"></i>
@@ -48,32 +54,40 @@
                     <div class="card-body px-4 pt-4 pb-4">
                         <div>
                             <p>Are you sure you want to delete this product?</p>
-                            @if (!string.IsNullOrEmpty(Model.Product_photo_filepath))
-                            {
-                                <img class="d-block mx-auto mb-2 max-width-300 height-300" src="@Url.Content(Model.Product_photo_filepath)" alt="Product Photo" />
-                            }
-                            else
-                            {
-                                <div class="bg-ocean-100 bg-opacity-100 text-white p-5 text-center d-block mx-auto mb-2 max-width-300 h-auto">Product Photo</div>
-                            }
-                            <p class="text-center text-2xl font-weight-bold mb-4">@Model.Product_accessories_name</p>
+                            <div class="d-flex justify-content-center align-items-center mb-2">
+                                @if (!string.IsNullOrEmpty(Model.Product_photo_filepath))
+                                {
+                                    <a href="@Url.Content(Model.Product_photo_filepath)" target="_blank">
+                                        <img class="d-block max-width-300 height-300" src="@Url.Content(Model.Product_photo_filepath)" alt="Product Photo" />
+                                    </a>
+                                }
+                                else
+                                {
+                                    <div class="bg-ocean-100 bg-opacity-100 text-white p-5 text-center d-block mb-2 max-width-300 h-auto">Product Photo</div>
+                                }
+                            </div>
+                            <p class="text-center text-2xl fw-bold mb-4">@Html.DisplayFor(modelItem => Model.Product_accessories_name)</p>
                         </div>
                         <table class="table table-bordered">
                             <tr>
-                                <th class="text-uppercase text-md">Category</th>
-                                <td>@(Model.Category != null ? Model.Category.Category_name : "N/A")</td>
+                                <th class="text-uppercase text-md fw-bolder align-content-center">Category</th>
+                                <td style="white-space: normal; word-break: break-word;">@Html.DisplayFor(modelItem => Model.Category.Category_name)</td>
                             </tr>
                             <tr>
-                                <th class="text-uppercase text-md">Accessories Name</th>
-                                <td>@Model.Product_accessories_name</td>
+                                <th class="text-uppercase text-md fw-bolder align-content-center">Accessory Name</th>
+                                <td style="white-space: normal; word-break: break-word;">@Html.DisplayFor(modelItem => Model.Product_accessories_name)</td>
                             </tr>
                             <tr>
-                                <th class="text-uppercase text-md">Owner</th>
-                                <td>@Model.Product_owner</td>
+                                <th class="text-uppercase text-md fw-bolder align-content-center">Quantity</th>
+                                <td style="white-space: normal; word-break: break-word;">@(Model.Product_qty.HasValue ? Model.Product_qty.ToString() : "(N/A)")</td>
                             </tr>
                             <tr>
-                                <th class="text-uppercase text-md">Department</th>
-                                <td>@Model.Product_dept</td>
+                                <th class="text-uppercase text-md fw-bolder align-content-center">Owner</th>
+                                <td style="white-space: normal; word-break: break-word;">@Html.DisplayFor(modelItem => Model.Product_owner)</td>
+                            </tr>
+                            <tr>
+                                <th class="text-uppercase text-md fw-bolder align-content-center">Vendor</th>
+                                <td style="white-space: normal; word-break: break-word;">@((Model.Product_vendor_name != null && !string.IsNullOrEmpty(Model.Product_vendor_name)) ? Model.Product_vendor_name : "(N/A)")</td>
                             </tr>
                         </table>
 
@@ -104,7 +118,7 @@
                         <div class="copyright text-center text-md text-muted text-lg-start">
                             ©
                             <script>document.write(new Date().getFullYear())</script> -
-                            <a class="font-weight-bold">OE Applications</a>
+                            <a class="fw-bold">OE Applications</a>
                         </div>
                     </div>
                 </div>

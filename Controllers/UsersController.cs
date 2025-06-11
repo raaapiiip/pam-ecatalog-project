@@ -74,11 +74,11 @@ namespace ItemListApp.Controllers
                 user.IsActive = true;
                 _context.Users.Add(user);
                 _context.SaveChanges();
-                TempData["SuccessMessage"] = "New user successfully added.";
+                TempData["SuccessMessage"] = $"New user \"{user.User_name}\" successfully added.";
                 return RedirectToAction("Index");
             }
 
-            TempData["ErrorMessage"] = "Failed to add new user.";
+            TempData["ErrorMessage"] = $"Failed to add new user \"{user.User_name}\".";
             return View(user);
         }
 
@@ -122,11 +122,11 @@ namespace ItemListApp.Controllers
 
                 _context.Entry(user).State = EntityState.Modified;
                 _context.SaveChanges();
-                TempData["SuccessMessage"] = "User successfully updated.";
+                TempData["SuccessMessage"] = $"User \"{user.User_name}\" successfully updated.";
                 return RedirectToAction("Index");
             }
 
-            TempData["ErrorMessage"] = "Failed to update user.";
+            TempData["ErrorMessage"] = $"Failed to update user \"{user.User_name}\".";
             return View(user);
         }
 
@@ -150,7 +150,7 @@ namespace ItemListApp.Controllers
             user.IsAdmin = false;
             user.IsActive = false;
             _context.SaveChanges();
-            TempData["SuccessMessage"] = "User successfully deactivated.";
+            TempData["SuccessMessage"] = $"User \"{user.User_name}\" successfully deactivated.";
 
             return RedirectToAction("Index");
         }
@@ -175,7 +175,7 @@ namespace ItemListApp.Controllers
             user.IsAdmin = true;
             user.IsActive = true;
             _context.SaveChanges();
-            TempData["SuccessMessage"] = "User successfully activated.";
+            TempData["SuccessMessage"] = $"User \"{user.User_name}\" successfully activated.";
 
             return RedirectToAction("Index");
         }

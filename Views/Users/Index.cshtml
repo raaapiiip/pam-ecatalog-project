@@ -15,13 +15,19 @@
                     <li class="breadcrumb-item text-sm text-white"><a class="text-white">Users</a></li>
                     <li class="breadcrumb-item text-sm text-white active" aria-current="page">Index</li>
                 </ol>
-                <h6 class="font-weight-bolder text-white mb-0 pe-3 pe-sm-0">Users</h6>
+                <h6 class="fw-bolder text-white mb-0 pe-3 pe-sm-0">Users</h6>
             </nav>
             <div class="collapse navbar-collapse me-md-0" id="navbar">
-                <div class="ms-auto d-flex align-items-center">
+                <div class="ms-auto d-flex flex-column align-items-end">
                     <span class="d-inline text-white">Hello, @User.Identity.Name</span>
+                    <a class="d-flex align-items-center justify-content-center gap-2 m-0 letter-normal fw-normal fs-6 text-white btn btn-link btn-outline-secondary shadow-none p-0" href="https://confluencewikiprod.intra.infineon.com/display/5SInternalAudit/E-Catalog+PAM" target="_blank">
+                        <div class="icon d-flex align-items-center justify-content-center">
+                            <i class="fa-solid fa-globe"></i>
+                        </div>
+                        <span class="d-inline">E-Catalog Accessories Tutorial</span>
+                    </a>
                 </div>
-                <div class="nav-item d-xl-none ps-3 d-flex align-items-center">
+                <div class="nav-item d-xl-none ps-3 d-flex align-items-end">
                     <a href="javascript:;" class="nav-link text-white p-0" id="iconNavbarSidenav">
                         <div class="sidenav-toggler-inner">
                             <i class="sidenav-toggler-line bg-white"></i>
@@ -68,7 +74,7 @@
                                 @foreach (var user in Model)
                                 {
                                     <tr>
-                                        <td class="text-sm text-center align-content-center">
+                                        <td class="text-sm text-center align-content-center p-2">
                                             <a href="@Url.Action("Edit", "Users", new { id = user.User_id })" class="btn bg-ocean-80 bg-opacity-100 text-white my-2">Edit</a>
                                         </td>
                                         <td class="text-sm text-center align-content-center">
@@ -119,7 +125,7 @@
                         <div class="copyright text-center text-md text-muted text-lg-start">
                             ©
                             <script>document.write(new Date().getFullYear())</script> -
-                            <a class="font-weight-bold">OE Applications</a>
+                            <a class="fw-bold">OE Applications</a>
                         </div>
                     </div>
                 </div>
@@ -181,7 +187,7 @@
                     confirmButtonColor: '#2dce89',
                     timer: 5000,
                     timerProgressBar: true,
-                    text: '@TempData["SuccessMessage"]'
+                    text: '@Html.Raw(TempData["SuccessMessage"])'
                 });
             </text>
         }
@@ -194,7 +200,7 @@
                     confirmButtonColor: '#2dce89',
                     timer: 5000,
                     timerProgressBar: true,
-                    text: '@TempData["ErrorMessage"]'
+                    text: '@Html.Raw(TempData["ErrorMessage"])'
                 });
             </text>
         }

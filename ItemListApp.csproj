@@ -162,9 +162,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202505220243265_InitialSync.cs" />
-    <Compile Include="Migrations\202505220243265_InitialSync.Designer.cs">
-      <DependentUpon>202505220243265_InitialSync.cs</DependentUpon>
+    <Compile Include="Migrations\202506100334446_SyncDatabase.cs" />
+    <Compile Include="Migrations\202506100334446_SyncDatabase.Designer.cs">
+      <DependentUpon>202506100334446_SyncDatabase.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Categories.cs" />
@@ -405,6 +405,8 @@
     <Content Include="Assets\SCSS\argon-dashboard\_utilities-extend.scss" />
     <Content Include="Assets\SCSS\argon-dashboard\_utilities.scss" />
     <Content Include="Assets\SCSS\argon-dashboard\_variables.scss" />
+    <Content Include="Assets\Tom-select\css\tom-select.bootstrap5.min.css" />
+    <Content Include="Assets\Tom-select\js\tom-select.complete.min.js" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
     <Content Include="Content\bootstrap-grid.rtl.css" />
@@ -1052,8 +1054,8 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202505220243265_InitialSync.resx">
-      <DependentUpon>202505220243265_InitialSync.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202506100334446_SyncDatabase.resx">
+      <DependentUpon>202506100334446_SyncDatabase.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

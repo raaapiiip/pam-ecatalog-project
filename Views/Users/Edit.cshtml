@@ -16,13 +16,19 @@
                     <li class="breadcrumb-item text-sm text-white"><a class="text-white">Edit</a></li>
                     <li class="breadcrumb-item text-sm text-white active" aria-current="page">@Model.Windows_account</li>
                 </ol>
-                <h6 class="font-weight-bolder text-white mb-0 pe-3 pe-sm-0">Users</h6>
+                <h6 class="fw-bolder text-white mb-0 pe-3 pe-sm-0">Users</h6>
             </nav>
             <div class="collapse navbar-collapse me-md-0" id="navbar">
-                <div class="ms-auto d-flex align-items-center">
+                <div class="ms-auto d-flex flex-column align-items-end">
                     <span class="d-inline text-white">Hello, @User.Identity.Name</span>
+                    <a class="d-flex align-items-center justify-content-center gap-2 m-0 letter-normal fw-normal fs-6 text-white btn btn-link btn-outline-secondary shadow-none p-0" href="https://confluencewikiprod.intra.infineon.com/display/5SInternalAudit/E-Catalog+PAM" target="_blank">
+                        <div class="icon d-flex align-items-center justify-content-center">
+                            <i class="fa-solid fa-globe"></i>
+                        </div>
+                        <span class="d-inline">E-Catalog Accessories Tutorial</span>
+                    </a>
                 </div>
-                <div class="nav-item d-xl-none ps-3 d-flex align-items-center">
+                <div class="nav-item d-xl-none ps-3 d-flex align-items-end">
                     <a href="javascript:;" class="nav-link text-white p-0" id="iconNavbarSidenav">
                         <div class="sidenav-toggler-inner">
                             <i class="sidenav-toggler-line bg-white"></i>
@@ -53,19 +59,17 @@
                             @Html.HiddenFor(model => model.User_id)
 
                             <div class="form-group mb-4">
-                                <span class="text-normal"><label>Username</label></span>
-                                <span class="text-danger text-sm">● required</span>
+                                <span class="text-normal"><label>Username <span class="text-danger text-sm">*</span></label></span>
                                 @Html.TextBoxFor(model => model.User_name, new { @class = "form-control w-80 px-3", required = "required", placeholder = "Example: Full Name (Department)" })
                                 @Html.ValidationMessageFor(model => model.User_name, "", new { @class = "text-danger d-block" })
                                 <span id="user-name-error" class="text-danger"></span>
                             </div>
 
                             <div class="form-group mb-4">
-                                <span class="text-normal"><label>Windows Account</label></span>
-                                <span class="text-danger text-sm">● required</span>
+                                <span class="text-normal"><label>Windows Account <span class="text-danger text-sm">*</span></label></span>
                                 <div class="input-group w-80">
                                     <span class="input-group-text bg-gray-300 border-end-0">INFINEON\</span>
-                                    <input type="text" id="windowsAccount" class="form-control border-start-0 px-3" required placeholder="Example: RamadhansyaM" />
+                                    <input type="text" id="windowsAccount" class="form-control border-start-0 px-3" required placeholder="Example: JohnDoe" />
                                 </div>
                                 <small class="form-text text-muted ms-1 d-block">
                                     Note: The domain prefix <strong>INFINEON\</strong> is automatically included.
@@ -104,7 +108,7 @@
                         <div class="text-center text-md text-muted text-lg-start">
                             ©
                             <script>document.write(new Date().getFullYear())</script> -
-                            <a class="font-weight-bold">OE Applications</a>
+                            <a class="fw-bold">OE Applications</a>
                         </div>
                     </div>
                 </div>

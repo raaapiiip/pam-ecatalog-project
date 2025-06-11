@@ -15,7 +15,6 @@ namespace ItemListApp.Models
         public int Product_id { get; set; }
         [Required(ErrorMessage = "Product Category ID is required.")]
         public int? Product_Category_id { get; set; }
-        public int? Product_Vendor_id { get; set; }
         [Required(ErrorMessage = "Product accessories name is required.")]
         public string Product_accessories_name { get; set; }
         public int? Product_qty { get; set; }
@@ -28,6 +27,8 @@ namespace ItemListApp.Models
         public string Product_eccn { get; set; }
         public int? Product_hs_code { get; set; }
         public string Product_vendor_name { get; set; }
+        [NotMapped]
+        public List<string> SelectedVendors { get; set; }
         public string Product_quotation_filepath { get; set; }
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = true)]
         public DateTime? Product_last_modification { get; set; }
@@ -39,7 +40,5 @@ namespace ItemListApp.Models
         public bool IsDeleted { get; set; } = false;
         [ForeignKey("Product_Category_id")]
         public virtual Categories Category { get; set; }
-        [ForeignKey("Product_Vendor_id")]
-        public virtual Vendors Vendor { get; set; }
     }
 }
