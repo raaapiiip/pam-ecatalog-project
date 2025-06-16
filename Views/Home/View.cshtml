@@ -3,6 +3,7 @@
 @{
     ViewBag.Title = "Product Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var isAdmin = Session["IsAdmin"] != null && (bool)Session["IsAdmin"];
 }
 
 <main class="main-content position-relative border-radius-lg max-height-vh-100 h-100">
@@ -21,7 +22,9 @@
             <div class="collapse navbar-collapse me-md-0" id="navbar">
                 <div class="ms-auto d-flex flex-column align-items-end">
                     <span class="d-inline text-white">Hello, @User.Identity.Name</span>
-                    <a class="d-flex align-items-center justify-content-center gap-2 m-0 letter-normal fw-normal fs-6 text-white btn btn-link btn-outline-secondary shadow-none p-0" href="https://confluencewikiprod.intra.infineon.com/display/5SInternalAudit/E-Catalog+PAM" target="_blank">
+                    <a class="d-flex align-items-center justify-content-center gap-2 m-0 letter-normal fw-normal fs-6 text-white btn btn-link btn-outline-secondary shadow-none p-0"
+                       href="@(isAdmin ? "https://confluencewikiprod.intra.infineon.com/display/5SInternalAudit/Admin" : "https://confluencewikiprod.intra.infineon.com/display/5SInternalAudit/User")"
+                       target="_blank">
                         <div class="icon d-flex align-items-center justify-content-center">
                             <i class="fa-solid fa-globe"></i>
                         </div>
@@ -85,24 +88,46 @@
                                 <p><strong>Quotation</strong></p>
                                 @if (!string.IsNullOrEmpty(Model.Product_quotation_filepath))
                                 {
-                                    <a class="btn btn-link custom-btn-link-berry shadow-none p-0" href="@Url.Content(Model.Product_quotation_filepath)" target="_blank">(attachment)</a>
+                                    var quotationPaths = Model.Product_quotation_filepath.Split(';');
+                                    foreach (var path in quotationPaths)
+                                    {
+                                        var fileName = System.IO.Path.GetFileName(path);
+                                        if (!string.IsNullOrWhiteSpace(path))
+                                        {
+                                            <div>
+                                                <a class="btn btn-link custom-btn-link-berry shadow-none p-0" href="@Url.Content(path)" target="_blank">(@fileName)</a>
+                                            </div>
+                                        }
+                                    }
                                 }
                                 else
                                 {
                                     <p class="fw-bolder text-sm" style="cursor: not-allowed;">(Will be updated)</p>
                                 }
                             </div>
+
                             <div class="col-md-4">
                                 <p><strong>Drawing</strong></p>
                                 @if (!string.IsNullOrEmpty(Model.Product_drawing_filepath))
                                 {
-                                    <a class="btn btn-link custom-btn-link-berry shadow-none p-0" href="@Url.Content(Model.Product_drawing_filepath)" target="_blank">(attachment)</a>
+                                    var drawingPaths = Model.Product_drawing_filepath.Split(';');
+                                    foreach (var path in drawingPaths)
+                                    {
+                                        var fileName = System.IO.Path.GetFileName(path);
+                                        if (!string.IsNullOrWhiteSpace(path))
+                                        {
+                                            <div>
+                                                <a class="btn btn-link custom-btn-link-berry shadow-none p-0" href="@Url.Content(path)" target="_blank">(@fileName)</a>
+                                            </div>
+                                        }
+                                    }
                                 }
                                 else
                                 {
                                     <p class="fw-bolder text-sm" style="cursor: not-allowed;">(Will be updated)</p>
                                 }
                             </div>
+
                             <div class="col-md-4">
                                 <p><strong>Function/Detail</strong></p>
                                 @if (!string.IsNullOrEmpty(Model.Product_function))

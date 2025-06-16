@@ -66,14 +66,14 @@ namespace ItemListApp.Controllers
         // POST: Products/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Products product, HttpPostedFileBase photoFile, HttpPostedFileBase drawingFile, HttpPostedFileBase quotationFile, string[] SelectedOwners, string[] SelectedVendors)
+        public ActionResult Create(Products product, HttpPostedFileBase photoFile, HttpPostedFileBase[] drawingFiles, HttpPostedFileBase[] quotationFiles, string[] selectedOwners, string[] selectedVendors)
         {
             if (ModelState.IsValid)
             {
                 // Combine selected owners
-                if (SelectedOwners != null && SelectedOwners.Length > 0)
+                if (selectedOwners != null && selectedOwners.Length > 0)
                 {
-                    product.Product_owner = string.Join("-", SelectedOwners);
+                    product.Product_owner = string.Join("-", selectedOwners);
                 }
                 else
                 {
@@ -84,8 +84,8 @@ namespace ItemListApp.Controllers
                 }
 
                 // Combine selected vendors
-                product.Product_vendor_name = (SelectedVendors != null && SelectedVendors.Length > 0)
-                    ? string.Join(", ", SelectedVendors)
+                product.Product_vendor_name = (selectedVendors != null && selectedVendors.Length > 0)
+                    ? string.Join(", ", selectedVendors)
                     : null;
 
                 // Check if the accessory name already exists (must be unique)
@@ -98,26 +98,43 @@ namespace ItemListApp.Controllers
                     ModelState.AddModelError("Product_accessories_name", "Accessories name must be unique.");
                 }
 
-                if (!ModelState.IsValid)
-                {
-                    PrepareCategories(product.Product_Category_id);
-                    PrepareVendors();
-                    ViewBag.Owners = _context.Owners.ToList();
-                    return View(product);
-                }
-
                 // Maximum limit for each uploaded file = 16 MB
                 int maxFileSize = 16 * 1024 * 1024;
 
-                if ((photoFile != null && photoFile.ContentLength > maxFileSize) ||
-                    (drawingFile != null && drawingFile.ContentLength > maxFileSize) ||
-                    (quotationFile != null && quotationFile.ContentLength > maxFileSize))
+                // Validate photo file
+                if (photoFile != null && photoFile.ContentLength > maxFileSize)
                 {
-                    ModelState.AddModelError("", "Each uploaded file must be less than or equal to 16 MB.");
+                    ModelState.AddModelError("Product_photo_filepath", "Photo file must be less than or equal to 16 MB.");
                     return View(product);
                 }
 
-                // Retrieve Category Name Based on Product_Category_id
+                // Validate all drawing files
+                if (drawingFiles != null)
+                {
+                    foreach (var file in drawingFiles)
+                    {
+                        if (file != null && file.ContentLength > maxFileSize)
+                        {
+                            ModelState.AddModelError("Product_drawing_filepath", "Each drawing file must be ≤ 16 MB.");
+                            return View(product);
+                        }
+                    }
+                }
+
+                // Validate all quotation files
+                if (quotationFiles != null)
+                {
+                    foreach (var file in quotationFiles)
+                    {
+                        if (file != null && file.ContentLength > maxFileSize)
+                        {
+                            ModelState.AddModelError("Product_quotation_filepath", "Each quotation file must be ≤ 16 MB.");
+                            return View(product);
+                        }
+                    }
+                }
+
+                // Retrieve category name based on Product_Category_id
                 var category = _context.Categories.FirstOrDefault(c => c.Category_id == product.Product_Category_id);
                 if (category == null)
                 {
@@ -125,7 +142,7 @@ namespace ItemListApp.Controllers
                     return View(product);
                 }
 
-                // Define Storage Folder Based on Category Name
+                // Define storage folder based on Category_name
                 string categoryFolder = $"~/Files/{category.Category_name}/";
                 string serverPath = Server.MapPath(categoryFolder);
 
@@ -134,7 +151,7 @@ namespace ItemListApp.Controllers
                     Directory.CreateDirectory(serverPath);
                 }
 
-                // Upload Photo Files
+                // Upload photo file
                 if (photoFile != null && photoFile.ContentLength > 0)
                 {
                     string photoExt = Path.GetExtension(photoFile.FileName).ToLower();
@@ -153,48 +170,70 @@ namespace ItemListApp.Controllers
                     product.Product_photo_filepath = photoPath;
                 }
 
-                // Upload Drawing Files
-                if (drawingFile != null && drawingFile.ContentLength > 0)
-                {
-                    string drawingExt = Path.GetExtension(drawingFile.FileName).ToLower();
-                    string[] allowedDrawingExt = { ".jpg", ".jpeg", ".png", ".pdf", ".doc", ".docx", ".xls", ".xlsx" };
+                // Upload multiple drawing files
+                List<string> drawingPaths = new List<string>();
+                string[] allowedDrawingExt = { ".jpg", ".jpeg", ".png", ".pdf", ".doc", ".docx", ".xls", ".xlsx" };
 
-                    if (!allowedDrawingExt.Contains(drawingExt))
+                if (drawingFiles != null)
+                {
+                    foreach (var file in drawingFiles)
                     {
-                        ModelState.AddModelError("Product_drawing_filepath", "Drawing format must be JPG, JPEG, PNG, PDF, DOC, DOCX, XLS, or XLSX.");
-                        return View(product);
+                        if (file != null && file.ContentLength > 0)
+                        {
+                            string ext = Path.GetExtension(file.FileName).ToLower();
+                            if (!allowedDrawingExt.Contains(ext))
+                            {
+                                ModelState.AddModelError("Product_drawing_filepath", "Invalid file format for drawing.");
+                                return View(product);
+                            }
+
+                            string fileName = Path.GetFileName(file.FileName);
+                            string path = Path.Combine(categoryFolder, fileName);
+                            string serverPathFile = Server.MapPath(path);
+                            file.SaveAs(serverPathFile);
+                            drawingPaths.Add(path);
+                        }
                     }
 
-                    string drawingFileName = Path.GetFileName(drawingFile.FileName);
-                    string drawingPath = Path.Combine(categoryFolder, drawingFileName);
-                    string serverDrawingPath = Server.MapPath(drawingPath);
-                    drawingFile.SaveAs(serverDrawingPath);
-                    product.Product_drawing_filepath = drawingPath;
+                    product.Product_drawing_filepath = drawingPaths.Count > 0
+                        ? string.Join(";", drawingPaths)
+                        : null;
                 }
 
-                // Upload Quotation Files
-                if (quotationFile != null && quotationFile.ContentLength > 0)
-                {
-                    string quotationExt = Path.GetExtension(quotationFile.FileName).ToLower();
-                    string[] allowedQuotationExt = { ".jpg", ".jpeg", ".png", ".pdf", ".doc", ".docx", ".xls", ".xlsx" };
+                // Upload multiple quotation files
+                List<string> quotationPaths = new List<string>();
+                string[] allowedQuotationExt = { ".jpg", ".jpeg", ".png", ".pdf", ".doc", ".docx", ".xls", ".xlsx" };
 
-                    if (!allowedQuotationExt.Contains(quotationExt))
+                if (quotationFiles != null)
+                {
+                    foreach (var file in quotationFiles)
                     {
-                        ModelState.AddModelError("Product_quotation_filepath", "Quotation format must be JPG, JPEG, PNG, PDF, DOC, DOCX, XLS, or XLSX.");
-                        return View(product);
+                        if (file != null && file.ContentLength > 0)
+                        {
+                            string ext = Path.GetExtension(file.FileName).ToLower();
+                            if (!allowedQuotationExt.Contains(ext))
+                            {
+                                ModelState.AddModelError("Product_quotation_filepath", "Invalid file format for quotation.");
+                                return View(product);
+                            }
+
+                            string fileName = Path.GetFileName(file.FileName);
+                            string path = Path.Combine(categoryFolder, fileName);
+                            string serverPathFile = Server.MapPath(path);
+                            file.SaveAs(serverPathFile);
+                            quotationPaths.Add(path);
+                        }
                     }
 
-                    string quotationFileName = Path.GetFileName(quotationFile.FileName);
-                    string quotationPath = Path.Combine(categoryFolder, quotationFileName);
-                    string serverQuotationPath = Server.MapPath(quotationPath);
-                    quotationFile.SaveAs(serverQuotationPath);
-                    product.Product_quotation_filepath = quotationPath;
+                    product.Product_quotation_filepath = quotationPaths.Count > 0
+                        ? string.Join(";", quotationPaths)
+                        : null;
                 }
 
                 // Save create action from user
                 product.CreatedBy = User.Identity.Name;
 
-                // Save Product to Database
+                // Save product to database
                 _context.Products.Add(product);
                 _context.SaveChanges();
                 TempData["SuccessMessage"] = $"New product \"{product.Product_accessories_name}\" successfully added.";
@@ -232,15 +271,15 @@ namespace ItemListApp.Controllers
         // POST: Products/Edit/Id
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(Products product, HttpPostedFileBase photoFile, HttpPostedFileBase drawingFile, HttpPostedFileBase quotationFile,
-                                 bool? removePhoto, bool? removeDrawing, bool? removeQuotation, string[] SelectedOwners, string[] SelectedVendors)
+        public ActionResult Edit(Products product, HttpPostedFileBase photoFile, HttpPostedFileBase[] drawingFiles, HttpPostedFileBase[] quotationFiles,
+                                 bool? removePhoto, string[] removeDrawingFiles, string[] removeQuotationFiles, string[] selectedOwners, string[] selectedVendors)
         {
             if (ModelState.IsValid)
             {
                 // Combine selected owners
-                if (SelectedOwners != null && SelectedOwners.Length > 0)
+                if (selectedOwners != null && selectedOwners.Length > 0)
                 {
-                    product.Product_owner = string.Join("-", SelectedOwners);
+                    product.Product_owner = string.Join("-", selectedOwners);
                 }
                 else
                 {
@@ -251,8 +290,8 @@ namespace ItemListApp.Controllers
                 }
 
                 // Combine selected vendors
-                product.Product_vendor_name = (SelectedVendors != null && SelectedVendors.Length > 0)
-                    ? string.Join(", ", SelectedVendors)
+                product.Product_vendor_name = (selectedVendors != null && selectedVendors.Length > 0)
+                    ? string.Join(", ", selectedVendors)
                     : null;
 
                 // Check if the accessory name already exists (must be unique)
@@ -265,26 +304,43 @@ namespace ItemListApp.Controllers
                     ModelState.AddModelError("Product_accessories_name", "Accessories name must be unique.");
                 }
 
-                if (!ModelState.IsValid)
-                {
-                    PrepareCategories(product.Product_Category_id);
-                    PrepareVendors(product.Product_vendor_name?.Split(',').Select(v => v.Trim()).ToArray());
-                    ViewBag.Owners = _context.Owners.ToList();
-                    return View(product);
-                }
-
                 // Maximum limit for each uploaded file = 16 MB
                 int maxFileSize = 16 * 1024 * 1024;
 
-                if ((photoFile != null && photoFile.ContentLength > maxFileSize) ||
-                    (drawingFile != null && drawingFile.ContentLength > maxFileSize) ||
-                    (quotationFile != null && quotationFile.ContentLength > maxFileSize))
+                // Validate photo file
+                if (photoFile != null && photoFile.ContentLength > maxFileSize)
                 {
-                    ModelState.AddModelError("", "Each uploaded file must be less than or equal to 16 MB.");
+                    ModelState.AddModelError("Product_photo_filepath", "Photo file must be less than or equal to 16 MB.");
                     return View(product);
                 }
 
-                // Retrieve Category Name Based on Product_Category_id
+                // Validate all drawing files
+                if (drawingFiles != null)
+                {
+                    foreach (var file in drawingFiles)
+                    {
+                        if (file != null && file.ContentLength > maxFileSize)
+                        {
+                            ModelState.AddModelError("Product_drawing_filepath", "Each drawing file must be ≤ 16 MB.");
+                            return View(product);
+                        }
+                    }
+                }
+
+                // Validate all quotation files
+                if (quotationFiles != null)
+                {
+                    foreach (var file in quotationFiles)
+                    {
+                        if (file != null && file.ContentLength > maxFileSize)
+                        {
+                            ModelState.AddModelError("Product_quotation_filepath", "Each quotation file must be ≤ 16 MB.");
+                            return View(product);
+                        }
+                    }
+                }
+
+                // Retrieve category name based on Product_Category_id
                 var category = _context.Categories.FirstOrDefault(c => c.Category_id == product.Product_Category_id);
                 if (category == null)
                 {
@@ -292,7 +348,7 @@ namespace ItemListApp.Controllers
                     return View(product);
                 }
 
-                // Define Storage Folder Based on Category Name
+                // Define storage folder based on Category_name
                 string categoryFolder = $"~/Files/{category.Category_name}/";
                 string serverPath = Server.MapPath(categoryFolder);
 
@@ -301,40 +357,70 @@ namespace ItemListApp.Controllers
                     Directory.CreateDirectory(serverPath);
                 }
 
-                // Remove Existing Photo File
+                // Remove existing photo file
                 if (removePhoto == true && !string.IsNullOrEmpty(product.Product_photo_filepath))
                 {
-                    string oldPhotoPath = Server.MapPath(product.Product_photo_filepath);
-                    if (System.IO.File.Exists(oldPhotoPath))
+                    string singlePhotoPath = Server.MapPath(product.Product_photo_filepath);
+                    if (System.IO.File.Exists(singlePhotoPath))
                     {
-                        System.IO.File.Delete(oldPhotoPath);
+                        System.IO.File.Delete(singlePhotoPath);
                     }
                     product.Product_photo_filepath = null;
                 }
 
-                // Remove Existing Drawing File
-                if (removeDrawing == true && !string.IsNullOrEmpty(product.Product_drawing_filepath))
+                // Remove existing drawing files
+                if (removeDrawingFiles != null && removeDrawingFiles.Length > 0)
                 {
-                    string oldDrawingPath = Server.MapPath(product.Product_drawing_filepath);
-                    if (System.IO.File.Exists(oldDrawingPath))
+                    var currentDrawingPaths = (product.Product_drawing_filepath ?? "")
+                        .Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
+                        .ToList();
+
+                    foreach (var fileNameToRemove in removeDrawingFiles)
                     {
-                        System.IO.File.Delete(oldDrawingPath);
+                        var matchingPath = currentDrawingPaths.FirstOrDefault(p => Path.GetFileName(p).Equals(fileNameToRemove, StringComparison.OrdinalIgnoreCase));
+                        if (!string.IsNullOrEmpty(matchingPath))
+                        {
+                            var fullPath = Server.MapPath(matchingPath);
+                            if (System.IO.File.Exists(fullPath))
+                            {
+                                System.IO.File.Delete(fullPath);
+                            }
+                            currentDrawingPaths.Remove(matchingPath);
+                        }
                     }
-                    product.Product_drawing_filepath = null;
+
+                    product.Product_drawing_filepath = currentDrawingPaths.Any()
+                        ? string.Join(";", currentDrawingPaths)
+                        : null;
                 }
 
-                // Remove Existing Quotation File
-                if (removeQuotation == true && !string.IsNullOrEmpty(product.Product_quotation_filepath))
+                // Remove existing quotation files
+                if (removeQuotationFiles != null && removeQuotationFiles.Length > 0)
                 {
-                    string oldQuotationPath = Server.MapPath(product.Product_quotation_filepath);
-                    if (System.IO.File.Exists(oldQuotationPath))
+                    var currentQuotationPaths = (product.Product_quotation_filepath ?? "")
+                        .Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
+                        .ToList();
+
+                    foreach (var fileNameToRemove in removeQuotationFiles)
                     {
-                        System.IO.File.Delete(oldQuotationPath);
+                        var matchingPath = currentQuotationPaths.FirstOrDefault(p => Path.GetFileName(p).Equals(fileNameToRemove, StringComparison.OrdinalIgnoreCase));
+                        if (!string.IsNullOrEmpty(matchingPath))
+                        {
+                            var fullPath = Server.MapPath(matchingPath);
+                            if (System.IO.File.Exists(fullPath))
+                            {
+                                System.IO.File.Delete(fullPath);
+                            }
+                            currentQuotationPaths.Remove(matchingPath);
+                        }
                     }
-                    product.Product_quotation_filepath = null;
+
+                    product.Product_quotation_filepath = currentQuotationPaths.Any()
+                        ? string.Join(";", currentQuotationPaths)
+                        : null;
                 }
 
-                // Upload Photo Files
+                // Upload photo file
                 if (photoFile != null && photoFile.ContentLength > 0)
                 {
                     string photoExt = Path.GetExtension(photoFile.FileName).ToLower();
@@ -353,43 +439,69 @@ namespace ItemListApp.Controllers
                     product.Product_photo_filepath = photoPath;
                 }
 
-                // Upload Drawing Files
-                if (drawingFile != null && drawingFile.ContentLength > 0)
+                // Upload multiple drawing files
+                var existingDrawingPaths = (product.Product_drawing_filepath ?? "")
+                    .Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
+                    .ToList();
+
+                List<string> newDrawingPaths = new List<string>();
+                string[] allowedDrawingExt = { ".jpg", ".jpeg", ".png", ".pdf", ".doc", ".docx", ".xls", ".xlsx" };
+
+                if (drawingFiles != null)
                 {
-                    string drawingExt = Path.GetExtension(drawingFile.FileName).ToLower();
-                    string[] allowedDrawingExt = { ".jpg", ".jpeg", ".png", ".pdf", ".doc", ".docx", ".xls", ".xlsx" };
-
-                    if (!allowedDrawingExt.Contains(drawingExt))
+                    foreach (var file in drawingFiles)
                     {
-                        ModelState.AddModelError("Product_drawing_filepath", "Drawing format must be JPG, JPEG, PNG, PDF, DOC, DOCX, XLS, or XLSX.");
-                        return View(product);
-                    }
+                        if (file != null && file.ContentLength > 0)
+                        {
+                            string ext = Path.GetExtension(file.FileName).ToLower();
+                            if (!allowedDrawingExt.Contains(ext))
+                            {
+                                ModelState.AddModelError("Product_drawing_filepath", "Invalid file format for drawing.");
+                                return View(product);
+                            }
 
-                    string drawingFileName = Path.GetFileName(drawingFile.FileName);
-                    string drawingPath = Path.Combine(categoryFolder, drawingFileName);
-                    string serverDrawingPath = Server.MapPath(drawingPath);
-                    drawingFile.SaveAs(serverDrawingPath);
-                    product.Product_drawing_filepath = drawingPath;
+                            string fileName = Path.GetFileName(file.FileName);
+                            string path = Path.Combine(categoryFolder, fileName);
+                            string serverPathFile = Server.MapPath(path);
+                            file.SaveAs(serverPathFile);
+                            newDrawingPaths.Add(path);
+                        }
+                    }
                 }
 
-                // Upload Quotation Files
-                if (quotationFile != null && quotationFile.ContentLength > 0)
+                product.Product_drawing_filepath = string.Join(";", existingDrawingPaths.Concat(newDrawingPaths));
+
+                // Upload multiple quotation files
+                var existingQuotationPaths = (product.Product_quotation_filepath ?? "")
+                    .Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
+                    .ToList();
+
+                List<string> newQuotationPaths = new List<string>();
+                string[] allowedQuotationExt = { ".jpg", ".jpeg", ".png", ".pdf", ".doc", ".docx", ".xls", ".xlsx" };
+
+                if (quotationFiles != null)
                 {
-                    string quotationExt = Path.GetExtension(quotationFile.FileName).ToLower();
-                    string[] allowedQuotationExt = { ".jpg", ".jpeg", ".png", ".pdf", ".doc", ".docx", ".xls", ".xlsx" };
-
-                    if (!allowedQuotationExt.Contains(quotationExt))
+                    foreach (var file in quotationFiles)
                     {
-                        ModelState.AddModelError("Product_quotation_filepath", "Quotation format must be JPG, JPEG, PNG, PDF, DOC, DOCX, XLS, or XLSX.");
-                        return View(product);
-                    }
+                        if (file != null && file.ContentLength > 0)
+                        {
+                            string ext = Path.GetExtension(file.FileName).ToLower();
+                            if (!allowedQuotationExt.Contains(ext))
+                            {
+                                ModelState.AddModelError("Product_quotation_filepath", "Invalid file format for quotation.");
+                                return View(product);
+                            }
 
-                    string quotationFileName = Path.GetFileName(quotationFile.FileName);
-                    string quotationPath = Path.Combine(categoryFolder, quotationFileName);
-                    string serverQuotationPath = Server.MapPath(quotationPath);
-                    quotationFile.SaveAs(serverQuotationPath);
-                    product.Product_quotation_filepath = quotationPath;
+                            string fileName = Path.GetFileName(file.FileName);
+                            string path = Path.Combine(categoryFolder, fileName);
+                            string serverPathFile = Server.MapPath(path);
+                            file.SaveAs(serverPathFile);
+                            newQuotationPaths.Add(path);
+                        }
+                    }
                 }
+
+                product.Product_quotation_filepath = string.Join(";", existingQuotationPaths.Concat(newQuotationPaths));
 
                 // Retrieve old data from the database
                 var existingProduct = _context.Products.AsNoTracking().FirstOrDefault(p => p.Product_id == product.Product_id);
@@ -403,7 +515,7 @@ namespace ItemListApp.Controllers
                 product.CreatedBy = existingProduct.CreatedBy;
                 product.UpdatedBy = User.Identity.Name;
 
-                // Save Product to Database
+                // Save product to database
                 _context.Entry(product).State = EntityState.Modified;
                 _context.SaveChanges();
                 TempData["SuccessMessage"] = $"Product \"{product.Product_accessories_name}\" successfully updated.";
@@ -498,13 +610,10 @@ namespace ItemListApp.Controllers
 
         private void PrepareVendors(string[] selectedVendors = null)
         {
-            // Konversi ke List<string> untuk menghindari masalah dengan EF
             var selectedVendorList = selectedVendors?.ToList() ?? new List<string>();
 
-            // Ambil semua vendors dari database dulu
             var allVendors = _context.Vendors.ToList();
 
-            // Buat SelectListItem di memory, bukan di query EF
             ViewData["Product_vendor_name"] = allVendors
                 .Select(v => new SelectListItem
                 {

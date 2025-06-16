@@ -4,7 +4,7 @@
 @{
     ViewBag.Title = "Edit Product";
     Layout = "~/Views/Shared/_Layout.cshtml";
-
+    var isAdmin = Session["IsAdmin"] != null && (bool)Session["IsAdmin"];
     var ownerSingle = Model.Product_owner ?? "";
     var ownerArray = ownerSingle.Split('-');
     var selectedOwners = ownerArray.Select(x => x.Trim()).ToList();
@@ -26,7 +26,9 @@
             <div class="collapse navbar-collapse me-md-0" id="navbar">
                 <div class="ms-auto d-flex flex-column align-items-end">
                     <span class="d-inline text-white">Hello, @User.Identity.Name</span>
-                    <a class="d-flex align-items-center justify-content-center gap-2 m-0 letter-normal fw-normal fs-6 text-white btn btn-link btn-outline-secondary shadow-none p-0" href="https://confluencewikiprod.intra.infineon.com/display/5SInternalAudit/E-Catalog+PAM" target="_blank">
+                    <a class="d-flex align-items-center justify-content-center gap-2 m-0 letter-normal fw-normal fs-6 text-white btn btn-link btn-outline-secondary shadow-none p-0"
+                       href="@(isAdmin ? "https://confluencewikiprod.intra.infineon.com/display/5SInternalAudit/Admin" : "https://confluencewikiprod.intra.infineon.com/display/5SInternalAudit/User")"
+                       target="_blank">
                         <div class="icon d-flex align-items-center justify-content-center">
                             <i class="fa-solid fa-globe"></i>
                         </div>
@@ -116,15 +118,23 @@
                                 <span class="text-normal"><label>Drawing</label></span>
                                 @if (!string.IsNullOrEmpty(Model.Product_drawing_filepath))
                                 {
-                                    <div>
-                                        <a class="btn btn-link custom-btn-link-berry shadow-none mx-2 my-0 p-0" href="@Url.Content(Model.Product_drawing_filepath)" target="_blank">@Model.Product_drawing_filepath</a>
-                                        <div class="form-check form-switch mx-2 my-3">
-                                            <input class="form-check-input" type="checkbox" id="RemoveDrawing" name="RemoveDrawing" value="true">
-                                            <label class="form-check-label" for="RemoveDrawing">Remove Drawing</label>
-                                        </div>
-                                    </div>
+                                    var drawingPaths = Model.Product_drawing_filepath.Split(';');
+                                    foreach (var path in drawingPaths)
+                                    {
+                                        var fileName = System.IO.Path.GetFileName(path);
+                                        if (!string.IsNullOrWhiteSpace(path))
+                                        {
+                                            <div>
+                                                <a class="btn btn-link custom-btn-link-berry shadow-none mx-2 my-0 p-0" href="@Url.Content(path)" target="_blank">(@fileName)</a>
+                                                <div class="form-check form-switch mx-2 my-3">
+                                                    <input class="form-check-input" type="checkbox" name="RemoveDrawingFiles" value="@fileName" id="RemoveDrawing_@fileName">
+                                                    <label class="form-check-label" for="RemoveDrawing_@fileName">Remove Drawing</label>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
                                 }
-                                <input type="file" name="drawingFile" id="drawingFile" class="form-control w-80" accept=".pdf,.doc,.docx,.xls,.xlsx" />
+                                <input type="file" name="drawingFiles" id="drawingFiles" class="form-control w-80" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx" multiple />
                                 <small class="form-text text-muted ms-1 d-block">Supported Formats: JPG, JPEG, PNG, PDF, DOC, DOCX, XLS, XLSX.</small>
                                 <small class="form-text text-muted ms-1 d-block">Size Limit: 16 MB.</small>
                                 @Html.HiddenFor(model => model.Product_drawing_filepath)
@@ -174,15 +184,23 @@
                                 <span class="text-normal"><label>Quotation</label></span>
                                 @if (!string.IsNullOrEmpty(Model.Product_quotation_filepath))
                                 {
-                                    <div>
-                                        <a class="btn btn-link custom-btn-link-berry shadow-none mx-2 my-0 p-0" href="@Url.Content(Model.Product_quotation_filepath)" target="_blank">@Model.Product_quotation_filepath</a>
-                                        <div class="form-check form-switch mx-2 my-3">
-                                            <input class="form-check-input" type="checkbox" id="RemoveQuotation" name="RemoveQuotation" value="true">
-                                            <label class="form-check-label" for="RemoveQuotation">Remove Quotation</label>
-                                        </div>
-                                    </div>
+                                    var quotationPaths = Model.Product_quotation_filepath.Split(';');
+                                    foreach (var path in quotationPaths)
+                                    {
+                                        var fileName = System.IO.Path.GetFileName(path);
+                                        if (!string.IsNullOrWhiteSpace(path))
+                                        {
+                                            <div>
+                                                <a class="btn btn-link custom-btn-link-berry shadow-none mx-2 my-0 p-0" href="@Url.Content(path)" target="_blank">(@fileName)</a>
+                                                <div class="form-check form-switch mx-2 my-3">
+                                                    <input class="form-check-input" type="checkbox" name="RemoveQuotationFiles" value="@fileName" id="RemoveQuotation_@fileName">
+                                                    <label class="form-check-label" for="RemoveQuotation_@fileName">Remove Quotation</label>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
                                 }
-                                <input type="file" name="quotationFile" id="quotationFile" class="form-control w-80" accept=".pdf,.doc,.docx,.xls,.xlsx" />
+                                <input type="file" name="quotationFiles" id="quotationFiles" class="form-control w-80" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx" multiple />
                                 <small class="form-text text-muted ms-1 d-block">Supported Formats: JPG, JPEG, PNG, PDF, DOC, DOCX, XLS, XLSX.</small>
                                 <small class="form-text text-muted ms-1 d-block">Size Limit: 16 MB.</small>
                                 @Html.HiddenFor(model => model.Product_quotation_filepath)
@@ -258,34 +276,36 @@
             }
         });
 
-        // File Type Validation
-        function validateFile(input, allowedExtensions) {
-            if (input.files.length > 0) {
-                let fileName = input.files[0].name.toLowerCase();
-                let isValid = allowedExtensions.some(ext => fileName.endsWith(ext));
+        // File type validation
+        function validateFiles(input, allowedExtensions) {
+            const files = input.files;
+            for (let i = 0; i < files.length; i++) {
+                const fileName = files[i].name.toLowerCase();
+                const isValid = allowedExtensions.some(ext => fileName.endsWith(ext));
                 if (!isValid) {
-                    alert("Invalid file type. Allowed formats: " + allowedExtensions.join(", "));
+                    alert("Invalid file type: " + fileName + "\nAllowed formats: " + allowedExtensions.join(", "));
                     input.value = "";
+                    break;
                 }
             }
         }
 
         const fileValidationMap = {
             "#photoFile": [".jpg", ".jpeg", ".png", ".gif"],
-            "#drawingFile": [".jpg", ".jpeg", ".png", ".pdf", ".doc", ".docx", ".xls", ".xlsx"],
-            "#quotationFile": [".jpg", ".jpeg", ".png", ".pdf", ".doc", ".docx", ".xls", ".xlsx"]
+            "#drawingFiles": [".jpg", ".jpeg", ".png", ".pdf", ".doc", ".docx", ".xls", ".xlsx"],
+            "#quotationFiles": [".jpg", ".jpeg", ".png", ".pdf", ".doc", ".docx", ".xls", ".xlsx"]
         };
 
         $.each(fileValidationMap, function (selector, extensions) {
             const input = $(selector);
             if (input.length > 0) {
                 input.on("change", function () {
-                    validateFile(this, extensions);
+                    validateFiles(this, extensions);
                 });
             }
         });
 
-        // Uniqueness Validation
+        // Uniqueness validation
         let isAccessoriesNameValid = true;
         let isOwnerValid = true;
 
@@ -326,9 +346,9 @@
                 $("#owner-error").hide();
             }
         }
-
         $("input[name='SelectedOwners']").on("change", validateOwner);
 
+        // Scroll to form
         function scrollToElement(selector) {
             const el = $(selector);
             if (el.length) {
@@ -345,22 +365,36 @@
             }
         }
 
-        // File size validation (Shared Function)
+        // File size validation
         function validateFileSize(e, formId) {
-            const maxSize = 16 * 1024 * 1024;
-            const files = [
-                $(`${formId} #photoFile`)[0]?.files[0],
-                $(`${formId} #drawingFile`)[0]?.files[0],
-                $(`${formId} #quotationFile`)[0]?.files[0]
-            ];
+            const maxSize = 16 * 1024 * 1024; // 16 MB
+            const selectors = ["#photoFile", "#drawingFiles", "#quotationFiles"];
+            let oversizedFiles = [];
 
-            for (const file of files) {
-                if (file && file.size > maxSize) {
-                    alert("Each uploaded file must be less than or equal to 16 MB.");
-                    e.preventDefault();
-                    return false;
+            for (const selector of selectors) {
+                const input = $(`${formId} ${selector}`)[0];
+                if (input && input.files.length > 0) {
+                    for (let i = 0; i < input.files.length; i++) {
+                        if (input.files[i].size > maxSize) {
+                            oversizedFiles.push(input.files[i].name);
+                        }
+                    }
                 }
             }
+
+            if (oversizedFiles.length > 0) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'File Size Too Large',
+                    html: `File(s) below exceed 16 MB limit:<br><ul style="text-align: left; margin-top: 8px;">${oversizedFiles.map(f => `<li>${f}</li>`).join('')}</ul>`,
+                    showCloseButton: true,
+                    confirmButtonColor: '#8392ab',
+                    confirmButtonText: 'OK'
+                });
+                e.preventDefault();
+                return false;
+            }
+
             return true;
         }
 
@@ -369,12 +403,13 @@
 
             validateOwner();
 
-            // Scroll and prevent submit if validations fail
+            // Scroll to form if accessories name validation fail
             if (!isAccessoriesNameValid) {
                 scrollToElement("#Product_accessories_name");
                 return;
             }
 
+            // Scroll to form if owner validation fail
             if (!isOwnerValid) {
                 scrollToElement("#owner-checkboxes");
                 return;
@@ -389,6 +424,7 @@
                 title: "Update Data?",
                 text: "Are you sure you want to update this product?",
                 icon: "question",
+                showCloseButton: true,
                 showCancelButton: true,
                 confirmButtonColor: '#2dce89',
                 cancelButtonColor: '#8392ab',

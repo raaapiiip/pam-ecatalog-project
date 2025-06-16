@@ -3,6 +3,7 @@
 @{
     ViewBag.Title = "Home";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var isAdmin = Session["IsAdmin"] != null && (bool)Session["IsAdmin"];
 }
 
 <main class="main-content position-relative border-radius-lg max-height-vh-100 h-100">
@@ -20,7 +21,9 @@
             <div class="collapse navbar-collapse me-md-0" id="navbar">
                 <div class="ms-auto d-flex flex-column align-items-end">
                     <span class="d-inline text-white">Hello, @User.Identity.Name</span>
-                    <a class="d-flex align-items-center justify-content-center gap-2 m-0 letter-normal fw-normal fs-6 text-white btn btn-link btn-outline-secondary shadow-none p-0" href="https://confluencewikiprod.intra.infineon.com/display/5SInternalAudit/E-Catalog+PAM" target="_blank">
+                    <a class="d-flex align-items-center justify-content-center gap-2 m-0 letter-normal fw-normal fs-6 text-white btn btn-link btn-outline-secondary shadow-none p-0" 
+                       href="@(isAdmin ? "https://confluencewikiprod.intra.infineon.com/display/5SInternalAudit/Admin" : "https://confluencewikiprod.intra.infineon.com/display/5SInternalAudit/User")" 
+                       target="_blank">
                         <div class="icon d-flex align-items-center justify-content-center">
                             <i class="fa-solid fa-globe"></i>
                         </div>

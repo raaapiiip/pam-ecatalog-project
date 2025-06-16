@@ -162,9 +162,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202506100334446_SyncDatabase.cs" />
-    <Compile Include="Migrations\202506100334446_SyncDatabase.Designer.cs">
-      <DependentUpon>202506100334446_SyncDatabase.cs</DependentUpon>
+    <Compile Include="Migrations\202506120805598_SyncDatabase1.cs" />
+    <Compile Include="Migrations\202506120805598_SyncDatabase1.Designer.cs">
+      <DependentUpon>202506120805598_SyncDatabase1.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Categories.cs" />
@@ -1054,8 +1054,8 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202506100334446_SyncDatabase.resx">
-      <DependentUpon>202506100334446_SyncDatabase.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202506120805598_SyncDatabase1.resx">
+      <DependentUpon>202506120805598_SyncDatabase1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
