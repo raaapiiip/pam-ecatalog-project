@@ -135,7 +135,7 @@
                                     }
                                 }
                                 <input type="file" name="drawingFiles" id="drawingFiles" class="form-control w-80" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx" multiple />
-                                <small class="form-text text-muted ms-1 d-block">Supported Formats: JPG, JPEG, PNG, PDF, DOC, DOCX, XLS, XLSX.</small>
+                                <small class="form-text text-muted ms-1 d-block">Allowed Formats: JPG, JPEG, PNG, PDF, DOC, DOCX, XLS, XLSX.</small>
                                 <small class="form-text text-muted ms-1 d-block">Size Limit: 16 MB.</small>
                                 @Html.HiddenFor(model => model.Product_drawing_filepath)
                             </div>
@@ -155,7 +155,7 @@
                                     </div>
                                 }
                                 <input type="file" name="photoFile" id="photoFile" class="form-control w-80" accept="image/*" />
-                                <small class="form-text text-muted ms-1 d-block">Supported Formats: JPG, JPEG, PNG, GIF.</small>
+                                <small class="form-text text-muted ms-1 d-block">Allowed Formats: JPG, JPEG, PNG, GIF.</small>
                                 <small class="form-text text-muted ms-1 d-block">Size Limit: 16 MB.</small>
                                 @Html.HiddenFor(model => model.Product_photo_filepath)
                             </div>
@@ -201,7 +201,7 @@
                                     }
                                 }
                                 <input type="file" name="quotationFiles" id="quotationFiles" class="form-control w-80" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx" multiple />
-                                <small class="form-text text-muted ms-1 d-block">Supported Formats: JPG, JPEG, PNG, PDF, DOC, DOCX, XLS, XLSX.</small>
+                                <small class="form-text text-muted ms-1 d-block">Allowed Formats: JPG, JPEG, PNG, PDF, DOC, DOCX, XLS, XLSX.</small>
                                 <small class="form-text text-muted ms-1 d-block">Size Limit: 16 MB.</small>
                                 @Html.HiddenFor(model => model.Product_quotation_filepath)
                             </div>
@@ -283,8 +283,16 @@
                 const fileName = files[i].name.toLowerCase();
                 const isValid = allowedExtensions.some(ext => fileName.endsWith(ext));
                 if (!isValid) {
-                    alert("Invalid file type: " + fileName + "\nAllowed formats: " + allowedExtensions.join(", "));
-                    input.value = "";
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Invalid File Type',
+                        html: `File: <b>${fileName}</b><br>Allowed Formats: ${allowedExtensions.join(", ")}`,
+                        showCloseButton: true,
+                        confirmButtonColor: '#8392ab',
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        input.value = "";
+                    });
                     break;
                 }
             }
@@ -373,10 +381,13 @@
 
             for (const selector of selectors) {
                 const input = $(`${formId} ${selector}`)[0];
-                if (input && input.files.length > 0) {
+                if (input && input.files && input.files.length > 0) {
                     for (let i = 0; i < input.files.length; i++) {
                         if (input.files[i].size > maxSize) {
-                            oversizedFiles.push(input.files[i].name);
+                            let label = selector.includes("drawing") ? "Drawing" :
+                                selector.includes("quotation") ? "Quotation" :
+                                    "Photo";
+                            oversizedFiles.push({ name: input.files[i].name, type: label });
                         }
                     }
                 }
@@ -386,7 +397,18 @@
                 Swal.fire({
                     icon: 'error',
                     title: 'File Size Too Large',
-                    html: `File(s) below exceed 16 MB limit:<br><ul style="text-align: left; margin-top: 8px;">${oversizedFiles.map(f => `<li>${f}</li>`).join('')}</ul>`,
+                    html: `
+                        <p style="margin-bottom: 8px;">The file below exceeds the size limit of <strong>16 MB</strong>:</p>
+                        <ul style="text-align: left; padding-left: 20px; margin-top: 8px; margin-bottom: 12px;">
+                            ${oversizedFiles.map(f => `
+                                <li>
+                                    <span style="color: #d90429;"><strong>[${f.type}]</strong></span> ${f.name}
+                                </li>`).join('')}
+                        </ul>
+                        <p style="margin-top: 12px;">
+                            Please check the uploaded file again and re-upload with the appropriate size.
+                        </p>
+                    `,
                     showCloseButton: true,
                     confirmButtonColor: '#8392ab',
                     confirmButtonText: 'OK'
@@ -416,7 +438,7 @@
             }
 
             // File size validation
-            if (!validateFileSize("#editProductForm")) {
+            if (!validateFileSize(e, "#editProductForm")) {
                 return;
             }
 
